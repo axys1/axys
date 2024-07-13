@@ -1,6 +1,7 @@
 ///****************************************************************************
 //Copyright (c) 2014 cocos2d-x.org
 //Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+//Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
 //
 //https://axmol.dev/
 //
@@ -295,7 +296,7 @@ void EditBoxWinRT::setInputFlag(int inputFlags)
         _password = true;
         break;
     default:
-        AXLOG("Warning: cannot set INITIAL_CAPS_* input flags for WinRT edit boxes");
+        AXLOGD("Warning: cannot set INITIAL_CAPS_* input flags for WinRT edit boxes");
     }
 }
 

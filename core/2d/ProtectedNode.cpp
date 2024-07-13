@@ -5,7 +5,8 @@
  Copyright (c) 2011      Zynga Inc.
  Copyright (c) 2013-2016 Chukong Technologies Inc.
  Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
-
+ Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
+ 
  https://axmol.dev/
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -38,7 +39,7 @@ ProtectedNode::ProtectedNode() : _reorderProtectedChildDirty(false) {}
 
 ProtectedNode::~ProtectedNode()
 {
-    AXLOGINFO("deallocing ProtectedNode: %p - tag: %i", this, _tag);
+    AXLOGV("deallocing ProtectedNode: {} - tag: {}", fmt::ptr(this), _tag);
     removeAllProtectedChildren();
 }
 
@@ -230,7 +231,7 @@ void ProtectedNode::removeProtectedChildByTag(int tag, bool cleanup)
 
     if (child == nullptr)
     {
-        AXLOG("axmol: removeChildByTag(tag = %d): child not found!", tag);
+        AXLOGD("axmol: removeChildByTag(tag = {}): child not found!", tag);
     }
     else
     {

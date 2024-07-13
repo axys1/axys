@@ -2,7 +2,8 @@
  Copyright (c) 2010-2012 cocos2d-x.org
  Copyright (c) 2015 hanxi
  Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
-
+ Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
+ 
  https://axmol.dev/
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -282,7 +283,7 @@ static bool LinuxInputBox(std::string& entryLine)
         didChange = true;
         break;
     default:
-        // AXLOG("Undefined. Perhaps dialog was closed");
+        // AXLOGD("Undefined. Perhaps dialog was closed");
         break;
     }
 

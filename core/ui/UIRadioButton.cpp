@@ -1,6 +1,7 @@
 /****************************************************************************
 Copyright (c) 2015 Neo Kim (neo.kim@neofect.com)
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
 
 https://axmol.dev/
 
@@ -187,7 +188,7 @@ void RadioButtonGroup::removeRadioButton(RadioButton* radioButton)
     ssize_t index = _radioButtons.getIndex(radioButton);
     if (index == AX_INVALID_INDEX)
     {
-        AXLOGERROR("The radio button does not belong to this group!");
+        AXLOGE("The radio button does not belong to this group!");
         return;
     }
 
@@ -224,7 +225,7 @@ RadioButton* RadioButtonGroup::getRadioButtonByIndex(int index) const
 {
     if (index >= _radioButtons.size())
     {
-        AXLOGERROR("Out of array index! length=%d, requestedIndex=%d", (int)_radioButtons.size(), index);
+        AXLOGE("Out of array index! length={}, requestedIndex={}", (int)_radioButtons.size(), index);
         return nullptr;
     }
     return _radioButtons.at(index);
@@ -274,7 +275,7 @@ void RadioButtonGroup::setSelectedButtonWithoutEvent(RadioButton* radioButton)
     }
     if (radioButton != nullptr && !_radioButtons.contains(radioButton))
     {
-        AXLOGERROR("The radio button does not belong to this group!");
+        AXLOGE("The radio button does not belong to this group!");
         return;
     }
 

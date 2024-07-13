@@ -1,6 +1,7 @@
 /****************************************************************************
 Copyright (c) 2013-2016 Chukong Technologies Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
 
 https://axmol.dev/
 
@@ -123,18 +124,18 @@ std::string Helper::getSubStringOfUTF8String(std::string_view str,
     std::u32string utf32;
     if (!StringUtils::UTF8ToUTF32(str, utf32))
     {
-        AXLOGERROR("Can't convert string to UTF-32: %s", str.data());
+        AXLOGE("Can't convert string to UTF-32: {}", str);
         return "";
     }
     if (utf32.size() < start)
     {
-        AXLOGERROR("'start' is out of range: %d, %s", static_cast<int32_t>(start), str.data());
+        AXLOGE("'start' is out of range: {}, {}", static_cast<int32_t>(start), str);
         return "";
     }
     std::string result;
     if (!StringUtils::UTF32ToUTF8(utf32.substr(start, length), result))
     {
-        AXLOGERROR("Can't convert internal UTF-32 string to UTF-8: %s", str.data());
+        AXLOGE("Can't convert internal UTF-32 string to UTF-8: {}", str);
         return "";
     }
     return result;

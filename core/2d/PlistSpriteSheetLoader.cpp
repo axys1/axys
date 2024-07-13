@@ -1,3 +1,27 @@
+ /****************************************************************************
+ Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
+ 
+ https://axmol.dev/
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+ 
 #include "2d/PlistSpriteSheetLoader.h"
 
 #include "platform/FileUtils.h"
@@ -26,7 +50,7 @@ void PlistSpriteSheetLoader::load(std::string_view filePath, SpriteFrameCache& c
     if (fullPath.empty())
     {
         // return if plist file doesn't exist
-        AXLOG("axmol: SpriteFrameCache: can not find %s", filePath.data());
+        AXLOGW("SpriteFrameCache: can not find {}", filePath);
         return;
     }
 
@@ -61,7 +85,7 @@ void PlistSpriteSheetLoader::load(std::string_view filePath, SpriteFrameCache& c
         // append .png
         texturePath = texturePath.append(".png");
 
-        AXLOG("axmol: SpriteFrameCache: Trying to use file %s as texture", texturePath.c_str());
+        AXLOGD("SpriteFrameCache: Trying to use file {} as texture", texturePath);
     }
     addSpriteFramesWithDictionary(dict, texturePath, filePath, cache);
 }
@@ -143,7 +167,7 @@ void PlistSpriteSheetLoader::reload(std::string_view filePath, SpriteFrameCache&
     }
     else
     {
-        AXLOG("axmol: SpriteFrameCache: Couldn't load texture");
+        AXLOGD("SpriteFrameCache: Couldn't load texture");
     }
 }
 
@@ -219,8 +243,8 @@ void PlistSpriteSheetLoader::addSpriteFramesWithDictionary(ValueMap& dictionary,
             // check ow/oh
             if (!ow || !oh)
             {
-                AXLOGWARN(
-                    "axmol: WARNING: originalWidth/Height not found on the SpriteFrame. AnchorPoint won't work as "
+                AXLOGW(
+                    "WARNING: originalWidth/Height not found on the SpriteFrame. AnchorPoint won't work as "
                     "expected. Regenerate the .plist");
             }
             // abs ow/oh
@@ -268,7 +292,7 @@ void PlistSpriteSheetLoader::addSpriteFramesWithDictionary(ValueMap& dictionary,
                 }
                 else
                 {
-                    AXLOGWARN("axmol: WARNING: an alias with name %s already exists", oneAlias.c_str());
+                    AXLOGW("WARNING: an alias with name {} already exists", oneAlias);
                 }
             }
 
@@ -364,7 +388,7 @@ void PlistSpriteSheetLoader::addSpriteFramesWithDictionary(ValueMap& dict,
     }
     else
     {
-        AXLOG("axmol: SpriteFrameCache: Couldn't load texture");
+        AXLOGD("SpriteFrameCache: Couldn't load texture");
     }
 }
 
@@ -414,8 +438,8 @@ void PlistSpriteSheetLoader::reloadSpriteFramesWithDictionary(ValueMap& dict,
             // check ow/oh
             if (!ow || !oh)
             {
-                AXLOGWARN(
-                    "axmol:WARNING: originalWidth/Height not found on the SpriteFrame. AnchorPoint won't work as "
+                AXLOGW(
+                    "WARNING: originalWidth/Height not found on the SpriteFrame. AnchorPoint won't work as "
                     "expected. Regenerate the .plist");
             }
             // abs ow/oh
@@ -463,7 +487,7 @@ void PlistSpriteSheetLoader::reloadSpriteFramesWithDictionary(ValueMap& dict,
                 }
                 else
                 {
-                    AXLOGWARN("axmol: WARNING: an alias with name %s already exists", oneAlias.c_str());
+                    AXLOGW("WARNING: an alias with name {} already exists", oneAlias);
                 }
             }
 

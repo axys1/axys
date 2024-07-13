@@ -1,7 +1,8 @@
 /****************************************************************************
  Copyright (c) 2013-2016 Chukong Technologies Inc.
  Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
-
+ Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
+ 
  https://axmol.dev/
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -44,7 +45,7 @@ EventListenerTouchOneByOne::EventListenerTouchOneByOne()
 
 EventListenerTouchOneByOne::~EventListenerTouchOneByOne()
 {
-    AXLOGINFO("In the destructor of EventListenerTouchOneByOne, %p", this);
+    AXLOGV("In the destructor of EventListenerTouchOneByOne, {}", fmt::ptr(this));
 }
 
 bool EventListenerTouchOneByOne::init()
@@ -126,7 +127,7 @@ EventListenerTouchAllAtOnce::EventListenerTouchAllAtOnce()
 
 EventListenerTouchAllAtOnce::~EventListenerTouchAllAtOnce()
 {
-    AXLOGINFO("In the destructor of EventListenerTouchAllAtOnce, %p", this);
+    AXLOGV("In the destructor of EventListenerTouchAllAtOnce, {}", fmt::ptr(this));
 }
 
 bool EventListenerTouchAllAtOnce::init()

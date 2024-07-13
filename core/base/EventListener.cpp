@@ -1,7 +1,7 @@
 /****************************************************************************
  Copyright (c) 2013-2016 Chukong Technologies Inc.
  Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
-
+ Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
  https://axmol.dev/
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -32,7 +32,7 @@ EventListener::EventListener() {}
 
 EventListener::~EventListener()
 {
-    AXLOGINFO("In the destructor of EventListener. %p", this);
+    AXLOGV("In the destructor of EventListener. {}", fmt::ptr(this));
 }
 
 bool EventListener::init(Type t, std::string_view listenerID, const std::function<void(Event*)>& callback)

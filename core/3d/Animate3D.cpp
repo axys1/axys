@@ -1,7 +1,8 @@
 /****************************************************************************
  Copyright (c) 2014-2016 Chukong Technologies Inc.
  Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
-
+ Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
+ 
  https://axmol.dev/
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -224,7 +225,7 @@ void Animate3D::startWithTarget(Node* target)
 
         if (!hasCurve)
         {
-            AXLOG("warning: no animation found for the skeleton");
+            AXLOGW("warning: no animation found for the skeleton");
         }
     }
 

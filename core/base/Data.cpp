@@ -2,7 +2,8 @@
  Copyright (c) 2010-2012 cocos2d-x.org
  Copyright (c) 2013-2016 Chukong Technologies Inc.
  Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
-
+ Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
+ 
  https://axmol.dev/
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,22 +34,22 @@ const Data Data::Null;
 
 Data::Data()
 {
-    AXLOGINFO("In the empty constructor of Data.");
+    AXLOGV("In the empty constructor of Data.");
 }
 
 Data::Data(Data&& other) : _impl(std::move(other._impl))
 {
-    AXLOGINFO("In the move constructor of Data.");
+    AXLOGV("In the move constructor of Data.");
 }
 
 Data::Data(const Data& other) : _impl(other._impl)
 {
-    AXLOGINFO("In the copy constructor of Data.");
+    AXLOGV("In the copy constructor of Data.");
 }
 
 Data::~Data()
 {
-    AXLOGINFO("deallocing Data: %p", this);
+    AXLOGV("deallocing Data: {}", fmt::ptr(this));
     clear();
 }
 
@@ -56,7 +57,7 @@ Data& Data::operator=(const Data& other)
 {
     if (this != &other)
     {
-        AXLOGINFO("In the copy assignment of Data.");
+        AXLOGV("In the copy assignment of Data.");
         _impl = other._impl;
     }
     return *this;
@@ -66,7 +67,7 @@ Data& Data::operator=(Data&& other)
 {
     if (this != &other)
     {
-        AXLOGINFO("In the move assignment of Data.");
+        AXLOGV("In the move assignment of Data.");
         this->_impl = std::move(other._impl);
     }
     return *this;

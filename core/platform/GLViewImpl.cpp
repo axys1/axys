@@ -368,7 +368,7 @@ GLViewImpl::GLViewImpl(bool initglfw)
 
 GLViewImpl::~GLViewImpl()
 {
-    AXLOGI("deallocing GLViewImpl: {}", fmt::ptr(this));
+    AXLOGD("deallocing GLViewImpl: {}", fmt::ptr(this));
     GLFWEventHandler::setGLViewImpl(nullptr);
     glfwTerminate();
 }
@@ -546,7 +546,7 @@ bool GLViewImpl::initWithRect(std::string_view viewName, const ax::Rect& rect, f
     id<MTLDevice> device = MTLCreateSystemDefaultDevice();
     if (!device)
     {
-        AXLOG("Doesn't support metal.");
+        AXLOGD("Doesn't support metal.");
         return false;
     }
 
@@ -1041,11 +1041,11 @@ void GLViewImpl::onGLFWError(int errorID, const char* errorDesc)
 {
     if (_mainWindow)
     {
-        _glfwError = StringUtils::format("GLFWError #%d Happen, %s", errorID, errorDesc);
+        _glfwError = fmt::format("GLFWError #{} Happen, {}", errorID, errorDesc);
     }
     else
     {
-        _glfwError.append(StringUtils::format("GLFWError #%d Happen, %s\n", errorID, errorDesc));
+        _glfwError.append(fmt::format("GLFWError #{} Happen, {}\n", errorID, errorDesc));
     }
     AXLOGE("{}", _glfwError);
 }

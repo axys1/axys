@@ -5,6 +5,7 @@ Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
 Copyright (c) 2013-2016 Chukong Technologies Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
 
 https://axmol.dev/
 
@@ -37,7 +38,7 @@ TMXObjectGroup::TMXObjectGroup() : _groupName("") {}
 
 TMXObjectGroup::~TMXObjectGroup()
 {
-    AXLOGINFO("deallocing TMXObjectGroup: %p", this);
+    AXLOGV("deallocing TMXObjectGroup: {}", fmt::ptr(this));
 }
 
 ValueMap TMXObjectGroup::getObject(std::string_view objectName) const

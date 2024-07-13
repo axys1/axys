@@ -4,6 +4,7 @@ Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
 Copyright (c) 2013-2016 Chukong Technologies Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
 
 https://axmol.dev/
 
@@ -59,7 +60,7 @@ bool AnimationFrame::initWithSpriteFrame(SpriteFrame* spriteFrame, float delayUn
 
 AnimationFrame::~AnimationFrame()
 {
-    AXLOGINFO("deallocing AnimationFrame: %p", this);
+    AXLOGV("deallocing AnimationFrame: {}", fmt::ptr(this));
 
     AX_SAFE_RELEASE(_spriteFrame);
 }
@@ -153,7 +154,7 @@ Animation::Animation()
 
 Animation::~Animation()
 {
-    AXLOGINFO("deallocing Animation: %p", this);
+    AXLOGV("deallocing Animation: {}", fmt::ptr(this));
 }
 
 void Animation::addSpriteFrame(SpriteFrame* spriteFrame)

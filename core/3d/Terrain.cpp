@@ -1,7 +1,8 @@
 /****************************************************************************
 Copyright (c) 2015-2016 Chukong Technologies Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
-
+ Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
+ 
 https://axmol.dev/
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -246,7 +247,7 @@ bool Terrain::initHeightMap(std::string_view heightMap)
     }
     else
     {
-        AXLOG("warning: the height map size is not POT or POT + 1");
+        AXLOGW("warning: the height map size is not POT or POT + 1");
         return false;
     }
 }
@@ -683,7 +684,7 @@ void Terrain::setDetailMap(unsigned int index, DetailMap detailMap)
 {
     if (index > 4)
     {
-        AXLOG("invalid DetailMap index %d\n", index);
+        AXLOGW("invalid DetailMap index {}\n", index);
     }
     _terrainData._detailMaps[index] = detailMap;
     if (_detailMapTextures[index])

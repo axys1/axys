@@ -167,7 +167,7 @@ bool Director::init()
 
 Director::~Director()
 {
-    AXLOGINFO("deallocing Director: %p", this);
+    AXLOGD("deallocing Director: {}", fmt::ptr(this));
 
 #if AX_ENABLE_CACHE_TEXTURE_DATA
     _eventDispatcher->removeEventListener(_rendererRecreatedListener);
@@ -617,7 +617,7 @@ void Director::setProjection(Projection projection)
 
     if (size.width == 0 || size.height == 0)
     {
-        AXLOGERROR("axmol: warning, Director::setProjection() failed because size is 0");
+        AXLOGE("warning, Director::setProjection() failed because size is 0");
         return;
     }
 
@@ -659,7 +659,7 @@ void Director::setProjection(Projection projection)
         break;
 
     default:
-        AXLOG("axmol: Director: unrecognized projection");
+        AXLOGD("Director: unrecognized projection");
         break;
     }
 
@@ -680,7 +680,7 @@ void Director::purgeCachedData()
 
         // Note: some tests such as ActionsTest are leaking refcounted textures
         // There should be no test textures left in the cache
-        AXLOGI("{}\n", _textureCache->getCachedTextureInfo());
+        AXLOGD("{}\n", _textureCache->getCachedTextureInfo());
     }
     FileUtils::getInstance()->purgeCachedEntries();
 }
@@ -1320,7 +1320,7 @@ void Director::createStatsLabel()
     {
         if (image)
             delete image;
-        AXLOGERROR("%s", "Fails: init fps_images");
+        AXLOGE("{}", "Fails: init fps_images");
         return;
     }
 

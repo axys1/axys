@@ -1,6 +1,7 @@
 /****************************************************************************
 Copyright (c) 2013-2016 Chukong Technologies Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
 
 https://axmol.dev/
 
@@ -100,7 +101,7 @@ void TextAtlas::setProperty(std::string_view stringValue,
 
     updateContentSizeWithTextureSize(_labelAtlasRenderer->getContentSize());
     _labelAtlasRendererAdaptDirty = true;
-    //    AXLOG("cs w %f, h %f", _contentSize.width, _contentSize.height);
+    //    AXLOGD("cs w {}, h {}", _contentSize.width, _contentSize.height);
 }
 
 void TextAtlas::setString(std::string_view value)
@@ -113,7 +114,7 @@ void TextAtlas::setString(std::string_view value)
     _labelAtlasRenderer->setString(value);
     updateContentSizeWithTextureSize(_labelAtlasRenderer->getContentSize());
     _labelAtlasRendererAdaptDirty = true;
-    //    AXLOG("cssss w %f, h %f", _contentSize.width, _contentSize.height);
+    //    AXLOGD("cssss w {}, h {}", _contentSize.width, _contentSize.height);
 }
 
 std::string_view TextAtlas::getString() const

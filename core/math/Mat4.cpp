@@ -1,6 +1,7 @@
 /**
  Copyright 2013 BlackBerry Inc.
  Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -131,7 +132,7 @@ void Mat4::createPerspective(float fieldOfView, float aspectRatio, float zNearPl
     float theta = MATH_DEG_TO_RAD(fieldOfView) * 0.5f;
     if (std::abs(std::fmod(theta, MATH_PIOVER2)) < MATH_EPSILON)
     {
-        AXLOGERROR("Invalid field of view value (%f) causes attempted calculation tan(%f), which is undefined.",
+        AXLOGE("Invalid field of view value ({}) causes attempted calculation tan({}), which is undefined.",
                    fieldOfView, theta);
         return;
     }

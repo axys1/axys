@@ -1,7 +1,8 @@
 /****************************************************************************
  Copyright (c) 2013-2016 Chukong Technologies Inc.
  Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
-
+ Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
+ 
  https://axmol.dev/
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -35,7 +36,7 @@ EventListenerAcceleration::EventListenerAcceleration() {}
 
 EventListenerAcceleration::~EventListenerAcceleration()
 {
-    AXLOGINFO("In the destructor of AccelerationEventListener. %p", this);
+    AXLOGV("In the destructor of AccelerationEventListener. {}", fmt::ptr(this));
 }
 
 EventListenerAcceleration* EventListenerAcceleration::create(const std::function<void(Acceleration*, Event*)>& callback)

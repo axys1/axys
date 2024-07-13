@@ -3,6 +3,7 @@ Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2013-2016 Chukong Technologies Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
 
 https://axmol.dev/
 
@@ -50,7 +51,7 @@ enum
 
 Menu::~Menu()
 {
-    AXLOGINFO("In the destructor of Menu. %p", this);
+    AXLOGV("In the destructor of Menu. {}", fmt::ptr(this));
 }
 
 Menu* Menu::create()
@@ -554,7 +555,7 @@ bool Menu::isOpacityModifyRGB() const
 
 std::string Menu::getDescription() const
 {
-    return StringUtils::format("<Menu | Tag = %d>", _tag);
+    return fmt::format("<Menu | Tag = {}>", _tag);
 }
 
 NS_AX_END

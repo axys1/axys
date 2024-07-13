@@ -1,3 +1,29 @@
+/****************************************************************************
+ Copyright (c) 2015-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
+ 
+ http://www.cocos2d-x.org
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+ 
 #include "network/WebSocket-wasm.h"
 #include "yasio/errc.hpp"
 #include "base/Logging.h"
@@ -58,7 +84,7 @@ bool WebSocket::open(Delegate* delegate, std::string_view url, std::string_view 
 {
     if (url.empty())
     {
-        AXLOG("ws open fail, url is empty!");
+        AXLOGW("ws open fail, url is empty!");
         return false;
     }
 
@@ -70,7 +96,7 @@ bool WebSocket::open(Delegate* delegate, std::string_view url, std::string_view 
     EmscriptenWebSocketCreateAttributes ws_attrs = {_url.c_str(),
                                                     _subProtocols.empty() ? nullptr : _subProtocols.c_str(), EM_TRUE};
 
-    AXLOG("ws open url: %s, protocols: %s", ws_attrs.url, ws_attrs.protocols);
+    AXLOGD("ws open url: {}, protocols: {}", ws_attrs.url, ws_attrs.protocols);
 
     _state = WebSocket::State::CONNECTING;
     _wsfd = emscripten_websocket_new(&ws_attrs);
@@ -95,7 +121,7 @@ void WebSocket::send(std::string_view message)
 {
     auto error = emscripten_websocket_send_utf8_text(_wsfd, message.data());
     if (error)
-        AXLOG("Failed to emscripten_websocket_send_binary(): %d", error);
+        AXLOGW("Failed to emscripten_websocket_send_binary(): {}", error);
 }
 
 /**
@@ -109,7 +135,7 @@ void WebSocket::send(const void* data, unsigned int len)
 {
     auto error = emscripten_websocket_send_binary(_wsfd, const_cast<void*>(data), len);
     if (error)
-        AXLOG("Failed to emscripten_websocket_send_binary(): %d", error);
+        AXLOGW("Failed to emscripten_websocket_send_binary(): {}", error);
 }
 
 /**
@@ -136,7 +162,7 @@ void WebSocket::closeAsync()
     if (!error)
         _state = WebSocket::State::CLOSING;
     else
-        AXLOG("Failed to emscripten_websocket_close(): %d", error);
+        AXLOGW("Failed to emscripten_websocket_close(): {}", error);
 }
 
 }  // namespace network
