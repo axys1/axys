@@ -45,8 +45,10 @@
 
 NS_AX_EXT_BEGIN
 
-// AX_ENABLE_DRAWNODE_DRAW_LINE_POINT an option for future versions of DrawNode (currently: defined)
-#define AX_ENABLE_DRAWNODE_DRAW_LINE_POINT
+
+// New "parameter" rule:
+// returnValue func(position, dimension1, dimensionN, colors1, colorsN, stettings1, settingsN, stettings1withDefault, stettingsNwithDefault)
+
 
 static const int DEFAULT_LINEWIDTH = 2;
 
@@ -71,6 +73,13 @@ public:
         Semi,
     };
 
+    enum PointType
+    {
+        Circle,
+        Rect,
+        Triangle,
+    };
+
 
     // see https://www.angusj.com/clipper2/Docs/Units/Clipper/Types/EndType.htm
     enum EndType
@@ -84,7 +93,7 @@ public:
     {
         v0,  // DrawNode cocos2dx/axmol 1.0
         v1,  // DrawNode 1.0
-        v2,  
+        v2,
         v3,
         v4,
     };
@@ -92,6 +101,7 @@ public:
     // DrawNodeExt stuff
     Version _dnVersion = Version::v1;
     ax::Vec2 _dnScale;
+    float _dnFactor = 0.5f;  /// set the lineWith like Axmol 1.0 
     ax::Vec2 _dnCenter;
     float _dnRotation = 0.0f;
     ax::Vec2 _dnPosition;
@@ -106,54 +116,60 @@ public:
     ax::Vec2 _dnPositionTmp = _dnPosition;
     float _dnLineWidthTmp = _dnLineWidth;
     bool  _dnTransform = false;
-
-#if defined(AX_ENABLE_DRAWNODE_DRAW_LINE_POINT)
     bool _drawOrder = true;
-#endif
+
 
     bool swapIsConvex(bool isConvex) {
         _isConvexTmp = _isConvex; _isConvex = isConvex; return _isConvexTmp;
     };
-
     ax::extension::DrawNodeEx::Version getDNVersion() {
         return _dnVersion;
     };
     void setDNScale(ax::Vec2 scale) {
+        _dnTransform = true;
         _dnScale = scale;
     };
     void setDNScaleX(float scaleX) {
+        _dnTransform = true;
         _dnScale.x = scaleX;
     };
     void setDNScaleY(float scaleY) {
+        _dnTransform = true;
         _dnScale.y = scaleY;
     };
     void setDNRotation(float rotation) {
+        _dnTransform = true;
         _dnRotation = rotation;
     };
     float getDNRotation() {
         return _dnRotation;
     };
     void setDNCenter(ax::Vec2 center) {
+        _dnTransform = true;
         _dnCenter = center;
     };
     ax::Vec2 getDNCenter() {
         return _dnCenter;
     };
     void setDNPosition(ax::Vec2 position) {
+        _dnTransform = true;
         _dnPosition = position;
     };
     ax::Vec2 getDNPosition() {
         return _dnPosition;
     };
     void setDNLineWidth(float lineWidth) {
+        _dnTransform = true;
         _dnLineWidth = lineWidth;
     };
     float getDNLineWidth() {
         return _dnLineWidth;
     };
-    ax::Vec2* transform(const ax::Vec2* vertices, unsigned int count);
+    ax::Vec2* transform(const ax::Vec2* vertices, unsigned int& count, bool closedPolygon = false);
+
     void resetDNValues()
     {
+        _dnTransform = false;
         _dnVersion = Version::v2;
         _dnScale = Vec2(1.f, 1.f);
         _dnCenter = Vec2(0.f, 0.f);
@@ -172,6 +188,7 @@ public:
     };
     void restoreDNValues()
     {
+        _dnTransform = true;
         _dnVersion = _dnVersionTmp;
         _dnScale = _dnScaleTmp;
         _dnCenter = _dnCenterTmp;
@@ -185,15 +202,16 @@ public:
     * @return Return an autorelease object.
     */
     static DrawNodeEx* create(float defaultLineWidth = DEFAULT_LINEWIDTH);
+    // DrawNodeEx();
 
-    /** Draw a point.
-    *
-    * @param point A Vec2 used to point.
-    * @param pointSize The point size.
-    * @param color The point color.
-    * @js NA
-    */
-    void drawPoint(const ax::Vec2& point, const float pointSize, const ax::Color4B& color);
+     /** Draw a point.
+     *
+     * @param point A Vec2 used to point.
+     * @param pointSize The point size.
+     * @param color The point color.
+     * @js NA
+     */
+    void drawPoint(const ax::Vec2& point, const float pointSize, const ax::Color4B& color, DrawNodeEx::PointType pointType = DrawNodeEx::PointType::Rect);
 
     /** Draw a group point.
     *
@@ -202,7 +220,7 @@ public:
     * @param color The point color.
     * @js NA
     */
-    void drawPoints(const ax::Vec2* position, unsigned int numberOfPoints, const ax::Color4B& color);
+    void drawPoints(const ax::Vec2* position, unsigned int numberOfPoints, const ax::Color4B& color, DrawNodeEx::PointType pointType = DrawNodeEx::PointType::Rect);
 
     /** Draw a group point.
     *
@@ -215,7 +233,7 @@ public:
     void drawPoints(const ax::Vec2* position,
         unsigned int numberOfPoints,
         const float pointSize,
-        const ax::Color4B& color);
+        const ax::Color4B& color, DrawNodeEx::PointType pointType = DrawNodeEx::PointType::Rect);
 
     /** Draw an line from origin to destination with color.
     *
@@ -227,7 +245,9 @@ public:
     void drawLine(const ax::Vec2& origin,
         const ax::Vec2& destination,
         const ax::Color4B& color,
-        float thickness = 1.0f);
+        float thickness = 1.0f,
+        DrawNodeEx::EndType etStart = DrawNodeEx::EndType::Square,
+        DrawNodeEx::EndType etEnd = DrawNodeEx::EndType::Square);
 
     /** Draws a rectangle given the origin and destination point measured in points.
     * The origin and the destination can not have the same x and y coordinate.
@@ -236,7 +256,7 @@ public:
     * @param destination The rectangle destination.
     * @param color The rectangle color.
     */
-    void drawRect(const ax::Vec2& origin, const ax::Vec2& destination, const ax::Color4B& color, float thickness = 1);
+    void drawRect(const ax::Vec2& origin, const ax::Vec2& destination, const ax::Color4B& color, float thickness = 1.0f);
 
     /** Draws a polygon given a pointer to point coordinates and the number of vertices measured in points.
     * The polygon can be closed or open.
@@ -248,14 +268,14 @@ public:
     */
     void drawPoly(const ax::Vec2* poli,
         unsigned int numberOfPoints,
-        bool closePolygon,
+        bool closedPolygon,
         const ax::Color4B& color,
-        float thickness = 1);
+        float thickness = 1.0f);
     void _drawPoly(const ax::Vec2* poli,
         unsigned int numberOfPoints,
-        bool closePolygon,
+        bool closedPolygon,
         const ax::Color4B& color,
-        float thickness = 1);
+        float thickness = 1.0f);
 
     /** Draws a circle given the center, radius and number of segments.
     *
@@ -320,6 +340,15 @@ public:
         const Color4B& color,
         const Color4B& filledColor,
         float thickness = 1.0f);
+
+    void _drawAStar(const Vec2& center,
+        float radiusI,
+        float radiusO,
+        unsigned int segments,
+        const Color4B& color,
+        const Color4B& filledColor,
+        float thickness = 1.0f,
+        bool solid = false);
 
     /** Draws a quad bezier path.
     *
@@ -398,7 +427,7 @@ public:
         const ax::Vec2& p3,
         const ax::Vec2& p4,
         const ax::Color4B& color,
-        float thickness = 1);
+        float thickness = 1.0f);
 
     /** Draws a solid rectangle given the origin and destination point measured in points.
     * The origin and the destination can not have the same x and y coordinate.
@@ -408,7 +437,7 @@ public:
     * @param color The rectangle color.
     * @js NA
     */
-    void drawSolidRect(const ax::Vec2& origin, const ax::Vec2& destination, const ax::Color4B& color);
+    void drawSolidRect(const ax::Vec2& origin, const ax::Vec2& destination, const ax::Color4B& color, float thickness = 0, const ax::Color4B& borderColor = ax::Color4B(0, 0, 0, 0));
 
     /** Draws a solid polygon given a pointer to CGPoint coordinates, the number of vertices measured in points, and a
     * color.
@@ -418,7 +447,7 @@ public:
     * @param color The solid polygon color.
     * @js NA
     */
-    void drawSolidPoly(const ax::Vec2* poli, unsigned int numberOfPoints, const ax::Color4B& color);
+    void drawSolidPoly(const ax::Vec2* poli, unsigned int numberOfPoints, const ax::Color4B& color, float thickness = 0, const ax::Color4B& borderColor = ax::Color4B(0, 0, 0, 0));
 
     /** Draws a solid circle given the center, radius and number of segments.
     * @param center The circle center point.
@@ -428,7 +457,7 @@ public:
     * @param scaleX The scale value in x.
     * @param scaleY The scale value in y.
     * @param fillColor The color will fill in polygon.
-    * @param borderWidth The border of line width.
+    * @param thickness The border of line width.
     * @param borderColor The border of line color.
     * @js NA
     */
@@ -439,7 +468,7 @@ public:
         float scaleX,
         float scaleY,
         const ax::Color4B& fillColor,
-        float borderWidth,
+        float thickness,
         const ax::Color4B& borderColor);
 
     /** Draws a solid circle given the center, radius and number of segments.
@@ -507,7 +536,8 @@ public:
     * @param etStart The segment first DrawNodeEx::EndType.
     * @param etEnd The segment last DrawNodeEx::EndType.
     */
-    void drawSegment(const ax::Vec2& from, const ax::Vec2& to, float radius, const ax::Color4B& color, DrawNodeEx::EndType etStart = DrawNodeEx::EndType::Round, DrawNodeEx::EndType etEnd = DrawNodeEx::EndType::Round);
+    void drawSegment(const ax::Vec2& from, const ax::Vec2& to, float radius, const ax::Color4B& color,
+        DrawNodeEx::EndType etStart = DrawNodeEx::EndType::Round, DrawNodeEx::EndType etEnd = DrawNodeEx::EndType::Round);
 
     /** draw a polygon with a fill color and line color
     * @code
@@ -518,27 +548,27 @@ public:
     * @param verts A pointer to point coordinates.
     * @param count The number of verts measured in points.
     * @param fillColor The color will fill in polygon.
-    * @param borderWidth The border of line width.
+    * @param thickness The border of line width.
     * @param borderColor The border of line color.
     * @js NA
     */
-    void drawPolygon(const ax::Vec2* verts,
+    void drawPolygon(ax::Vec2* verts,
         int count,
         const ax::Color4B& fillColor,
-        float borderWidth,
+        float thickness,
         const ax::Color4B& borderColor);
 
-    void drawPolygon(const ax::Vec2* verts, int count, float borderWidth, const ax::Color4B& borderColor);
-    void drawSolidPolygon(const ax::Vec2* verts,
+    void drawPolygon(ax::Vec2* verts, int count, float thickness, const ax::Color4B& borderColor);
+    void drawSolidPolygon(ax::Vec2* verts,
         int count,
         const ax::Color4B& fillColor,
-        float borderWidth,
+        float thickness,
         const ax::Color4B& borderColor);
 
     void _drawPolygon(const ax::Vec2* verts,
         unsigned int count,
         const ax::Color4B& fillColor,
-        float borderWidth,
+        float thickness,
         const ax::Color4B& borderColor,
         bool closedPolygon = true);
 
@@ -550,10 +580,28 @@ public:
     * @param color The triangle color.
     * @js NA
     */
+
+    void drawTriangle(const Vec2* vertices3, 
+        const ax::Color4B& fillColor,
+        const ax::Color4B& borderColor,
+        float thickness = 1.0f);
+
     void drawTriangle(const ax::Vec2& p1,
         const ax::Vec2& p2,
         const ax::Vec2& p3,
         const ax::Color4B& color,
+        float thickness = 1.0f);
+
+    void drawSolidTriangle(const Vec2* vertices3, 
+        const ax::Color4B& fillColor,
+        const ax::Color4B& borderColor,
+        float thickness = 1.0f);
+
+    void drawSolidTriangle(const ax::Vec2& p1,
+        const ax::Vec2& p2,
+        const ax::Vec2& p3,
+        const ax::Color4B& fillColor,
+        const ax::Color4B& borderColor,
         float thickness = 1.0f);
 
     /** Clear the geometry in the node's buffer. */
@@ -602,10 +650,8 @@ public:
 
 protected:
     void ensureCapacityTriangle(int count);
-#if defined(AX_ENABLE_DRAWNODE_DRAW_LINE_POINT)
     void ensureCapacityPoint(int count);
     void ensureCapacityLine(int count);
-#endif
 
     void updateShader();
     void updateShaderInternal(ax::CustomCommand& cmd,
@@ -625,7 +671,6 @@ protected:
     ax::CustomCommand _customCommandTriangle;
     bool _dirtyTriangle = false;
 
-#if defined(AX_ENABLE_DRAWNODE_DRAW_LINE_POINT)
     int _bufferCapacityPoint = 0;
     int _bufferCountPoint = 0;
     ax::V2F_C4B_T2F* _bufferPoint = nullptr;
@@ -641,7 +686,6 @@ protected:
     ax::CustomCommand _customCommandLine;
     bool _dirtyPoint = false;
     bool _dirtyLine = false;
-#endif
 
     ax::BlendFunc _blendFunc;
 
@@ -650,6 +694,7 @@ protected:
     float _defaultLineWidth = 0.0f;
 
     ax::any_buffer _abuf;
+    ax::any_buffer _abufTransform;
 
 private:
     AX_DISALLOW_COPY_AND_ASSIGN(DrawNodeEx);
