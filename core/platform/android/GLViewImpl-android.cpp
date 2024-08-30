@@ -3,7 +3,7 @@ Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2013-2016 Chukong Technologies Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
- 
+
 https://axmol.dev/
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -37,7 +37,8 @@ THE SOFTWARE.
 #define WIDE_SCREEN_ASPECT_RATIO_ANDROID 2.0f
 
 
-NS_AX_BEGIN
+namespace ax
+{
 void GLViewImpl::loadGLES2()
 {
     auto glesVer = gladLoaderLoadGLES2();
@@ -271,4 +272,4 @@ void GLViewImpl::queueOperation(void (*op)(void*), void* param)
                                     (jlong)(uintptr_t)param);
 }
 
-NS_AX_END
+}

@@ -45,7 +45,8 @@ THE SOFTWARE.
 #include "renderer/backend/ProgramState.h"
 #include "renderer/backend/DriverBase.h"
 
-NS_AX_BEGIN
+namespace ax
+{
 
 // MARK: create, init, dealloc
 Sprite* Sprite::createWithTexture(Texture2D* texture)
@@ -327,7 +328,7 @@ bool Sprite::initWithImageData(const Data& imageData, std::string_view key)
     //_fileName = filename;
 
     Texture2D *texture = _director->getTextureCache()->addImage(imageData, key);
-    
+
     if (texture)
     {
         Rect rect = Rect::ZERO;
@@ -1359,7 +1360,7 @@ void Sprite::setVisible(bool bVisible)
 
 void Sprite::setContentSize(const Vec2& size)
 {
-    if (_renderMode == RenderMode::QUAD_BATCHNODE || _renderMode == RenderMode::POLYGON)
+    if (_stretchEnabled && (_renderMode == RenderMode::QUAD_BATCHNODE || _renderMode == RenderMode::POLYGON))
         AXLOGW(
             "Sprite::setContentSize() doesn't stretch the sprite when using QUAD_BATCHNODE or POLYGON render modes");
 
@@ -1725,4 +1726,4 @@ void Sprite::setMVPMatrixUniform()
         programState->setUniform(_mvpMatrixLocation, projectionMat.m, sizeof(projectionMat.m));
 }
 
-NS_AX_END
+}

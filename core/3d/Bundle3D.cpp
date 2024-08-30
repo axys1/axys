@@ -89,7 +89,8 @@ static const char* SCALE         = "scale";
 static const char* KEYTIME       = "keytime";
 static const char* AABBS         = "aabb";
 
-NS_AX_BEGIN
+namespace ax
+{
 
 void getChildMap(std::map<int, std::vector<int>>& map, SkinData* skinData, const rapidjson::Value& val)
 {
@@ -474,7 +475,7 @@ bool Bundle3D::loadMeshDatasBinary(MeshDatas& meshdatas)
                 {
                     AXLOGW("warning: Failed to read meshdata: aabb '{}'.", _path);
                     goto FAILED;
-                } 
+                }
                 meshData->subMeshAABB.emplace_back(AABB(Vec3(aabb[0], aabb[1], aabb[2]), Vec3(aabb[3], aabb[4], aabb[5])));
             }
             else
@@ -2329,10 +2330,10 @@ ax::AABB Bundle3D::calculateAABB(const std::vector<float>& vertex,
 
     indices.for_each ([&](uint32_t i) {
         Vec3 point(vertex[i * stride], vertex[i * stride + 1], vertex[i * stride + 2]);
-        aabb.updateMinMax(&point, 1); 
+        aabb.updateMinMax(&point, 1);
     });
 
     return aabb;
 }
 
-NS_AX_END
+}

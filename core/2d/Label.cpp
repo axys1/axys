@@ -51,7 +51,8 @@
 #include "renderer/backend/ProgramState.h"
 #include "renderer/backend/ProgramStateRegistry.h"
 
-NS_AX_BEGIN
+namespace ax
+{
 
 namespace
 {
@@ -568,7 +569,7 @@ Label::~Label()
 
     AX_SAFE_RELEASE_NULL(_textSprite);
     AX_SAFE_RELEASE_NULL(_shadowNode);
-    
+
 #if AX_LABEL_DEBUG_DRAW
     AX_SAFE_RELEASE_NULL(_debugDrawNode);
 #endif
@@ -2106,7 +2107,7 @@ void Label::visit(Renderer* renderer, const Mat4& parentTransform, uint32_t pare
 #if AX_LABEL_DEBUG_DRAW
     _debugDrawNode->visit(renderer, _modelViewTransform, parentFlags | FLAGS_TRANSFORM_DIRTY);
 #endif
-    
+
     _director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 }
 
@@ -3071,4 +3072,4 @@ void Label::recordPlaceholderInfo(int letterIndex, char32_t utf32Char)
     _lettersInfo[letterIndex].valid     = false;
 }
 
-NS_AX_END
+}

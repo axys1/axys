@@ -34,7 +34,8 @@ THE SOFTWARE.
 
 #define COCOS2D_VERSION 0x00040000
 
-NS_AX_BEGIN
+namespace ax
+{
 
 AX_DLL const char* cocos2dVersion();
 
@@ -48,11 +49,9 @@ using Ref                   = Object;
 
 #define setDisplayStats setStatsDisplay
 
-NS_AX_END
+}
 
 namespace cocos2d = ax;
-
-#define USING_NS_CC                  USING_NS_AX
 
 #define CC_SAFE_RELEASE              AX_SAFE_RELEASE
 #define CC_SAFE_RELEASE_NULL         AX_SAFE_RELEASE_NULL

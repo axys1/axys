@@ -3,7 +3,7 @@ Copyright (c) 2013 cocos2d-x.org
 Copyright (c) Microsoft Open Technologies, Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
- 
+
 https://axmol.dev/
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -41,7 +41,8 @@ THE SOFTWARE.
 #include <winrt/Windows.UI.Popups.h>
 #include <winrt/Windows.UI.Input.h>
 
-NS_AX_BEGIN
+namespace ax
+{
 
 static GLViewImpl* s_pEglView = nullptr;
 
@@ -610,4 +611,4 @@ void GLViewImpl::queueOperation(AsyncOperation op, void* param)
         mQueueOperationCb(std::move(op), param);
 }
 
-NS_AX_END
+}

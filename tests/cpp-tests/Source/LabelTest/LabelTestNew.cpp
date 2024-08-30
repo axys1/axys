@@ -27,7 +27,7 @@
 #include "renderer/Renderer.h"
 #include "2d/FontAtlasCache.h"
 
-USING_NS_AX;
+using namespace ax;
 using namespace ui;
 using namespace extension;
 
@@ -72,7 +72,7 @@ public:
     }
 
     virtual std::string title() const override { return "Github Issue 1336"; }
-    virtual std::string subtitle() const override { return "The label char shouldn't overalpping"; }
+    virtual std::string subtitle() const override { return "The label char shouldn't overlap"; }
 };
 
 //------------------------------------------------------------------

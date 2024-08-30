@@ -3,7 +3,7 @@ Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2013-2016 Chukong Technologies Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
- 
+
 https://axmol.dev/
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -88,13 +88,14 @@ struct GLContextAttrs
     int multisamplingCount;
     bool visible   = true;
     bool decorated = true;
-    bool vsync       = false;
+    bool vsync     = true;
 #if defined(_WIN32)
     void* viewParent = nullptr;
 #endif
 };
 
-NS_AX_BEGIN
+namespace ax
+{
 
 class Scene;
 class Renderer;
@@ -468,6 +469,6 @@ protected:
 // end of platform group
 /// @}
 
-NS_AX_END
+}
 
 #endif /* __CCGLVIEW_H__ */

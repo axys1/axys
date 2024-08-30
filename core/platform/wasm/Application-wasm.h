@@ -36,7 +36,8 @@ THE SOFTWARE.
 #include "platform/ApplicationBase.h"
 #include <string>
 
-NS_AX_BEGIN
+namespace ax
+{
 class Rect;
 
 class Application : public ApplicationBase
@@ -71,7 +72,7 @@ public:
 
     /** @deprecated Use getInstance() instead */
     AX_DEPRECATED_ATTRIBUTE static Application* sharedApplication();
-    
+
     /* override functions */
     virtual LanguageType getCurrentLanguage() override;
 
@@ -80,7 +81,7 @@ public:
     @return Current language iso 639-1 code
     */
     virtual const char * getCurrentLanguageCode() override;
-    
+
     /**
     @brief Get application version
     */
@@ -99,13 +100,13 @@ public:
      *  @deprecated Please use FileUtils::getInstance()->setSearchPaths() instead.
      */
     AX_DEPRECATED_ATTRIBUTE void setResourceRootPath(const std::string& rootResDir);
-    
-    /** 
+
+    /**
      *  Gets the Resource root path.
-     *  @deprecated Please use FileUtils::getInstance()->getSearchPaths() instead. 
+     *  @deprecated Please use FileUtils::getInstance()->getSearchPaths() instead.
      */
     AX_DEPRECATED_ATTRIBUTE const std::string& getResourceRootPath();
-    
+
     /**
      @brief Get target platform
      */
@@ -113,11 +114,11 @@ public:
 protected:
     long _animationSpeed;  // micro second
     std::string _resourceRootPath;
-    
+
     static Application * sm_pSharedApplication;
 };
 
-NS_AX_END
+}
 
 #endif // AX_TARGET_PLATFORM == AX_PLATFORM_WASM
 
