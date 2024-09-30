@@ -172,7 +172,7 @@ namespace ax { namespace network {
                 dir = storagePath.substr(0, found + 1);
                 if (false == util->isDirectoryExist(dir))
                 {
-                    if (false == util->createDirectory(dir))
+                    if (false == util->createDirectories(dir))
                     {
                         errCode = DownloadTask::ERROR_CREATE_DIR_FAILED;
                         errCodeInternal = 0;
@@ -228,10 +228,8 @@ namespace ax { namespace network {
             }
 
             DownloadTaskEmscripten *coTask = iter->second;
-            function<int64_t(void*, int64_t)> transferDataToBuffer; // just a placeholder
-            // int dl = dlNow - coTask->bytesReceived;
             coTask->bytesReceived = dlNow;
-            downloader->onTaskProgress(*coTask->task, transferDataToBuffer);
+            downloader->onTaskProgress(*coTask->task);
         }
 
         void DownloaderEmscripten::onError(emscripten_fetch_t *fetch)

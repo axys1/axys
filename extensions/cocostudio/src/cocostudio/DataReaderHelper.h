@@ -34,7 +34,9 @@ THE SOFTWARE.
 #include "pugixml/pugixml.hpp"
 #include "pugixml/pugiext.hpp"
 
-#include "rapidjson/document-wrapper.h"
+#include "rapidjson/rapidjson.h"
+#include "rapidjson/document.h"
+
 
 #include <string>
 #include <queue>
@@ -86,13 +88,9 @@ protected:
     } DataInfo;
 
 public:
-    /** @deprecated Use getInstance() instead */
-    AX_DEPRECATED_ATTRIBUTE static DataReaderHelper* sharedDataReaderHelper()
-    {
-        return DataReaderHelper::getInstance();
-    }
 
     static DataReaderHelper* getInstance();
+    static void destroyInstance();
 
     /**
      * Scale the position data, used for multiresolution adapter
@@ -100,8 +98,6 @@ public:
      */
     static void setPositionReadScale(float scale);
     static float getPositionReadScale();
-
-    static void purge();
 
 public:
     /**
