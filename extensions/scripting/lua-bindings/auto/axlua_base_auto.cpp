@@ -21063,9 +21063,9 @@ int lua_ax_base_PolygonInfo_setQuad(lua_State* tolua_S)
     argc = lua_gettop(tolua_S)-1;
     if (argc == 1) 
     {
-        ax::V3F_C4B_T2F_Quad* arg0;
+        ax::V3F_C4F_T2F_Quad* arg0;
 
-        #pragma warning NO CONVERSION TO NATIVE FOR V3F_C4B_T2F_Quad*
+        #pragma warning NO CONVERSION TO NATIVE FOR V3F_C4F_T2F_Quad*
 		ok = false;
         if(!ok)
         {
@@ -21114,10 +21114,10 @@ int lua_ax_base_PolygonInfo_setQuads(lua_State* tolua_S)
     argc = lua_gettop(tolua_S)-1;
     if (argc == 2) 
     {
-        ax::V3F_C4B_T2F_Quad* arg0;
+        ax::V3F_C4F_T2F_Quad* arg0;
         int arg1;
 
-        #pragma warning NO CONVERSION TO NATIVE FOR V3F_C4B_T2F_Quad*
+        #pragma warning NO CONVERSION TO NATIVE FOR V3F_C4F_T2F_Quad*
 		ok = false;
 
         ok &= luaval_to_int32(tolua_S, 3,(int *)&arg1, "ax.PolygonInfo:setQuads");
@@ -51495,13 +51495,13 @@ int lua_ax_base_DrawNode_drawPoint(lua_State* tolua_S)
     {
         ax::Vec2 arg0;
         double arg1;
-        ax::Color4B arg2;
+        ax::Color arg2;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawPoint");
 
         ok &= luaval_to_number(tolua_S, 3,&arg1, "ax.DrawNode:drawPoint");
 
-        ok &=luaval_to_color4b(tolua_S, 4, &arg2, "ax.DrawNode:drawPoint");
+        ok &=luaval_to_color4f(tolua_S, 4, &arg2, "ax.DrawNode:drawPoint");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_DrawNode_drawPoint'", nullptr);
@@ -51515,14 +51515,14 @@ int lua_ax_base_DrawNode_drawPoint(lua_State* tolua_S)
     {
         ax::Vec2 arg0;
         double arg1;
-        ax::Color4B arg2;
+        ax::Color arg2;
         ax::DrawNode::PointType arg3;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawPoint");
 
         ok &= luaval_to_number(tolua_S, 3,&arg1, "ax.DrawNode:drawPoint");
 
-        ok &=luaval_to_color4b(tolua_S, 4, &arg2, "ax.DrawNode:drawPoint");
+        ok &=luaval_to_color4f(tolua_S, 4, &arg2, "ax.DrawNode:drawPoint");
 
         ok &= luaval_to_int32(tolua_S, 5,(int *)&arg3, "ax.DrawNode:drawPoint");
         if(!ok)
@@ -51574,13 +51574,13 @@ int lua_ax_base_DrawNode_drawLine(lua_State* tolua_S)
     {
         ax::Vec2 arg0;
         ax::Vec2 arg1;
-        ax::Color4B arg2;
+        ax::Color arg2;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawLine");
 
         ok &= luaval_to_vec2(tolua_S, 3, &arg1, "ax.DrawNode:drawLine");
 
-        ok &=luaval_to_color4b(tolua_S, 4, &arg2, "ax.DrawNode:drawLine");
+        ok &=luaval_to_color4f(tolua_S, 4, &arg2, "ax.DrawNode:drawLine");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_DrawNode_drawLine'", nullptr);
@@ -51594,14 +51594,14 @@ int lua_ax_base_DrawNode_drawLine(lua_State* tolua_S)
     {
         ax::Vec2 arg0;
         ax::Vec2 arg1;
-        ax::Color4B arg2;
+        ax::Color arg2;
         double arg3;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawLine");
 
         ok &= luaval_to_vec2(tolua_S, 3, &arg1, "ax.DrawNode:drawLine");
 
-        ok &=luaval_to_color4b(tolua_S, 4, &arg2, "ax.DrawNode:drawLine");
+        ok &=luaval_to_color4f(tolua_S, 4, &arg2, "ax.DrawNode:drawLine");
 
         ok &= luaval_to_number(tolua_S, 5,&arg3, "ax.DrawNode:drawLine");
         if(!ok)
@@ -51617,7 +51617,7 @@ int lua_ax_base_DrawNode_drawLine(lua_State* tolua_S)
     {
         ax::Vec2 arg0;
         ax::Vec2 arg1;
-        ax::Color4B arg2;
+        ax::Color arg2;
         double arg3;
         ax::DrawNode::EndType arg4;
 
@@ -51625,7 +51625,7 @@ int lua_ax_base_DrawNode_drawLine(lua_State* tolua_S)
 
         ok &= luaval_to_vec2(tolua_S, 3, &arg1, "ax.DrawNode:drawLine");
 
-        ok &=luaval_to_color4b(tolua_S, 4, &arg2, "ax.DrawNode:drawLine");
+        ok &=luaval_to_color4f(tolua_S, 4, &arg2, "ax.DrawNode:drawLine");
 
         ok &= luaval_to_number(tolua_S, 5,&arg3, "ax.DrawNode:drawLine");
 
@@ -51643,7 +51643,7 @@ int lua_ax_base_DrawNode_drawLine(lua_State* tolua_S)
     {
         ax::Vec2 arg0;
         ax::Vec2 arg1;
-        ax::Color4B arg2;
+        ax::Color arg2;
         double arg3;
         ax::DrawNode::EndType arg4;
         ax::DrawNode::EndType arg5;
@@ -51652,7 +51652,7 @@ int lua_ax_base_DrawNode_drawLine(lua_State* tolua_S)
 
         ok &= luaval_to_vec2(tolua_S, 3, &arg1, "ax.DrawNode:drawLine");
 
-        ok &=luaval_to_color4b(tolua_S, 4, &arg2, "ax.DrawNode:drawLine");
+        ok &=luaval_to_color4f(tolua_S, 4, &arg2, "ax.DrawNode:drawLine");
 
         ok &= luaval_to_number(tolua_S, 5,&arg3, "ax.DrawNode:drawLine");
 
@@ -51717,8 +51717,8 @@ int lua_ax_base_DrawNode_drawRect(lua_State* tolua_S)
             ok &= luaval_to_vec2(tolua_S, 5, &arg3, "ax.DrawNode:drawRect");
 
             if (!ok) { break; }
-            ax::Color4B arg4;
-            ok &=luaval_to_color4b(tolua_S, 6, &arg4, "ax.DrawNode:drawRect");
+            ax::Color arg4;
+            ok &=luaval_to_color4f(tolua_S, 6, &arg4, "ax.DrawNode:drawRect");
 
             if (!ok) { break; }
             cobj->drawRect(arg0, arg1, arg2, arg3, arg4);
@@ -51745,8 +51745,8 @@ int lua_ax_base_DrawNode_drawRect(lua_State* tolua_S)
             ok &= luaval_to_vec2(tolua_S, 5, &arg3, "ax.DrawNode:drawRect");
 
             if (!ok) { break; }
-            ax::Color4B arg4;
-            ok &=luaval_to_color4b(tolua_S, 6, &arg4, "ax.DrawNode:drawRect");
+            ax::Color arg4;
+            ok &=luaval_to_color4f(tolua_S, 6, &arg4, "ax.DrawNode:drawRect");
 
             if (!ok) { break; }
             double arg5;
@@ -51769,8 +51769,8 @@ int lua_ax_base_DrawNode_drawRect(lua_State* tolua_S)
             ok &= luaval_to_vec2(tolua_S, 3, &arg1, "ax.DrawNode:drawRect");
 
             if (!ok) { break; }
-            ax::Color4B arg2;
-            ok &=luaval_to_color4b(tolua_S, 4, &arg2, "ax.DrawNode:drawRect");
+            ax::Color arg2;
+            ok &=luaval_to_color4f(tolua_S, 4, &arg2, "ax.DrawNode:drawRect");
 
             if (!ok) { break; }
             cobj->drawRect(arg0, arg1, arg2);
@@ -51789,8 +51789,8 @@ int lua_ax_base_DrawNode_drawRect(lua_State* tolua_S)
             ok &= luaval_to_vec2(tolua_S, 3, &arg1, "ax.DrawNode:drawRect");
 
             if (!ok) { break; }
-            ax::Color4B arg2;
-            ok &=luaval_to_color4b(tolua_S, 4, &arg2, "ax.DrawNode:drawRect");
+            ax::Color arg2;
+            ok &=luaval_to_color4f(tolua_S, 4, &arg2, "ax.DrawNode:drawRect");
 
             if (!ok) { break; }
             double arg3;
@@ -51856,8 +51856,8 @@ int lua_ax_base_DrawNode_drawCircle(lua_State* tolua_S)
             ok &= luaval_to_boolean(tolua_S, 6,&arg4, "ax.DrawNode:drawCircle");
 
             if (!ok) { break; }
-            ax::Color4B arg5;
-            ok &=luaval_to_color4b(tolua_S, 7, &arg5, "ax.DrawNode:drawCircle");
+            ax::Color arg5;
+            ok &=luaval_to_color4f(tolua_S, 7, &arg5, "ax.DrawNode:drawCircle");
 
             if (!ok) { break; }
             cobj->drawCircle(arg0, arg1, arg2, arg3, arg4, arg5);
@@ -51888,8 +51888,8 @@ int lua_ax_base_DrawNode_drawCircle(lua_State* tolua_S)
             ok &= luaval_to_boolean(tolua_S, 6,&arg4, "ax.DrawNode:drawCircle");
 
             if (!ok) { break; }
-            ax::Color4B arg5;
-            ok &=luaval_to_color4b(tolua_S, 7, &arg5, "ax.DrawNode:drawCircle");
+            ax::Color arg5;
+            ok &=luaval_to_color4f(tolua_S, 7, &arg5, "ax.DrawNode:drawCircle");
 
             if (!ok) { break; }
             double arg6;
@@ -51932,8 +51932,8 @@ int lua_ax_base_DrawNode_drawCircle(lua_State* tolua_S)
             ok &= luaval_to_number(tolua_S, 8,&arg6, "ax.DrawNode:drawCircle");
 
             if (!ok) { break; }
-            ax::Color4B arg7;
-            ok &=luaval_to_color4b(tolua_S, 9, &arg7, "ax.DrawNode:drawCircle");
+            ax::Color arg7;
+            ok &=luaval_to_color4f(tolua_S, 9, &arg7, "ax.DrawNode:drawCircle");
 
             if (!ok) { break; }
             cobj->drawCircle(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
@@ -51972,8 +51972,8 @@ int lua_ax_base_DrawNode_drawCircle(lua_State* tolua_S)
             ok &= luaval_to_number(tolua_S, 8,&arg6, "ax.DrawNode:drawCircle");
 
             if (!ok) { break; }
-            ax::Color4B arg7;
-            ok &=luaval_to_color4b(tolua_S, 9, &arg7, "ax.DrawNode:drawCircle");
+            ax::Color arg7;
+            ok &=luaval_to_color4f(tolua_S, 9, &arg7, "ax.DrawNode:drawCircle");
 
             if (!ok) { break; }
             double arg8;
@@ -52028,7 +52028,7 @@ int lua_ax_base_DrawNode_drawStar(lua_State* tolua_S)
         double arg1;
         double arg2;
         unsigned int arg3;
-        ax::Color4B arg4;
+        ax::Color arg4;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawStar");
 
@@ -52038,7 +52038,7 @@ int lua_ax_base_DrawNode_drawStar(lua_State* tolua_S)
 
         ok &= luaval_to_uint32(tolua_S, 5,&arg3, "ax.DrawNode:drawStar");
 
-        ok &=luaval_to_color4b(tolua_S, 6, &arg4, "ax.DrawNode:drawStar");
+        ok &=luaval_to_color4f(tolua_S, 6, &arg4, "ax.DrawNode:drawStar");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_DrawNode_drawStar'", nullptr);
@@ -52054,7 +52054,7 @@ int lua_ax_base_DrawNode_drawStar(lua_State* tolua_S)
         double arg1;
         double arg2;
         unsigned int arg3;
-        ax::Color4B arg4;
+        ax::Color arg4;
         double arg5;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawStar");
@@ -52065,7 +52065,7 @@ int lua_ax_base_DrawNode_drawStar(lua_State* tolua_S)
 
         ok &= luaval_to_uint32(tolua_S, 5,&arg3, "ax.DrawNode:drawStar");
 
-        ok &=luaval_to_color4b(tolua_S, 6, &arg4, "ax.DrawNode:drawStar");
+        ok &=luaval_to_color4f(tolua_S, 6, &arg4, "ax.DrawNode:drawStar");
 
         ok &= luaval_to_number(tolua_S, 7,&arg5, "ax.DrawNode:drawStar");
         if(!ok)
@@ -52119,8 +52119,8 @@ int lua_ax_base_DrawNode_drawSolidStar(lua_State* tolua_S)
         double arg1;
         double arg2;
         unsigned int arg3;
-        ax::Color4B arg4;
-        ax::Color4B arg5;
+        ax::Color arg4;
+        ax::Color arg5;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawSolidStar");
 
@@ -52130,9 +52130,9 @@ int lua_ax_base_DrawNode_drawSolidStar(lua_State* tolua_S)
 
         ok &= luaval_to_uint32(tolua_S, 5,&arg3, "ax.DrawNode:drawSolidStar");
 
-        ok &=luaval_to_color4b(tolua_S, 6, &arg4, "ax.DrawNode:drawSolidStar");
+        ok &=luaval_to_color4f(tolua_S, 6, &arg4, "ax.DrawNode:drawSolidStar");
 
-        ok &=luaval_to_color4b(tolua_S, 7, &arg5, "ax.DrawNode:drawSolidStar");
+        ok &=luaval_to_color4f(tolua_S, 7, &arg5, "ax.DrawNode:drawSolidStar");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_DrawNode_drawSolidStar'", nullptr);
@@ -52148,8 +52148,8 @@ int lua_ax_base_DrawNode_drawSolidStar(lua_State* tolua_S)
         double arg1;
         double arg2;
         unsigned int arg3;
-        ax::Color4B arg4;
-        ax::Color4B arg5;
+        ax::Color arg4;
+        ax::Color arg5;
         double arg6;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawSolidStar");
@@ -52160,9 +52160,9 @@ int lua_ax_base_DrawNode_drawSolidStar(lua_State* tolua_S)
 
         ok &= luaval_to_uint32(tolua_S, 5,&arg3, "ax.DrawNode:drawSolidStar");
 
-        ok &=luaval_to_color4b(tolua_S, 6, &arg4, "ax.DrawNode:drawSolidStar");
+        ok &=luaval_to_color4f(tolua_S, 6, &arg4, "ax.DrawNode:drawSolidStar");
 
-        ok &=luaval_to_color4b(tolua_S, 7, &arg5, "ax.DrawNode:drawSolidStar");
+        ok &=luaval_to_color4f(tolua_S, 7, &arg5, "ax.DrawNode:drawSolidStar");
 
         ok &= luaval_to_number(tolua_S, 8,&arg6, "ax.DrawNode:drawSolidStar");
         if(!ok)
@@ -52216,7 +52216,7 @@ int lua_ax_base_DrawNode_drawQuadBezier(lua_State* tolua_S)
         ax::Vec2 arg1;
         ax::Vec2 arg2;
         unsigned int arg3;
-        ax::Color4B arg4;
+        ax::Color arg4;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawQuadBezier");
 
@@ -52226,7 +52226,7 @@ int lua_ax_base_DrawNode_drawQuadBezier(lua_State* tolua_S)
 
         ok &= luaval_to_uint32(tolua_S, 5,&arg3, "ax.DrawNode:drawQuadBezier");
 
-        ok &=luaval_to_color4b(tolua_S, 6, &arg4, "ax.DrawNode:drawQuadBezier");
+        ok &=luaval_to_color4f(tolua_S, 6, &arg4, "ax.DrawNode:drawQuadBezier");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_DrawNode_drawQuadBezier'", nullptr);
@@ -52242,7 +52242,7 @@ int lua_ax_base_DrawNode_drawQuadBezier(lua_State* tolua_S)
         ax::Vec2 arg1;
         ax::Vec2 arg2;
         unsigned int arg3;
-        ax::Color4B arg4;
+        ax::Color arg4;
         double arg5;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawQuadBezier");
@@ -52253,7 +52253,7 @@ int lua_ax_base_DrawNode_drawQuadBezier(lua_State* tolua_S)
 
         ok &= luaval_to_uint32(tolua_S, 5,&arg3, "ax.DrawNode:drawQuadBezier");
 
-        ok &=luaval_to_color4b(tolua_S, 6, &arg4, "ax.DrawNode:drawQuadBezier");
+        ok &=luaval_to_color4f(tolua_S, 6, &arg4, "ax.DrawNode:drawQuadBezier");
 
         ok &= luaval_to_number(tolua_S, 7,&arg5, "ax.DrawNode:drawQuadBezier");
         if(!ok)
@@ -52308,7 +52308,7 @@ int lua_ax_base_DrawNode_drawCubicBezier(lua_State* tolua_S)
         ax::Vec2 arg2;
         ax::Vec2 arg3;
         unsigned int arg4;
-        ax::Color4B arg5;
+        ax::Color arg5;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawCubicBezier");
 
@@ -52320,7 +52320,7 @@ int lua_ax_base_DrawNode_drawCubicBezier(lua_State* tolua_S)
 
         ok &= luaval_to_uint32(tolua_S, 6,&arg4, "ax.DrawNode:drawCubicBezier");
 
-        ok &=luaval_to_color4b(tolua_S, 7, &arg5, "ax.DrawNode:drawCubicBezier");
+        ok &=luaval_to_color4f(tolua_S, 7, &arg5, "ax.DrawNode:drawCubicBezier");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_DrawNode_drawCubicBezier'", nullptr);
@@ -52337,7 +52337,7 @@ int lua_ax_base_DrawNode_drawCubicBezier(lua_State* tolua_S)
         ax::Vec2 arg2;
         ax::Vec2 arg3;
         unsigned int arg4;
-        ax::Color4B arg5;
+        ax::Color arg5;
         double arg6;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawCubicBezier");
@@ -52350,7 +52350,7 @@ int lua_ax_base_DrawNode_drawCubicBezier(lua_State* tolua_S)
 
         ok &= luaval_to_uint32(tolua_S, 6,&arg4, "ax.DrawNode:drawCubicBezier");
 
-        ok &=luaval_to_color4b(tolua_S, 7, &arg5, "ax.DrawNode:drawCubicBezier");
+        ok &=luaval_to_color4f(tolua_S, 7, &arg5, "ax.DrawNode:drawCubicBezier");
 
         ok &= luaval_to_number(tolua_S, 8,&arg6, "ax.DrawNode:drawCubicBezier");
         if(!ok)
@@ -52402,13 +52402,13 @@ int lua_ax_base_DrawNode_drawDot(lua_State* tolua_S)
     {
         ax::Vec2 arg0;
         double arg1;
-        ax::Color4B arg2;
+        ax::Color arg2;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawDot");
 
         ok &= luaval_to_number(tolua_S, 3,&arg1, "ax.DrawNode:drawDot");
 
-        ok &=luaval_to_color4b(tolua_S, 4, &arg2, "ax.DrawNode:drawDot");
+        ok &=luaval_to_color4f(tolua_S, 4, &arg2, "ax.DrawNode:drawDot");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_DrawNode_drawDot'", nullptr);
@@ -52458,13 +52458,13 @@ int lua_ax_base_DrawNode_drawSolidRect(lua_State* tolua_S)
     {
         ax::Vec2 arg0;
         ax::Vec2 arg1;
-        ax::Color4B arg2;
+        ax::Color arg2;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawSolidRect");
 
         ok &= luaval_to_vec2(tolua_S, 3, &arg1, "ax.DrawNode:drawSolidRect");
 
-        ok &=luaval_to_color4b(tolua_S, 4, &arg2, "ax.DrawNode:drawSolidRect");
+        ok &=luaval_to_color4f(tolua_S, 4, &arg2, "ax.DrawNode:drawSolidRect");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_DrawNode_drawSolidRect'", nullptr);
@@ -52478,14 +52478,14 @@ int lua_ax_base_DrawNode_drawSolidRect(lua_State* tolua_S)
     {
         ax::Vec2 arg0;
         ax::Vec2 arg1;
-        ax::Color4B arg2;
+        ax::Color arg2;
         double arg3;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawSolidRect");
 
         ok &= luaval_to_vec2(tolua_S, 3, &arg1, "ax.DrawNode:drawSolidRect");
 
-        ok &=luaval_to_color4b(tolua_S, 4, &arg2, "ax.DrawNode:drawSolidRect");
+        ok &=luaval_to_color4f(tolua_S, 4, &arg2, "ax.DrawNode:drawSolidRect");
 
         ok &= luaval_to_number(tolua_S, 5,&arg3, "ax.DrawNode:drawSolidRect");
         if(!ok)
@@ -52501,19 +52501,19 @@ int lua_ax_base_DrawNode_drawSolidRect(lua_State* tolua_S)
     {
         ax::Vec2 arg0;
         ax::Vec2 arg1;
-        ax::Color4B arg2;
+        ax::Color arg2;
         double arg3;
-        ax::Color4B arg4;
+        ax::Color arg4;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawSolidRect");
 
         ok &= luaval_to_vec2(tolua_S, 3, &arg1, "ax.DrawNode:drawSolidRect");
 
-        ok &=luaval_to_color4b(tolua_S, 4, &arg2, "ax.DrawNode:drawSolidRect");
+        ok &=luaval_to_color4f(tolua_S, 4, &arg2, "ax.DrawNode:drawSolidRect");
 
         ok &= luaval_to_number(tolua_S, 5,&arg3, "ax.DrawNode:drawSolidRect");
 
-        ok &=luaval_to_color4b(tolua_S, 6, &arg4, "ax.DrawNode:drawSolidRect");
+        ok &=luaval_to_color4f(tolua_S, 6, &arg4, "ax.DrawNode:drawSolidRect");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_DrawNode_drawSolidRect'", nullptr);
@@ -52580,8 +52580,8 @@ int lua_ax_base_DrawNode_drawSolidCircle(lua_State* tolua_S)
             ok &= luaval_to_number(tolua_S, 7,&arg5, "ax.DrawNode:drawSolidCircle");
 
             if (!ok) { break; }
-            ax::Color4B arg6;
-            ok &=luaval_to_color4b(tolua_S, 8, &arg6, "ax.DrawNode:drawSolidCircle");
+            ax::Color arg6;
+            ok &=luaval_to_color4f(tolua_S, 8, &arg6, "ax.DrawNode:drawSolidCircle");
 
             if (!ok) { break; }
             cobj->drawSolidCircle(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
@@ -52616,16 +52616,16 @@ int lua_ax_base_DrawNode_drawSolidCircle(lua_State* tolua_S)
             ok &= luaval_to_number(tolua_S, 7,&arg5, "ax.DrawNode:drawSolidCircle");
 
             if (!ok) { break; }
-            ax::Color4B arg6;
-            ok &=luaval_to_color4b(tolua_S, 8, &arg6, "ax.DrawNode:drawSolidCircle");
+            ax::Color arg6;
+            ok &=luaval_to_color4f(tolua_S, 8, &arg6, "ax.DrawNode:drawSolidCircle");
 
             if (!ok) { break; }
             double arg7;
             ok &= luaval_to_number(tolua_S, 9,&arg7, "ax.DrawNode:drawSolidCircle");
 
             if (!ok) { break; }
-            ax::Color4B arg8;
-            ok &=luaval_to_color4b(tolua_S, 10, &arg8, "ax.DrawNode:drawSolidCircle");
+            ax::Color arg8;
+            ok &=luaval_to_color4f(tolua_S, 10, &arg8, "ax.DrawNode:drawSolidCircle");
 
             if (!ok) { break; }
             cobj->drawSolidCircle(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
@@ -52660,16 +52660,16 @@ int lua_ax_base_DrawNode_drawSolidCircle(lua_State* tolua_S)
             ok &= luaval_to_number(tolua_S, 7,&arg5, "ax.DrawNode:drawSolidCircle");
 
             if (!ok) { break; }
-            ax::Color4B arg6;
-            ok &=luaval_to_color4b(tolua_S, 8, &arg6, "ax.DrawNode:drawSolidCircle");
+            ax::Color arg6;
+            ok &=luaval_to_color4f(tolua_S, 8, &arg6, "ax.DrawNode:drawSolidCircle");
 
             if (!ok) { break; }
             double arg7;
             ok &= luaval_to_number(tolua_S, 9,&arg7, "ax.DrawNode:drawSolidCircle");
 
             if (!ok) { break; }
-            ax::Color4B arg8;
-            ok &=luaval_to_color4b(tolua_S, 10, &arg8, "ax.DrawNode:drawSolidCircle");
+            ax::Color arg8;
+            ok &=luaval_to_color4f(tolua_S, 10, &arg8, "ax.DrawNode:drawSolidCircle");
 
             if (!ok) { break; }
             bool arg9;
@@ -52700,8 +52700,8 @@ int lua_ax_base_DrawNode_drawSolidCircle(lua_State* tolua_S)
             ok &= luaval_to_uint32(tolua_S, 5,&arg3, "ax.DrawNode:drawSolidCircle");
 
             if (!ok) { break; }
-            ax::Color4B arg4;
-            ok &=luaval_to_color4b(tolua_S, 6, &arg4, "ax.DrawNode:drawSolidCircle");
+            ax::Color arg4;
+            ok &=luaval_to_color4f(tolua_S, 6, &arg4, "ax.DrawNode:drawSolidCircle");
 
             if (!ok) { break; }
             cobj->drawSolidCircle(arg0, arg1, arg2, arg3, arg4);
@@ -52771,8 +52771,8 @@ int lua_ax_base_DrawNode_drawPie(lua_State* tolua_S)
             ok &= luaval_to_number(tolua_S, 8,&arg6, "ax.DrawNode:drawPie");
 
             if (!ok) { break; }
-            ax::Color4B arg7;
-            ok &=luaval_to_color4b(tolua_S, 9, &arg7, "ax.DrawNode:drawPie");
+            ax::Color4F arg7;
+            ok &=luaval_to_color4f(tolua_S, 9, &arg7, "ax.DrawNode:drawPie");
 
             if (!ok) { break; }
             cobj->drawPie(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
@@ -52811,8 +52811,8 @@ int lua_ax_base_DrawNode_drawPie(lua_State* tolua_S)
             ok &= luaval_to_number(tolua_S, 8,&arg6, "ax.DrawNode:drawPie");
 
             if (!ok) { break; }
-            ax::Color4B arg7;
-            ok &=luaval_to_color4b(tolua_S, 9, &arg7, "ax.DrawNode:drawPie");
+            ax::Color4F arg7;
+            ok &=luaval_to_color4f(tolua_S, 9, &arg7, "ax.DrawNode:drawPie");
 
             if (!ok) { break; }
             ax::DrawNode::DrawMode arg8;
@@ -52855,12 +52855,12 @@ int lua_ax_base_DrawNode_drawPie(lua_State* tolua_S)
             ok &= luaval_to_number(tolua_S, 8,&arg6, "ax.DrawNode:drawPie");
 
             if (!ok) { break; }
-            ax::Color4B arg7;
-            ok &=luaval_to_color4b(tolua_S, 9, &arg7, "ax.DrawNode:drawPie");
+            ax::Color4F arg7;
+            ok &=luaval_to_color4f(tolua_S, 9, &arg7, "ax.DrawNode:drawPie");
 
             if (!ok) { break; }
-            ax::Color4B arg8;
-            ok &=luaval_to_color4b(tolua_S, 10, &arg8, "ax.DrawNode:drawPie");
+            ax::Color4F arg8;
+            ok &=luaval_to_color4f(tolua_S, 10, &arg8, "ax.DrawNode:drawPie");
 
             if (!ok) { break; }
             cobj->drawPie(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
@@ -52899,12 +52899,12 @@ int lua_ax_base_DrawNode_drawPie(lua_State* tolua_S)
             ok &= luaval_to_number(tolua_S, 8,&arg6, "ax.DrawNode:drawPie");
 
             if (!ok) { break; }
-            ax::Color4B arg7;
-            ok &=luaval_to_color4b(tolua_S, 9, &arg7, "ax.DrawNode:drawPie");
+            ax::Color4F arg7;
+            ok &=luaval_to_color4f(tolua_S, 9, &arg7, "ax.DrawNode:drawPie");
 
             if (!ok) { break; }
-            ax::Color4B arg8;
-            ok &=luaval_to_color4b(tolua_S, 10, &arg8, "ax.DrawNode:drawPie");
+            ax::Color4F arg8;
+            ok &=luaval_to_color4f(tolua_S, 10, &arg8, "ax.DrawNode:drawPie");
 
             if (!ok) { break; }
             ax::DrawNode::DrawMode arg9;
@@ -52947,12 +52947,12 @@ int lua_ax_base_DrawNode_drawPie(lua_State* tolua_S)
             ok &= luaval_to_number(tolua_S, 8,&arg6, "ax.DrawNode:drawPie");
 
             if (!ok) { break; }
-            ax::Color4B arg7;
-            ok &=luaval_to_color4b(tolua_S, 9, &arg7, "ax.DrawNode:drawPie");
+            ax::Color4F arg7;
+            ok &=luaval_to_color4f(tolua_S, 9, &arg7, "ax.DrawNode:drawPie");
 
             if (!ok) { break; }
-            ax::Color4B arg8;
-            ok &=luaval_to_color4b(tolua_S, 10, &arg8, "ax.DrawNode:drawPie");
+            ax::Color4F arg8;
+            ok &=luaval_to_color4f(tolua_S, 10, &arg8, "ax.DrawNode:drawPie");
 
             if (!ok) { break; }
             ax::DrawNode::DrawMode arg9;
@@ -53060,7 +53060,7 @@ int lua_ax_base_DrawNode_drawSegment(lua_State* tolua_S)
         ax::Vec2 arg0;
         ax::Vec2 arg1;
         double arg2;
-        ax::Color4B arg3;
+        ax::Color4F arg3;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawSegment");
 
@@ -53068,7 +53068,7 @@ int lua_ax_base_DrawNode_drawSegment(lua_State* tolua_S)
 
         ok &= luaval_to_number(tolua_S, 4,&arg2, "ax.DrawNode:drawSegment");
 
-        ok &=luaval_to_color4b(tolua_S, 5, &arg3, "ax.DrawNode:drawSegment");
+        ok &=luaval_to_color4f(tolua_S, 5, &arg3, "ax.DrawNode:drawSegment");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_DrawNode_drawSegment'", nullptr);
@@ -53083,7 +53083,7 @@ int lua_ax_base_DrawNode_drawSegment(lua_State* tolua_S)
         ax::Vec2 arg0;
         ax::Vec2 arg1;
         double arg2;
-        ax::Color4B arg3;
+        ax::Color4F arg3;
         ax::DrawNode::EndType arg4;
 
         ok &= luaval_to_vec2(tolua_S, 2, &arg0, "ax.DrawNode:drawSegment");
@@ -53092,7 +53092,7 @@ int lua_ax_base_DrawNode_drawSegment(lua_State* tolua_S)
 
         ok &= luaval_to_number(tolua_S, 4,&arg2, "ax.DrawNode:drawSegment");
 
-        ok &=luaval_to_color4b(tolua_S, 5, &arg3, "ax.DrawNode:drawSegment");
+        ok &=luaval_to_color4f(tolua_S, 5, &arg3, "ax.DrawNode:drawSegment");
 
         ok &= luaval_to_int32(tolua_S, 6,(int *)&arg4, "ax.DrawNode:drawSegment");
         if(!ok)
@@ -53109,7 +53109,7 @@ int lua_ax_base_DrawNode_drawSegment(lua_State* tolua_S)
         ax::Vec2 arg0;
         ax::Vec2 arg1;
         double arg2;
-        ax::Color4B arg3;
+        ax::Color4F arg3;
         ax::DrawNode::EndType arg4;
         ax::DrawNode::EndType arg5;
 
@@ -53119,7 +53119,7 @@ int lua_ax_base_DrawNode_drawSegment(lua_State* tolua_S)
 
         ok &= luaval_to_number(tolua_S, 4,&arg2, "ax.DrawNode:drawSegment");
 
-        ok &=luaval_to_color4b(tolua_S, 5, &arg3, "ax.DrawNode:drawSegment");
+        ok &=luaval_to_color4f(tolua_S, 5, &arg3, "ax.DrawNode:drawSegment");
 
         ok &= luaval_to_int32(tolua_S, 6,(int *)&arg4, "ax.DrawNode:drawSegment");
 
@@ -53232,8 +53232,8 @@ int lua_ax_base_DrawNode_drawTriangle(lua_State* tolua_S)
             ok &= luaval_to_vec2(tolua_S, 4, &arg2, "ax.DrawNode:drawTriangle");
 
             if (!ok) { break; }
-            ax::Color4B arg3;
-            ok &=luaval_to_color4b(tolua_S, 5, &arg3, "ax.DrawNode:drawTriangle");
+            ax::Color4F arg3;
+            ok &=luaval_to_color4f(tolua_S, 5, &arg3, "ax.DrawNode:drawTriangle");
 
             if (!ok) { break; }
             cobj->drawTriangle(arg0, arg1, arg2, arg3);
@@ -53248,8 +53248,8 @@ int lua_ax_base_DrawNode_drawTriangle(lua_State* tolua_S)
             ok &= luaval_to_object<const ax::Vec2>(tolua_S, 2, "ax.Vec2",&arg0, "ax.DrawNode:drawTriangle");
 
             if (!ok) { break; }
-            ax::Color4B arg1;
-            ok &=luaval_to_color4b(tolua_S, 3, &arg1, "ax.DrawNode:drawTriangle");
+            ax::Color4F arg1;
+            ok &=luaval_to_color4f(tolua_S, 3, &arg1, "ax.DrawNode:drawTriangle");
 
             if (!ok) { break; }
             cobj->drawTriangle(arg0, arg1);
@@ -53303,12 +53303,12 @@ int lua_ax_base_DrawNode_drawSolidTriangle(lua_State* tolua_S)
             ok &= luaval_to_vec2(tolua_S, 4, &arg2, "ax.DrawNode:drawSolidTriangle");
 
             if (!ok) { break; }
-            ax::Color4B arg3;
-            ok &=luaval_to_color4b(tolua_S, 5, &arg3, "ax.DrawNode:drawSolidTriangle");
+            ax::Color4F arg3;
+            ok &=luaval_to_color4f(tolua_S, 5, &arg3, "ax.DrawNode:drawSolidTriangle");
 
             if (!ok) { break; }
-            ax::Color4B arg4;
-            ok &=luaval_to_color4b(tolua_S, 6, &arg4, "ax.DrawNode:drawSolidTriangle");
+            ax::Color4F arg4;
+            ok &=luaval_to_color4f(tolua_S, 6, &arg4, "ax.DrawNode:drawSolidTriangle");
 
             if (!ok) { break; }
             cobj->drawSolidTriangle(arg0, arg1, arg2, arg3, arg4);
@@ -53331,12 +53331,12 @@ int lua_ax_base_DrawNode_drawSolidTriangle(lua_State* tolua_S)
             ok &= luaval_to_vec2(tolua_S, 4, &arg2, "ax.DrawNode:drawSolidTriangle");
 
             if (!ok) { break; }
-            ax::Color4B arg3;
-            ok &=luaval_to_color4b(tolua_S, 5, &arg3, "ax.DrawNode:drawSolidTriangle");
+            ax::Color4F arg3;
+            ok &=luaval_to_color4f(tolua_S, 5, &arg3, "ax.DrawNode:drawSolidTriangle");
 
             if (!ok) { break; }
-            ax::Color4B arg4;
-            ok &=luaval_to_color4b(tolua_S, 6, &arg4, "ax.DrawNode:drawSolidTriangle");
+            ax::Color4F arg4;
+            ok &=luaval_to_color4f(tolua_S, 6, &arg4, "ax.DrawNode:drawSolidTriangle");
 
             if (!ok) { break; }
             double arg5;
@@ -53355,12 +53355,12 @@ int lua_ax_base_DrawNode_drawSolidTriangle(lua_State* tolua_S)
             ok &= luaval_to_object<const ax::Vec2>(tolua_S, 2, "ax.Vec2",&arg0, "ax.DrawNode:drawSolidTriangle");
 
             if (!ok) { break; }
-            ax::Color4B arg1;
-            ok &=luaval_to_color4b(tolua_S, 3, &arg1, "ax.DrawNode:drawSolidTriangle");
+            ax::Color4F arg1;
+            ok &=luaval_to_color4f(tolua_S, 3, &arg1, "ax.DrawNode:drawSolidTriangle");
 
             if (!ok) { break; }
-            ax::Color4B arg2;
-            ok &=luaval_to_color4b(tolua_S, 4, &arg2, "ax.DrawNode:drawSolidTriangle");
+            ax::Color4F arg2;
+            ok &=luaval_to_color4f(tolua_S, 4, &arg2, "ax.DrawNode:drawSolidTriangle");
 
             if (!ok) { break; }
             cobj->drawSolidTriangle(arg0, arg1, arg2);
@@ -53375,12 +53375,12 @@ int lua_ax_base_DrawNode_drawSolidTriangle(lua_State* tolua_S)
             ok &= luaval_to_object<const ax::Vec2>(tolua_S, 2, "ax.Vec2",&arg0, "ax.DrawNode:drawSolidTriangle");
 
             if (!ok) { break; }
-            ax::Color4B arg1;
-            ok &=luaval_to_color4b(tolua_S, 3, &arg1, "ax.DrawNode:drawSolidTriangle");
+            ax::Color arg1;
+            ok &=luaval_to_color4f(tolua_S, 3, &arg1, "ax.DrawNode:drawSolidTriangle");
 
             if (!ok) { break; }
-            ax::Color4B arg2;
-            ok &=luaval_to_color4b(tolua_S, 4, &arg2, "ax.DrawNode:drawSolidTriangle");
+            ax::Color arg2;
+            ok &=luaval_to_color4f(tolua_S, 4, &arg2, "ax.DrawNode:drawSolidTriangle");
 
             if (!ok) { break; }
             double arg3;
@@ -54592,9 +54592,9 @@ int lua_ax_base_Label_setTextColor(lua_State* tolua_S)
     argc = lua_gettop(tolua_S)-1;
     if (argc == 1) 
     {
-        ax::Color4B arg0;
+        ax::Color arg0;
 
-        ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.Label:setTextColor");
+        ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.Label:setTextColor");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_Label_setTextColor'", nullptr);
@@ -54700,9 +54700,9 @@ int lua_ax_base_Label_enableShadow(lua_State* tolua_S)
     }
     if (argc == 1) 
     {
-        ax::Color4B arg0;
+        ax::Color arg0;
 
-        ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.Label:enableShadow");
+        ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.Label:enableShadow");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_Label_enableShadow'", nullptr);
@@ -54714,10 +54714,10 @@ int lua_ax_base_Label_enableShadow(lua_State* tolua_S)
     }
     if (argc == 2) 
     {
-        ax::Color4B arg0;
+        ax::Color arg0;
         ax::Vec2 arg1;
 
-        ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.Label:enableShadow");
+        ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.Label:enableShadow");
 
         ok &= luaval_to_vec2(tolua_S, 3, &arg1, "ax.Label:enableShadow");
         if(!ok)
@@ -54731,11 +54731,11 @@ int lua_ax_base_Label_enableShadow(lua_State* tolua_S)
     }
     if (argc == 3) 
     {
-        ax::Color4B arg0;
+        ax::Color arg0;
         ax::Vec2 arg1;
         int arg2;
 
-        ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.Label:enableShadow");
+        ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.Label:enableShadow");
 
         ok &= luaval_to_vec2(tolua_S, 3, &arg1, "ax.Label:enableShadow");
 
@@ -54787,9 +54787,9 @@ int lua_ax_base_Label_enableOutline(lua_State* tolua_S)
     argc = lua_gettop(tolua_S)-1;
     if (argc == 1) 
     {
-        ax::Color4B arg0;
+        ax::Color arg0;
 
-        ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.Label:enableOutline");
+        ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.Label:enableOutline");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_Label_enableOutline'", nullptr);
@@ -54801,10 +54801,10 @@ int lua_ax_base_Label_enableOutline(lua_State* tolua_S)
     }
     if (argc == 2) 
     {
-        ax::Color4B arg0;
+        ax::Color arg0;
         int arg1;
 
-        ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.Label:enableOutline");
+        ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.Label:enableOutline");
 
         ok &= luaval_to_int32(tolua_S, 3,(int *)&arg1, "ax.Label:enableOutline");
         if(!ok)
@@ -54854,9 +54854,9 @@ int lua_ax_base_Label_enableGlow(lua_State* tolua_S)
     argc = lua_gettop(tolua_S)-1;
     if (argc == 1) 
     {
-        ax::Color4B arg0;
+        ax::Color arg0;
 
-        ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.Label:enableGlow");
+        ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.Label:enableGlow");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_Label_enableGlow'", nullptr);
@@ -60935,8 +60935,8 @@ int lua_ax_base_LayerColor_initWithColor(lua_State* tolua_S)
     argc = lua_gettop(tolua_S)-1;
     do{
         if (argc == 1) {
-            ax::Color4B arg0;
-            ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.LayerColor:initWithColor");
+            ax::Color arg0;
+            ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.LayerColor:initWithColor");
 
             if (!ok) { break; }
             bool ret = cobj->initWithColor(arg0);
@@ -60947,8 +60947,8 @@ int lua_ax_base_LayerColor_initWithColor(lua_State* tolua_S)
     ok  = true;
     do{
         if (argc == 3) {
-            ax::Color4B arg0;
-            ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.LayerColor:initWithColor");
+            ax::Color arg0;
+            ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.LayerColor:initWithColor");
 
             if (!ok) { break; }
             double arg1;
@@ -60993,8 +60993,8 @@ int lua_ax_base_LayerColor_create(lua_State* tolua_S)
     {
         if (argc == 3)
         {
-            ax::Color4B arg0;
-            ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.LayerColor:create");
+            ax::Color arg0;
+            ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.LayerColor:create");
             if (!ok) { break; }
             double arg1;
             ok &= luaval_to_number(tolua_S, 3,&arg1, "ax.LayerColor:create");
@@ -61022,8 +61022,8 @@ int lua_ax_base_LayerColor_create(lua_State* tolua_S)
     {
         if (argc == 1)
         {
-            ax::Color4B arg0;
-            ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.LayerColor:create");
+            ax::Color arg0;
+            ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.LayerColor:create");
             if (!ok) { break; }
             ax::LayerColor* ret = ax::LayerColor::create(arg0);
             object_to_luaval<ax::LayerColor>(tolua_S, "ax.LayerColor",(ax::LayerColor*)ret);
@@ -61706,12 +61706,12 @@ int lua_ax_base_LayerGradient_initWithColor(lua_State* tolua_S)
     argc = lua_gettop(tolua_S)-1;
     do{
         if (argc == 3) {
-            ax::Color4B arg0;
-            ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.LayerGradient:initWithColor");
+            ax::Color arg0;
+            ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.LayerGradient:initWithColor");
 
             if (!ok) { break; }
-            ax::Color4B arg1;
-            ok &=luaval_to_color4b(tolua_S, 3, &arg1, "ax.LayerGradient:initWithColor");
+            ax::Color arg1;
+            ok &=luaval_to_color4f(tolua_S, 3, &arg1, "ax.LayerGradient:initWithColor");
 
             if (!ok) { break; }
             ax::Vec2 arg2;
@@ -61726,12 +61726,12 @@ int lua_ax_base_LayerGradient_initWithColor(lua_State* tolua_S)
     ok  = true;
     do{
         if (argc == 2) {
-            ax::Color4B arg0;
-            ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.LayerGradient:initWithColor");
+            ax::Color arg0;
+            ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.LayerGradient:initWithColor");
 
             if (!ok) { break; }
-            ax::Color4B arg1;
-            ok &=luaval_to_color4b(tolua_S, 3, &arg1, "ax.LayerGradient:initWithColor");
+            ax::Color arg1;
+            ok &=luaval_to_color4f(tolua_S, 3, &arg1, "ax.LayerGradient:initWithColor");
 
             if (!ok) { break; }
             bool ret = cobj->initWithColor(arg0, arg1);
@@ -61768,11 +61768,11 @@ int lua_ax_base_LayerGradient_create(lua_State* tolua_S)
     {
         if (argc == 2)
         {
-            ax::Color4B arg0;
-            ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.LayerGradient:create");
+            ax::Color arg0;
+            ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.LayerGradient:create");
             if (!ok) { break; }
-            ax::Color4B arg1;
-            ok &=luaval_to_color4b(tolua_S, 3, &arg1, "ax.LayerGradient:create");
+            ax::Color arg1;
+            ok &=luaval_to_color4f(tolua_S, 3, &arg1, "ax.LayerGradient:create");
             if (!ok) { break; }
             ax::LayerGradient* ret = ax::LayerGradient::create(arg0, arg1);
             object_to_luaval<ax::LayerGradient>(tolua_S, "ax.LayerGradient",(ax::LayerGradient*)ret);
@@ -61794,11 +61794,11 @@ int lua_ax_base_LayerGradient_create(lua_State* tolua_S)
     {
         if (argc == 3)
         {
-            ax::Color4B arg0;
-            ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.LayerGradient:create");
+            ax::Color arg0;
+            ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.LayerGradient:create");
             if (!ok) { break; }
-            ax::Color4B arg1;
-            ok &=luaval_to_color4b(tolua_S, 3, &arg1, "ax.LayerGradient:create");
+            ax::Color arg1;
+            ok &=luaval_to_color4f(tolua_S, 3, &arg1, "ax.LayerGradient:create");
             if (!ok) { break; }
             ax::Vec2 arg2;
             ok &= luaval_to_vec2(tolua_S, 4, &arg2, "ax.LayerGradient:create");
@@ -62396,8 +62396,8 @@ int lua_ax_base_LayerRadialGradient_setStartColor(lua_State* tolua_S)
     argc = lua_gettop(tolua_S)-1;
     do{
         if (argc == 1) {
-            ax::Color4B arg0;
-            ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.LayerRadialGradient:setStartColor");
+            ax::Color arg0;
+            ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.LayerRadialGradient:setStartColor");
 
             if (!ok) { break; }
             cobj->setStartColor(arg0);
@@ -62545,8 +62545,8 @@ int lua_ax_base_LayerRadialGradient_setEndColor(lua_State* tolua_S)
     argc = lua_gettop(tolua_S)-1;
     do{
         if (argc == 1) {
-            ax::Color4B arg0;
-            ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.LayerRadialGradient:setEndColor");
+            ax::Color arg0;
+            ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.LayerRadialGradient:setEndColor");
 
             if (!ok) { break; }
             cobj->setEndColor(arg0);
@@ -62796,15 +62796,15 @@ int lua_ax_base_LayerRadialGradient_initWithColor(lua_State* tolua_S)
     argc = lua_gettop(tolua_S)-1;
     if (argc == 5) 
     {
-        ax::Color4B arg0;
-        ax::Color4B arg1;
+        ax::Color arg0;
+        ax::Color arg1;
         double arg2;
         ax::Vec2 arg3;
         double arg4;
 
-        ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.LayerRadialGradient:initWithColor");
+        ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.LayerRadialGradient:initWithColor");
 
-        ok &=luaval_to_color4b(tolua_S, 3, &arg1, "ax.LayerRadialGradient:initWithColor");
+        ok &=luaval_to_color4f(tolua_S, 3, &arg1, "ax.LayerRadialGradient:initWithColor");
 
         ok &= luaval_to_number(tolua_S, 4,&arg2, "ax.LayerRadialGradient:initWithColor");
 
@@ -62858,11 +62858,11 @@ int lua_ax_base_LayerRadialGradient_create(lua_State* tolua_S)
     {
         if (argc == 5)
         {
-            ax::Color4B arg0;
-            ok &=luaval_to_color4b(tolua_S, 2, &arg0, "ax.LayerRadialGradient:create");
+            ax::Color arg0;
+            ok &=luaval_to_color4f(tolua_S, 2, &arg0, "ax.LayerRadialGradient:create");
             if (!ok) { break; }
-            ax::Color4B arg1;
-            ok &=luaval_to_color4b(tolua_S, 3, &arg1, "ax.LayerRadialGradient:create");
+            ax::Color arg1;
+            ok &=luaval_to_color4f(tolua_S, 3, &arg1, "ax.LayerRadialGradient:create");
             if (!ok) { break; }
             double arg2;
             ok &= luaval_to_number(tolua_S, 4,&arg2, "ax.LayerRadialGradient:create");
