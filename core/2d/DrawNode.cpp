@@ -72,7 +72,7 @@ static bool isConvex(const Vec2* verts, int count)
     return true;  // is convex
 }
 
-static V2F_C4B_T2F* expandBufferAndGetPointer(axstd::pod_vector<V2F_C4B_T2F>& buffer, size_t count)
+static V2F_C4F_T2F* expandBufferAndGetPointer(axstd::pod_vector<V2F_C4F_T2F>& buffer, size_t count)
 {
     size_t oldSize = buffer.size();
     buffer.expand(count);
@@ -235,7 +235,7 @@ void DrawNode::draw(Renderer* renderer, const Mat4& transform, uint32_t flags)
     }
 }
 
-static void udpateCommand(CustomCommand& cmd, const axstd::pod_vector<V2F_C4B_T2F>& buffer)
+static void udpateCommand(CustomCommand& cmd, const axstd::pod_vector<V2F_C4F_T2F>& buffer)
 {
     if (buffer.empty())
     {
@@ -243,8 +243,9 @@ static void udpateCommand(CustomCommand& cmd, const axstd::pod_vector<V2F_C4B_T2
     }
     else
     {
-        cmd.createVertexBuffer(sizeof(V2F_C4B_T2F), buffer.size(), CustomCommand::BufferUsage::STATIC);
-        cmd.updateVertexBuffer(buffer.data(), buffer.size() * sizeof(V2F_C4B_T2F));
+        if (cmd.getVertexCapacity() < buffer.size())
+            cmd.createVertexBuffer(sizeof(V2F_C4F_T2F), buffer.size(), CustomCommand::BufferUsage::DYNAMIC);
+        cmd.updateVertexBuffer(buffer.data(), buffer.size() * sizeof(V2F_C4F_T2F));
     }
 
     cmd.setVertexDrawInfo(0, buffer.size());
@@ -273,7 +274,7 @@ void DrawNode::updateBuffers()
 
 void DrawNode::drawPoint(const Vec2& position,
                          const float pointSize,
-                         const Color4B& color,
+                         const Color& color,
                          const DrawNode::PointType pointType)
 {
     if (pointSize <= 0.0f)
@@ -284,7 +285,7 @@ void DrawNode::drawPoint(const Vec2& position,
 
 void DrawNode::drawPoints(const Vec2* position,
                           unsigned int numberOfPoints,
-                          const Color4B& color,
+                          const Color& color,
                           const DrawNode::PointType pointType)
 {
     _drawPoints(position, numberOfPoints, 1.0f, color, pointType);
@@ -293,7 +294,7 @@ void DrawNode::drawPoints(const Vec2* position,
 void DrawNode::drawPoints(const Vec2* position,
                           unsigned int numberOfPoints,
                           const float pointSize,
-                          const Color4B& color,
+                          const Color& color,
                           const DrawNode::PointType pointType)
 {
     if (pointSize <= 0.0f)
@@ -303,7 +304,7 @@ void DrawNode::drawPoints(const Vec2* position,
 
 void DrawNode::drawLine(const Vec2& origin,
                         const Vec2& destination,
-                        const Color4B& color,
+                        const Color& color,
                         float thickness,
                         DrawNode::EndType etStart,
                         DrawNode::EndType etEnd)
@@ -320,7 +321,7 @@ void DrawNode::drawLine(const Vec2& origin,
 void DrawNode::drawPoly(const Vec2* poli,
                         unsigned int numberOfPoints,
                         bool closedPolygon,
-                        const Color4B& color,
+                        const Color& color,
                         float thickness)
 {
     if (thickness <= 0.0f)
@@ -338,7 +339,7 @@ void DrawNode::drawCircle(const Vec2& center,
                           bool drawLineToCenter,
                           float scaleX,
                           float scaleY,
-                          const Color4B& color,
+                          const Color& color,
                           float thickness)
 {
     if (thickness <= 0.0f)
@@ -352,7 +353,7 @@ void DrawNode::drawCircle(const Vec2& center,
         return;
     }
 
-    _drawCircle(center, radius, angle, segments, drawLineToCenter, scaleX, scaleY, color, Color4B(), false, thickness);
+    _drawCircle(center, radius, angle, segments, drawLineToCenter, scaleX, scaleY, color, Color(), false, thickness);
 }
 
 void DrawNode::drawCircle(const Vec2& center,
@@ -360,7 +361,7 @@ void DrawNode::drawCircle(const Vec2& center,
                           float angle,
                           unsigned int segments,
                           bool drawLineToCenter,
-                          const Color4B& color,
+                          const Color& color,
                           float thickness)
 {
     if (thickness <= 0.0f)
@@ -381,7 +382,7 @@ void DrawNode::drawStar(const Vec2& center,
                         float radiusI,
                         float radiusO,
                         unsigned int segments,
-                        const Color4B& color,
+                        const Color& color,
                         float thickness)
 {
     if (thickness <= 0.0f)
@@ -396,8 +397,8 @@ void DrawNode::drawSolidStar(const Vec2& center,
                              float radiusI,  // inner
                              float radiusO,  // outer
                              unsigned int segments,
-                             const Color4B& color,
-                             const Color4B& filledColor,
+                             const Color& color,
+                             const Color& filledColor,
                              float thickness)
 {
     if (thickness < 0.0f)
@@ -412,7 +413,7 @@ void DrawNode::drawQuadBezier(const Vec2& origin,
                               const Vec2& control,
                               const Vec2& destination,
                               unsigned int segments,
-                              const Color4B& color,
+                              const Color& color,
                               float thickness)
 {
     if (thickness <= 0.0f)
@@ -442,7 +443,7 @@ void DrawNode::drawCubicBezier(const Vec2& origin,
                                const Vec2& control2,
                                const Vec2& destination,
                                unsigned int segments,
-                               const Color4B& color,
+                               const Color& color,
                                float thickness)
 {
     if (thickness <= 0.0f)
@@ -471,7 +472,7 @@ void DrawNode::drawCubicBezier(const Vec2& origin,
 void DrawNode::drawCardinalSpline(PointArray* config,
                                   float tension,
                                   unsigned int segments,
-                                  const Color4B& color,
+                                  const Color& color,
                                   float thickness)
 {
     if (thickness <= 0.0f)
@@ -513,7 +514,7 @@ void DrawNode::drawCardinalSpline(PointArray* config,
     _drawPoly(_vertices.data(), segments, false, color, thickness, true);
 }
 
-void DrawNode::drawCatmullRom(PointArray* points, unsigned int segments, const Color4B& color, float thickness)
+void DrawNode::drawCatmullRom(PointArray* points, unsigned int segments, const Color& color, float thickness)
 {
     if (thickness <= 0.0f)
     {
@@ -523,7 +524,7 @@ void DrawNode::drawCatmullRom(PointArray* points, unsigned int segments, const C
     drawCardinalSpline(points, 0.5f, segments, color, thickness);
 }
 
-void DrawNode::drawDot(const Vec2& pos, float radius, const Color4B& color)
+void DrawNode::drawDot(const Vec2& pos, float radius, const Color& color)
 {
     if (radius <= 0.0f)
     {
@@ -537,7 +538,7 @@ void DrawNode::drawRect(const Vec2& p1,
                         const Vec2& p2,
                         const Vec2& p3,
                         const Vec2& p4,
-                        const Color4B& color,
+                        const Color& color,
                         float thickness)
 {
     if (thickness <= 0.0f)
@@ -550,7 +551,7 @@ void DrawNode::drawRect(const Vec2& p1,
     _drawPoly(line, 5, false, color, thickness, true);
 }
 
-void DrawNode::drawRect(const Vec2& origin, const Vec2& destination, const Color4B& color, float thickness)
+void DrawNode::drawRect(const Vec2& origin, const Vec2& destination, const Color& color, float thickness)
 {
     if (thickness <= 0.0f)
     {
@@ -565,7 +566,7 @@ void DrawNode::drawRect(const Vec2& origin, const Vec2& destination, const Color
 void DrawNode::drawSegment(const Vec2& from,
                            const Vec2& to,
                            float thickness,
-                           const Color4B& color,
+                           const Color& color,
                            DrawNode::EndType etStart,
                            DrawNode::EndType etEnd)
 {
@@ -579,9 +580,9 @@ void DrawNode::drawSegment(const Vec2& from,
 
 void DrawNode::drawPolygon(Vec2* verts,
                            int count,
-                           const Color4B& fillColor,
+                           const Color& fillColor,
                            float thickness,
-                           const Color4B& borderColor,
+                           const Color& borderColor,
                            bool isconvex)
 {
     if (thickness < 0.0f)
@@ -592,21 +593,21 @@ void DrawNode::drawPolygon(Vec2* verts,
     _drawPolygon(verts, count, fillColor, borderColor, true, thickness, isconvex);
 }
 
-void DrawNode::drawPolygon(Vec2* verts, int count, float thickness, const Color4B& borderColor, bool isconvex)
+void DrawNode::drawPolygon(Vec2* verts, int count, float thickness, const Color& borderColor, bool isconvex)
 {
     if (thickness < 0.0f)
     {
         AXLOGW("{}: thickness < 0, changed to 0", __FUNCTION__);
         thickness = 0.0f;
     }
-    _drawPolygon(verts, count, Color4B::TRANSPARENT, borderColor, true, thickness, isconvex);
+    _drawPolygon(verts, count, Color::TRANSPARENT, borderColor, true, thickness, isconvex);
 }
 
 void DrawNode::drawSolidPolygon(Vec2* verts,
                                 int count,
-                                const Color4B& fillColor,
+                                const Color& fillColor,
                                 float thickness,
-                                const Color4B& borderColor,
+                                const Color& borderColor,
                                 bool isconvex)
 {
     if (thickness < 0.0f)
@@ -619,9 +620,9 @@ void DrawNode::drawSolidPolygon(Vec2* verts,
 
 void DrawNode::drawSolidRect(const Vec2& origin,
                              const Vec2& destination,
-                             const Color4B& fillColor,
+                             const Color& fillColor,
                              float thickness,
-                             const Color4B& borderColor)
+                             const Color& borderColor)
 {
     if (thickness < 0.0f)
     {
@@ -634,9 +635,9 @@ void DrawNode::drawSolidRect(const Vec2& origin,
 
 void DrawNode::drawSolidPoly(const Vec2* poli,
                              unsigned int numberOfPoints,
-                             const Color4B& color,
+                             const Color& color,
                              float thickness,
-                             const Color4B& borderColor,
+                             const Color& borderColor,
                              bool isconvex)
 {
     if (thickness < 0.0f)
@@ -654,8 +655,8 @@ void DrawNode::drawPie(const Vec2& center,
                        int endAngle,
                        float scaleX,
                        float scaleY,
-                       const Color4B& fillColor,
-                       const Color4B& borderColor,
+                       const Color& fillColor,
+                       const Color& borderColor,
                        DrawMode drawMode,
                        float thickness)
 {
@@ -675,10 +676,10 @@ void DrawNode::drawPie(const Vec2& center,
                        int endAngle,
                        float scaleX,
                        float scaleY,
-                       const Color4B& color,
+                       const Color& color,
                        DrawMode drawMode)
 {
-    _drawPie(center, radius, angle, startAngle, endAngle, scaleX, scaleY, Color4B::TRANSPARENT, color, drawMode, 1.0f);
+    _drawPie(center, radius, angle, startAngle, endAngle, scaleX, scaleY, Color::TRANSPARENT, color, drawMode, 1.0f);
 }
 
 void DrawNode::drawSolidCircle(const Vec2& center,
@@ -687,9 +688,9 @@ void DrawNode::drawSolidCircle(const Vec2& center,
                                unsigned int segments,
                                float scaleX,
                                float scaleY,
-                               const Color4B& fillColor,
+                               const Color& fillColor,
                                float thickness,
-                               const Color4B& borderColor,
+                               const Color& borderColor,
                                bool drawLineToCenter)
 {
     if (thickness < 0.0f)
@@ -707,51 +708,51 @@ void DrawNode::drawSolidCircle(const Vec2& center,
                                unsigned int segments,
                                float scaleX,
                                float scaleY,
-                               const Color4B& color)
+                               const Color& color)
 {
     if (radius < 0.0f)
     {
         AXLOGW("{}: radius < 0, changed to 0", __FUNCTION__);
         radius = 0.0f;
     }
-    _drawCircle(center, radius, angle, segments, false, scaleX, scaleY, Color4B(), color, true);
+    _drawCircle(center, radius, angle, segments, false, scaleX, scaleY, Color(), color, true);
 }
 
 void DrawNode::drawSolidCircle(const Vec2& center,
                                float radius,
                                float angle,
                                unsigned int segments,
-                               const Color4B& color)
+                               const Color& color)
 {
     if (radius < 0.0f)
     {
         AXLOGW("{}: radius < 0, changed to 0", __FUNCTION__);
         radius = 0.0f;
     }
-    _drawCircle(center, radius, angle, segments, false, 1.0f, 1.0f, Color4B(), color, true);
+    _drawCircle(center, radius, angle, segments, false, 1.0f, 1.0f, Color(), color, true);
 }
 
-void DrawNode::drawColoredTriangle(const Vec2* vertices3, const Color4B* color3)
+void DrawNode::drawColoredTriangle(const Vec2* vertices3, const Color* color3)
 {
     Vec2 vertices[3] = {vertices3[0], vertices3[1], vertices3[2]};
     _drawColoredTriangle(vertices, color3);
 }
 
-void DrawNode::drawTriangle(const Vec2* vertices3, const Color4B& color)
+void DrawNode::drawTriangle(const Vec2* vertices3, const Color& color)
 {
     Vec2 vertices[3] = {vertices3[0], vertices3[1], vertices3[2]};
-    _drawTriangle(vertices, Color4B::TRANSPARENT, color, false, 0.0f);
+    _drawTriangle(vertices, Color::TRANSPARENT, color, false, 0.0f);
 }
 
-void DrawNode::drawTriangle(const Vec2& p1, const Vec2& p2, const Vec2& p3, const Color4B& color)
+void DrawNode::drawTriangle(const Vec2& p1, const Vec2& p2, const Vec2& p3, const Color& color)
 {
     Vec2 vertices[3] = {p1, p2, p3};
-    _drawTriangle(vertices, Color4B::TRANSPARENT, color, false, 0.0f);
+    _drawTriangle(vertices, Color::TRANSPARENT, color, false, 0.0f);
 }
 
 void DrawNode::drawSolidTriangle(const Vec2* vertices3,
-                                 const Color4B& fillColor,
-                                 const Color4B& borderColor,
+                                 const Color& fillColor,
+                                 const Color& borderColor,
                                  float thickness)
 {
     if (thickness < 0.0f)
@@ -766,8 +767,8 @@ void DrawNode::drawSolidTriangle(const Vec2* vertices3,
 void DrawNode::drawSolidTriangle(const Vec2& p1,
                                  const Vec2& p2,
                                  const Vec2& p3,
-                                 const Color4B& fillColor,
-                                 const Color4B& borderColor,
+                                 const Color& fillColor,
+                                 const Color& borderColor,
                                  float thickness)
 {
     if (thickness < 0.0f)
@@ -817,8 +818,8 @@ void DrawNode::visit(Renderer* renderer, const Mat4& parentTransform, uint32_t p
 
 void DrawNode::_drawPolygon(const Vec2* verts,
                             unsigned int count,
-                            const Color4B& fillColor,
-                            const Color4B& borderColor,
+                            const Color& fillColor,
+                            const Color& borderColor,
                             bool closedPolygon,
                             float thickness,
                             bool isconvex)
@@ -829,7 +830,7 @@ void DrawNode::_drawPolygon(const Vec2* verts,
 
     auto _vertices = _transform(verts, count, closedPolygon);
 
-    std::vector<V2F_C4B_T2F_Triangle> triangleList;
+    std::vector<V2F_C4F_T2F_Triangle> triangleList;
 
     int vertex_count = 0;
 
@@ -857,7 +858,7 @@ void DrawNode::_drawPolygon(const Vec2* verts,
             p2t::Point* vec2 = t->GetPoint(1);
             p2t::Point* vec3 = t->GetPoint(2);
 
-            V2F_C4B_T2F_Triangle triangle = {
+            V2F_C4F_T2F_Triangle triangle = {
                 {Vec2(vec1->x, vec1->y), fillColor, Vec2::ZERO},
                 {Vec2(vec2->x, vec2->y), fillColor, Vec2::ZERO},
                 {Vec2(vec3->x, vec3->y), fillColor, Vec2::ZERO},
@@ -884,7 +885,7 @@ void DrawNode::_drawPolygon(const Vec2* verts,
 
     vertex_count *= 3;
 
-    auto triangles = reinterpret_cast<V2F_C4B_T2F_Triangle*>(expandBufferAndGetPointer(_triangles, vertex_count));
+    auto triangles = reinterpret_cast<V2F_C4F_T2F_Triangle*>(expandBufferAndGetPointer(_triangles, vertex_count));
     _trianglesDirty = true;
 
     // start drawing...
@@ -1017,7 +1018,7 @@ void DrawNode::_drawPolygon(const Vec2* verts,
 void DrawNode::_drawPoly(const Vec2* verts,
                          unsigned int count,
                          bool closedPolygon,
-                         const Color4B& color,
+                         const Color& color,
                          float thickness,
                          bool isconvex)
 {
@@ -1044,13 +1045,13 @@ void DrawNode::_drawPoly(const Vec2* verts,
     }
     else
     {
-        _drawPolygon(verts, count, Color4B::TRANSPARENT, color, closedPolygon, thickness, isconvex);
+        _drawPolygon(verts, count, Color::TRANSPARENT, color, closedPolygon, thickness, isconvex);
     }
 }
 
 void DrawNode::_drawSegment(const Vec2& from,
                             const Vec2& to,
-                            const Color4B& color,
+                            const Color& color,
                             float thickness,
                             DrawNode::EndType etStart,
                             DrawNode::EndType etEnd)
@@ -1085,7 +1086,7 @@ void DrawNode::_drawSegment(const Vec2& from,
 
         unsigned int vertex_count = 3 * ((etStart != DrawNode::EndType::Butt) ? 2 : 0) + 3 * 2 +
                                     3 * ((etEnd != DrawNode::EndType::Butt) ? 2 : 0);
-        auto triangles = reinterpret_cast<V2F_C4B_T2F_Triangle*>(expandBufferAndGetPointer(_triangles, vertex_count));
+        auto triangles = reinterpret_cast<V2F_C4F_T2F_Triangle*>(expandBufferAndGetPointer(_triangles, vertex_count));
         _trianglesDirty = true;
 
         int ii = 0;
@@ -1178,16 +1179,16 @@ void DrawNode::_drawSegment(const Vec2& from,
     }
 }
 
-void DrawNode::_drawDot(const Vec2& pos, float radius, const Color4B& color)
+void DrawNode::_drawDot(const Vec2& pos, float radius, const Color& color)
 {
     unsigned int vertex_count = 2 * 3;
-    auto triangles = reinterpret_cast<V2F_C4B_T2F_Triangle*>(expandBufferAndGetPointer(_triangles, vertex_count));
+    auto triangles = reinterpret_cast<V2F_C4F_T2F_Triangle*>(expandBufferAndGetPointer(_triangles, vertex_count));
     _trianglesDirty = true;
 
-    V2F_C4B_T2F a = {Vec2(pos.x - radius, pos.y - radius), color, Vec2(-1.0f, -1.0f)};
-    V2F_C4B_T2F b = {Vec2(pos.x - radius, pos.y + radius), color, Vec2(-1.0f, 1.0f)};
-    V2F_C4B_T2F c = {Vec2(pos.x + radius, pos.y + radius), color, Vec2(1.0f, 1.0f)};
-    V2F_C4B_T2F d = {Vec2(pos.x + radius, pos.y - radius), color, Vec2(1.0f, -1.0f)};
+    V2F_C4F_T2F a = {Vec2(pos.x - radius, pos.y - radius), color, Vec2(-1.0f, -1.0f)};
+    V2F_C4F_T2F b = {Vec2(pos.x - radius, pos.y + radius), color, Vec2(-1.0f, 1.0f)};
+    V2F_C4F_T2F c = {Vec2(pos.x + radius, pos.y + radius), color, Vec2(1.0f, 1.0f)};
+    V2F_C4F_T2F d = {Vec2(pos.x + radius, pos.y - radius), color, Vec2(1.0f, -1.0f)};
 
     triangles[0] = {a, b, c};
     triangles[1] = {a, c, d};
@@ -1200,8 +1201,8 @@ void DrawNode::_drawCircle(const Vec2& center,
                            bool drawLineToCenter,
                            float scaleX,
                            float scaleY,
-                           const Color4B& borderColor,
-                           const Color4B& fillColor,
+                           const Color& borderColor,
+                           const Color& fillColor,
                            bool solid,
                            float thickness)
 {
@@ -1248,8 +1249,8 @@ void DrawNode::_drawColoredTriangle(Vec2* vertices3,
 
 
 void DrawNode::_drawTriangle(Vec2* vertices3,
-                             const Color4B& borderColor,
-                             const Color4B& fillColor,
+                             const Color& borderColor,
+                             const Color& fillColor,
                              bool solid,
                              float thickness)
 {
@@ -1263,7 +1264,7 @@ void DrawNode::_drawTriangle(Vec2* vertices3,
     {
         applyTransform(vertices3, vertices3, vertex_count);
 
-        auto triangles = reinterpret_cast<V2F_C4B_T2F_Triangle*>(expandBufferAndGetPointer(_triangles, vertex_count));
+        auto triangles = reinterpret_cast<V2F_C4F_T2F_Triangle*>(expandBufferAndGetPointer(_triangles, vertex_count));
         _trianglesDirty = true;
 
         triangles[0] = {{vertices3[0], fillColor, Vec2::ZERO},
@@ -1276,8 +1277,8 @@ void DrawNode::_drawAStar(const Vec2& center,
                           float radiusI,  // inner
                           float radiusO,  // outer
                           unsigned int segments,
-                          const Color4B& color,
-                          const Color4B& filledColor,
+                          const Color& color,
+                          const Color& filledColor,
                           float thickness,
                           bool solid)
 {
@@ -1308,7 +1309,7 @@ void DrawNode::_drawAStar(const Vec2& center,
 void DrawNode::_drawPoints(const Vec2* position,
                            unsigned int numberOfPoints,
                            const float pointSize,
-                           const Color4B& color,
+                           const Color& color,
                            const DrawNode::PointType pointType)
 {
     if (properties.drawOrder == true)
@@ -1321,7 +1322,7 @@ void DrawNode::_drawPoints(const Vec2* position,
             {
             case PointType::Circle:
             {
-                _drawCircle(position[i], pointSize4, 90, 32, false, 1.0f, 1.0f, Color4B(), color, true);
+                _drawCircle(position[i], pointSize4, 90, 32, false, 1.0f, 1.0f, Color(), color, true);
                 break;
             }
             case PointType::Rect:
@@ -1351,7 +1352,7 @@ void DrawNode::_drawPoints(const Vec2* position,
 
 void DrawNode::_drawPoint(const Vec2& position,
                           const float pointSize,
-                          const Color4B& color,
+                          const Color& color,
                           const DrawNode::PointType pointType)
 {
     if (properties.drawOrder == true)
@@ -1363,7 +1364,7 @@ void DrawNode::_drawPoint(const Vec2& position,
         {
         case PointType::Circle:
         {
-            _drawCircle(position, pointSize4, 90, 32, false, 1.0f, 1.0f, Color4B(), color, true);
+            _drawCircle(position, pointSize4, 90, 32, false, 1.0f, 1.0f, Color(), color, true);
             break;
         }
         case PointType::Rect:
@@ -1406,8 +1407,8 @@ void DrawNode::_drawPie(const Vec2& center,
                         int endAngle,
                         float scaleX,
                         float scaleY,
-                        const Color4B& fillColor,
-                        const Color4B& borderColor,
+                        const Color& fillColor,
+                        const Color& borderColor,
                         DrawMode drawMode,
                         float thickness)
 {
@@ -1426,11 +1427,11 @@ void DrawNode::_drawPie(const Vec2& center,
             _drawCircle(center, radius, 0.0f, 360, false, scaleX, scaleY, borderColor, fillColor, true, thickness);
             break;
         case DrawMode::Outline:
-            _drawCircle(center, radius, 0.0f, 360, false, scaleX, scaleY, borderColor, Color4B::TRANSPARENT, true,
+            _drawCircle(center, radius, 0.0f, 360, false, scaleX, scaleY, borderColor, Color::TRANSPARENT, true,
                         thickness);
             break;
         case DrawMode::Line:
-            _drawCircle(center, radius, 0.0f, 360, false, scaleX, scaleY, borderColor, Color4B::TRANSPARENT, true,
+            _drawCircle(center, radius, 0.0f, 360, false, scaleX, scaleY, borderColor, Color::TRANSPARENT, true,
                         thickness);
             break;
         case DrawMode::Semi:
@@ -1475,7 +1476,7 @@ void DrawNode::_drawPie(const Vec2& center,
         case DrawMode::Fill:
             _vertices[n++] = center;
             _vertices[n++] = _vertices[0];
-            _drawPolygon(_vertices.data(), n, fillColor, Color4B::TRANSPARENT, true, 0, false);
+            _drawPolygon(_vertices.data(), n, fillColor, Color::TRANSPARENT, true, 0, false);
             _drawPoly(_vertices.data(), n, false, borderColor, thickness, true);
             break;
         case DrawMode::Outline:
@@ -1487,7 +1488,7 @@ void DrawNode::_drawPie(const Vec2& center,
             _drawPoly(_vertices.data(), n,  false, borderColor, thickness, true);
             break;
         case DrawMode::Semi:
-            if (fillColor != Color4B::TRANSPARENT)
+            if (fillColor != Color::TRANSPARENT)
                 _drawPolygon(_vertices.data(), n, fillColor, borderColor, true, 0, false);
             _drawPoly(_vertices.data(), n, true, borderColor, thickness, true);
             break;
