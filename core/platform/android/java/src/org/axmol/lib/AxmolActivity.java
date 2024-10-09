@@ -59,6 +59,7 @@ public abstract class AxmolActivity extends Activity implements AxmolEngineListe
     // ===========================================================
 
     private final static String TAG = AxmolActivity.class.getSimpleName();
+    private static int startCount = 0;
 
     // ===========================================================
     // Fields
@@ -81,6 +82,10 @@ public abstract class AxmolActivity extends Activity implements AxmolEngineListe
 
     public static Context getContext() {
         return sContext;
+    }
+
+    public static int startCount() {
+        return startCount;
     }
 
     public void setKeepScreenOn(boolean value) {
@@ -152,6 +157,8 @@ public abstract class AxmolActivity extends Activity implements AxmolEngineListe
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        startCount++;
 
         // Workaround in https://stackoverflow.com/questions/16283079/re-launch-of-activity-on-home-button-but-only-the-first-time/16447508
         if (!isTaskRoot()) {

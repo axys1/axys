@@ -124,6 +124,13 @@ JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolRenderer_nativeOnContextLost(JNIE
 #endif
 }
 
+JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolRenderer_nativeOnColdStart(JNIEnv*, jclass)
+{
+    auto director = ax::Director::getInstance();
+    ax::EventCustom coldStartEvent(EVENT_APP_COLD_START);
+    director->getEventDispatcher()->dispatchEvent(&coldStartEvent, true);
+}
+
 JNIEXPORT jintArray JNICALL Java_org_axmol_lib_AxmolActivity_getGLContextAttrs(JNIEnv* env, jclass)
 {
     ax::Application::getInstance()->initGLContextAttrs();

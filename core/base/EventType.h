@@ -52,6 +52,11 @@
 // This message is posted in core/platform/android/javaactivity.cpp
 #define EVENT_APP_RESTARTING "event_app_restarting"
 
+// The application has restarted after cold start.
+// This message is used for notifying application code of a cold restart.
+// This message is posted in core/platform/android/javaactivity.cpp
+#define EVENT_APP_COLD_START "event_app_cold_start"
+
 
 /// @endcond
 #endif  // __CCEVENT_TYPE_H__

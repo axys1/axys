@@ -49,6 +49,7 @@ public class AxmolRenderer implements GLSurfaceView.Renderer {
     private int mScreenHeight;
     private boolean mNativeInitCompleted = false;
     private boolean mIsPaused = false;
+    private boolean mNextResumeAfterColdStart = false;
 
     // ===========================================================
     // Constructors
@@ -76,11 +77,18 @@ public class AxmolRenderer implements GLSurfaceView.Renderer {
         AxmolRenderer.nativeInit(this.mScreenWidth, this.mScreenHeight);
         this.mLastTickInNanoSeconds = System.nanoTime();
 
+        boolean coldStart = AxmolActivity.startCount() > 1;
+
         if (mNativeInitCompleted) {
             // This must be from an OpenGL context loss
             nativeOnContextLost();
         } else {
             mNativeInitCompleted = true;
+            if(coldStart) {
+                mNextResumeAfterColdStart = true;
+                nativeOnContextLost();
+                nativeOnColdStart();
+            }
         }
     }
 
@@ -128,6 +136,7 @@ public class AxmolRenderer implements GLSurfaceView.Renderer {
     private static native void nativeOnSurfaceChanged(final int width, final int height);
     private static native void nativeOnPause();
     private static native void nativeOnResume();
+    private static native void nativeOnColdStart();
 
     public void handleActionDown(final int id, final float x, final float y) {
         AxmolRenderer.nativeTouchesBegin(id, x, y);
@@ -168,9 +177,10 @@ public class AxmolRenderer implements GLSurfaceView.Renderer {
     }
 
     public void handleOnResume() {
-        if (mIsPaused) {
+        if (mIsPaused || mNextResumeAfterColdStart) {
             AxmolRenderer.nativeOnResume();
             mIsPaused = false;
+            mNextResumeAfterColdStart = false;
         }
     }
 
