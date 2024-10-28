@@ -992,7 +992,7 @@ void DrawNode::_drawPolygon(const Vec2* verts,
                 extrude[i]  = {offset, n2};
             }
 
-            for (unsigned int i = 0; i < count-1; i++)
+            for (unsigned int i = 0; i < count; i++)
             {
                 int j   = (i + 1) % count;
                 Vec2 v0 = _vertices[i];
@@ -1461,18 +1461,21 @@ void DrawNode::_drawPie(const Vec2& center,
         case DrawMode::Fill:
             _vertices[n++] = center;
             _vertices[n++] = _vertices[0];
-            _drawPolygon(_vertices.data(), n, fillColor, borderColor, true, thickness, false);
+            _drawPolygon(_vertices.data(), n, fillColor, Color4B::TRANSPARENT, true, 0, false);
+            _drawPoly(_vertices.data(), n, false, borderColor, thickness, true);
             break;
         case DrawMode::Outline:
             _vertices[n++] = center;
             _vertices[n++] = _vertices[0];
-            _drawPolygon(_vertices.data(), n, Color4B::TRANSPARENT, borderColor, false, thickness, false);
+            _drawPoly(_vertices.data(), n, false, borderColor, thickness, true);
             break;
         case DrawMode::Line:
-            _drawPolygon(_vertices.data(), n - 1, Color4B::TRANSPARENT, borderColor, false, thickness, false);
+            _drawPoly(_vertices.data(), n,  false, borderColor, thickness, true);
             break;
         case DrawMode::Semi:
-            _drawPolygon(_vertices.data(), n - 1, fillColor, borderColor, true, thickness, false);
+            if (fillColor != Color4B::TRANSPARENT)
+                _drawPolygon(_vertices.data(), n, fillColor, borderColor, true, 0, false);
+            _drawPoly(_vertices.data(), n, true, borderColor, thickness, true);
             break;
         default:
             break;
