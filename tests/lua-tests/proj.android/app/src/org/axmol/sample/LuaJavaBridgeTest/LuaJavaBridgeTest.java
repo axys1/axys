@@ -27,13 +27,13 @@ package org.axmol.sample.LuaJavaBridgeTest;
 import org.axmol.lib.LuaBridge;
 
 public class LuaJavaBridgeTest
-{	
+{
 	public static int addTwoNumbers(final int num1,final int num2){
 		return num1 + num2;
 	}
-	
+
 	public static void callbackLua(final String tipInfo,final int luaFunc){
-		Cocos2dxLuaJavaBridge.callLuaFunctionWithString(luaFunc, "success");
-		Cocos2dxLuaJavaBridge.releaseLuaFunction(luaFunc);
+        LuaBridge.callLuaFunctionWithString(luaFunc, "success");
+        LuaBridge.releaseLuaFunction(luaFunc);
 	}
 }

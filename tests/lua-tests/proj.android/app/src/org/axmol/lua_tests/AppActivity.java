@@ -49,15 +49,15 @@ public class AppActivity extends AxmolActivity{
             return;
         }
         // DO OTHER INITIALIZATION BELOW
-        
+
     }
 
     @Override
-    public Cocos2dxGLSurfaceView onCreateView() {
-        Cocos2dxGLSurfaceView glSurfaceView = new Cocos2dxGLSurfaceView(this);
+    public AxmolGLSurfaceView onCreateView() {
+        AxmolGLSurfaceView glSurfaceView = new AxmolGLSurfaceView(this);
         // Tests should create stencil buffer
         glSurfaceView.setEGLConfigChooser(5, 6, 5, 0, 16, 8);
-        
+
         return glSurfaceView;
     }
 }
