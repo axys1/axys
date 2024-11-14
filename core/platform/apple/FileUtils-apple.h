@@ -65,9 +65,11 @@ public:
     virtual std::string getPathForDirectory(std::string_view dir,
                                             std::string_view searchPath) const override;
 
-private:
-    virtual bool isFileExistInternal(std::string_view filePath) const override;
-    virtual bool removeDirectory(std::string_view dirPath) const override;
+    protected:
+        virtual bool isFileExistInternal(std::string_view filePath) const override;
+
+    private:
+        virtual bool removeDirectory(std::string_view dirPath) const override;
 
     struct IMPL;
     std::unique_ptr<IMPL> pimpl_;
