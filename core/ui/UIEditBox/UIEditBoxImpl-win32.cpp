@@ -73,6 +73,7 @@ EditBoxImpl* __createSystemEditBox(EditBox* pEditBox)
 
 EditBoxImplWin::EditBoxImplWin(EditBox* pEditText)
     : EditBoxImplCommon(pEditText)
+    , _hotKeyIdCtrlA(0)
     , _hwndEdit(NULL)
     , _changedTextManually(false)
     , _hasFocus(false)
@@ -100,6 +101,10 @@ void EditBoxImplWin::cleanupEditCtrl()
 {
     if (_hwndEdit)
     {
+        UnregisterHotKey(_hwndEdit, _hotKeyIdCtrlA);
+        GlobalDeleteAtom(_hotKeyIdCtrlA);
+        _hotKeyIdCtrlA = 0;
+
         SetWindowLongPtrW(_hwndEdit, GWLP_WNDPROC, (LONG_PTR)_prevWndProc);
         ::DestroyWindow(_hwndEdit);
         _hasFocus            = false;
@@ -132,6 +137,9 @@ void EditBoxImplWin::createEditCtrl(bool singleLine)
         s_previousFocusWnd = s_hwndCocos;
         this->setNativeFont(this->getNativeDefaultFontName(), this->_fontSize);
         this->setNativeText(this->_text.c_str());
+
+        _hotKeyIdCtrlA = GlobalAddAtom(L"CTRL+A");
+        RegisterHotKey(_hwndEdit, _hotKeyIdCtrlA, MOD_CONTROL | MOD_NOREPEAT, 'A');
     }
 }
 
@@ -359,6 +367,12 @@ void EditBoxImplWin::_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
         if (this->_editingMode && !::IsWindowVisible(hwnd))
         {
             this->editBoxEditingDidEnd(this->getText(), _endAction);
+        }
+        break;
+    case WM_HOTKEY:
+        if (wParam == (WPARAM)_hotKeyIdCtrlA)
+        {
+            ::SendMessageW(_hwndEdit, EM_SETSEL, 0, -1);
         }
         break;
     default:

@@ -73,6 +73,8 @@ private:
     void _WindowProc(HWND, UINT, WPARAM, LPARAM);
 
     WNDPROC _prevWndProc;
+    ATOM _hotKeyIdCtrlA;
+
     static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
     static LRESULT CALLBACK hookGLFWWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
