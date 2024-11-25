@@ -53,7 +53,7 @@ WNDPROC EditBoxImplWin::s_prevCocosWndProc = 0;
 HINSTANCE EditBoxImplWin::s_hInstance      = 0;
 HWND EditBoxImplWin::s_hwndCocos           = 0;
 ATOM EditBoxImplWin::s_hotKeyIdCtrlA       = 0;
-uint64_t EditBoxImplWin::s_editBoxCount    = 0;
+int EditBoxImplWin::s_editBoxCount         = 0;
 bool EditBoxImplWin::s_editBoxFocused      = false;
 
 void EditBoxImplWin::lazyInit()
@@ -67,9 +67,6 @@ void EditBoxImplWin::lazyInit()
     s_hInstance = ::GetModuleHandleW(nullptr);
 
     s_prevCocosWndProc = (WNDPROC)SetWindowLongPtrW(s_hwndCocos, GWLP_WNDPROC, (LONG_PTR)hookGLFWWindowProc);
-
-    s_hotKeyIdCtrlA = GlobalAddAtom(L"CTRL+A");
-    RegisterHotKey(s_hwndCocos, s_hotKeyIdCtrlA, MOD_CONTROL | MOD_NOREPEAT, 'A');
 }
 
 EditBoxImpl* __createSystemEditBox(EditBox* pEditBox)
@@ -79,10 +76,11 @@ EditBoxImpl* __createSystemEditBox(EditBox* pEditBox)
 
 EditBoxImplWin::EditBoxImplWin(EditBox* pEditText)
     : EditBoxImplCommon(pEditText)
-    , _hwndEdit(NULL)
-    , _changedTextManually(false)
-    , _hasFocus(false)
-    , _endAction(EditBoxDelegate::EditBoxEndAction::UNKNOWN)
+      , _prevWndProc(NULL)
+      , _hwndEdit(NULL)
+      , _changedTextManually(false)
+      , _hasFocus(false)
+      , _endAction(EditBoxDelegate::EditBoxEndAction::UNKNOWN)
 {
     if (!s_isInitialized)
     {
@@ -90,6 +88,12 @@ EditBoxImplWin::EditBoxImplWin(EditBox* pEditText)
     }
 
     s_editboxChildID++;
+
+    if (s_hotKeyIdCtrlA == 0)
+    {
+        s_hotKeyIdCtrlA = GlobalAddAtom(L"CTRL+A");
+        RegisterHotKey(s_hwndCocos, s_hotKeyIdCtrlA, MOD_CONTROL | MOD_NOREPEAT, 'A');
+    }
 }
 
 EditBoxImplWin::~EditBoxImplWin()
@@ -113,6 +117,13 @@ void EditBoxImplWin::cleanupEditCtrl()
         _editingMode         = false;
         _hwndEdit            = NULL;
         --s_editBoxCount;
+
+        if (s_editBoxCount == 0)
+        {
+            UnregisterHotKey(_hwndEdit, s_hotKeyIdCtrlA);
+            GlobalDeleteAtom(s_hotKeyIdCtrlA);
+            s_hotKeyIdCtrlA = 0;
+        }
     }
 }
 

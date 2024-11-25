@@ -89,7 +89,7 @@ private:
     static bool s_isInitialized;
     static HMENU s_editboxChildID;
     static ATOM s_hotKeyIdCtrlA;
-    static uint64_t s_editBoxCount;
+    static int s_editBoxCount;
     static bool s_editBoxFocused;
     static void lazyInit();
 };
