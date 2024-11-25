@@ -76,11 +76,11 @@ EditBoxImpl* __createSystemEditBox(EditBox* pEditBox)
 
 EditBoxImplWin::EditBoxImplWin(EditBox* pEditText)
     : EditBoxImplCommon(pEditText)
-      , _prevWndProc(NULL)
-      , _hwndEdit(NULL)
-      , _changedTextManually(false)
-      , _hasFocus(false)
-      , _endAction(EditBoxDelegate::EditBoxEndAction::UNKNOWN)
+    , _prevWndProc(NULL)
+    , _hwndEdit(NULL)
+    , _changedTextManually(false)
+    , _hasFocus(false)
+    , _endAction(EditBoxDelegate::EditBoxEndAction::UNKNOWN)
 {
     if (!s_isInitialized)
     {
