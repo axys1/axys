@@ -73,7 +73,6 @@ private:
     void _WindowProc(HWND, UINT, WPARAM, LPARAM);
 
     WNDPROC _prevWndProc;
-    ATOM _hotKeyIdCtrlA;
 
     static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
     static LRESULT CALLBACK hookGLFWWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -89,6 +88,9 @@ private:
     static HWND s_previousFocusWnd;
     static bool s_isInitialized;
     static HMENU s_editboxChildID;
+    static ATOM s_hotKeyIdCtrlA;
+    static uint64_t s_editBoxCount;
+    static bool s_editBoxFocused;
     static void lazyInit();
 };
 
