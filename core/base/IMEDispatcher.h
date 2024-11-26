@@ -65,7 +65,7 @@ public:
      * @brief Dispatches the delete-backward operation.
      * @lua NA
      */
-    void dispatchDeleteBackward();
+    void dispatchDeleteBackward(int numChars);
 
     /**
      * @brief Dispatches the press control key operation.

@@ -458,11 +458,11 @@ public class AxmolGLSurfaceView extends GLSurfaceView {
         });
     }
 
-    public void deleteBackward() {
+    public void deleteBackward(int numChars) {
         this.queueEvent(new Runnable() {
             @Override
             public void run() {
-                AxmolGLSurfaceView.this.mRenderer.handleDeleteBackward();
+                AxmolGLSurfaceView.this.mRenderer.handleDeleteBackward(numChars);
             }
         });
     }

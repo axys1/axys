@@ -222,7 +222,7 @@ void IMEDispatcher::dispatchInsertText(const char* text, size_t len)
     } while (0);
 }
 
-void IMEDispatcher::dispatchDeleteBackward()
+void IMEDispatcher::dispatchDeleteBackward(int numChars)
 {
     do
     {
@@ -231,7 +231,7 @@ void IMEDispatcher::dispatchDeleteBackward()
         // there is no delegate attached to IME
         AX_BREAK_IF(!_impl->_delegateWithIme);
 
-        _impl->_delegateWithIme->deleteBackward();
+        _impl->_delegateWithIme->deleteBackward(numChars);
     } while (0);
 }
 

@@ -261,7 +261,7 @@ protected:
     virtual void didAttachWithIME() override;
     virtual void didDetachWithIME() override;
     virtual void insertText(const char* text, size_t len) override;
-    virtual void deleteBackward() override;
+    virtual void deleteBackward(size_t numChars) override;
     virtual std::string_view getContentText() override;
     virtual void controlKey(EventKeyboard::KeyCode keyCode) override;
 
