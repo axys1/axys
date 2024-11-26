@@ -91,7 +91,6 @@ public class TextInputWrapper implements TextWatcher, OnEditorActionListener {
         }
 
         if (old_i < this.mText.length()) {
-            Log.i(TAG, String.format("this.mText.length() - old_i = %d", this.mText.length() - old_i));
             this.mGLSurfaceView.deleteBackward(this.mText.length() - old_i);
         }
 
@@ -120,7 +119,6 @@ public class TextInputWrapper implements TextWatcher, OnEditorActionListener {
             // user press the action button, delete all old text and insert new text
             if (null != mOriginText) {
                 if (!this.mOriginText.isEmpty()) {
-                    Log.i(TAG, String.format("this.mOriginText.length() = %d", this.mOriginText.length()));
                     this.mGLSurfaceView.deleteBackward(this.mOriginText.length());
                 }
             }
