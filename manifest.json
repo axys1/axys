@@ -1,6 +1,6 @@
 {
   "versions": {
-    "1kdist": "v93",
+    "1kdist": "v95",
     "oboe": "1.9.0",
     "kcp": "v1.7-f2aa30e",
     "lz4": "v1.10.0",
@@ -9,6 +9,7 @@
   },
   "mirrors": {
     "github": {
+      "host": "github.com",
       "1kdist": "simdsoft/1kiss/releases/download",
       "oboe": "google/oboe.git",
       "kcp": "skywind3000/kcp.git",
@@ -19,6 +20,7 @@
     },
     "gitee":
     {
+      "host": "gitee.com",
       "1kdist": "simdsoft/1kiss/releases/download",
       "oboe": "simdsoft/oboe.git",
       "kcp": "simdsoft/kcp.git",

@@ -194,7 +194,9 @@ $1k = [_1kiss]::new()
 # *              : any
 # x.y.z~x2.y2.z2 : range
 $manifest = @{
-    msvc         = '14.39+'; # cl.exe @link.exe 14.39 VS2022 17.9.x
+    # cl.exe @link.exe 14.39 VS2022 17.9.x
+    # exactly match format: '14.42.*'
+    msvc         = '14.39+';
     vs           = '12.0+';
     ndk          = 'r23c';
     xcode        = '13.0.0+'; # range
@@ -203,7 +205,7 @@ $manifest = @{
     # clang-cl msvc14.40 require 17.0.0+
     llvm         = '17.0.6+'; 
     gcc          = '9.0.0+';
-    cmake        = '3.23.0+';
+    cmake        = '3.23.0~3.31.1+';
     ninja        = '1.10.0+';
     python       = '3.8.0+';
     jdk          = '17.0.10+'; # jdk17+ works for android cmdlinetools 7.0+
@@ -458,19 +460,24 @@ if ($1k.isfile($manifest_file)) {
 # 1kdist
 $sentry_file = Join-Path $myRoot '.gitee'
 $mirror = if ($1k.isfile($sentry_file)) { 'gitee' } else { 'github' }
-$mirror_url_base = @{'github' = 'https://github.com/'; 'gitee' = 'https://gitee.com/' }[$mirror]
-$1kdist_url_base = $mirror_url_base
 $mirror_conf_file = $1k.realpath("$myRoot/../manifest.json")
 $mirror_current = $null
 $devtools_url_base = $null
 $1kdist_ver = $null
+
 if ($1k.isfile($mirror_conf_file)) {
     $mirror_conf = ConvertFrom-Json (Get-Content $mirror_conf_file -raw)
     $mirror_current = $mirror_conf.mirrors.$mirror
+    $mirror_url_base = "https://$($mirror_current.host)/"
+    $1kdist_url_base = $mirror_url_base
+
     $1kdist_url_base += $mirror_current.'1kdist'
     $devtools_url_base += "$1kdist_url_base/devtools"
     $1kdist_ver = $mirror_conf.versions.'1kdist'
     $1kdist_url_base += "/$1kdist_ver"
+} else {
+    $mirror_url_base = 'https://github.com/'
+    $1kdist_url_base = $mirror_url_base
 }
 
 function 1kdist_url($filename) {
@@ -773,8 +780,9 @@ function find_vs() {
         $required_vs_ver = $manifest['vs']
         if (!$required_vs_ver) { $required_vs_ver = '12.0+' }
         
-        $require_comps = @('Microsoft.Component.MSBuild', 'Microsoft.VisualStudio.Component.VC.Tools.x86.x64')
-        $vs_installs = ConvertFrom-Json "$(&$VSWHERE_EXE -version $required_vs_ver.TrimEnd('+') -format 'json' -requires $require_comps)"
+        # refer: https://learn.microsoft.com/en-us/visualstudio/install/workload-and-component-ids?view=vs-2022
+        $require_comps = @('Microsoft.VisualStudio.Component.VC.Tools.x86.x64', 'Microsoft.VisualStudio.Product.BuildTools')
+        $vs_installs = ConvertFrom-Json "$(&$VSWHERE_EXE -version $required_vs_ver.TrimEnd('+') -format 'json' -requires $require_comps -requiresAny)"
         $ErrorActionPreference = $eap
 
         if ($vs_installs) {
@@ -789,7 +797,7 @@ function find_vs() {
             }
             $Global:VS_INST = $vs_inst_latest
         } else {
-            throw "No suitable visual studio installed, required: $required_vs_ver"
+            Write-Warning "Visual studio not found, your build may not work, required: $required_vs_ver"
         }
     }
 }
@@ -1275,16 +1283,19 @@ function setup_msvc() {
     if (!$cl_prog) {
         if ($Global:VS_INST) {
             $vs_path = $Global:VS_INST.installationPath
-            Import-Module "$vs_path\Common7\Tools\Microsoft.VisualStudio.DevShell.dll"
             $dev_cmd_args = "-arch=$target_cpu -host_arch=x64 -no_logo"
+
+            # if explicit version specified, use it
             if (!$manifest['msvc'].EndsWith('+')) { $dev_cmd_args += " -vcvars_ver=$cl_ver" }
+
+            Import-Module "$vs_path\Common7\Tools\Microsoft.VisualStudio.DevShell.dll"
             Enter-VsDevShell -VsInstanceId $Global:VS_INST.instanceId -SkipAutomaticLocation -DevCmdArguments $dev_cmd_args
 
             $cl_prog, $cl_ver = find_prog -name 'msvc' -cmd 'cl' -silent $true -usefv $true
             $1k.println("Using msvc: $cl_prog, version: $cl_ver")
         }
         else {
-            throw "Visual Studio not installed!"
+            Write-Warning "MSVC not found, your build may not work, required: $cl_ver"
         }
     }
 
