@@ -445,6 +445,100 @@ int lua_ax_video_MediaPlayer_play(lua_State* tolua_S)
 
     return 0;
 }
+int lua_ax_video_MediaPlayer_pausePlayback(lua_State* tolua_S)
+{
+    int argc = 0;
+    ax::ui::MediaPlayer* cobj = nullptr;
+    bool ok  = true;
+
+#if _AX_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if _AX_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"axui.MediaPlayer",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (ax::ui::MediaPlayer*)tolua_tousertype(tolua_S,1,0);
+
+#if _AX_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_ax_video_MediaPlayer_pausePlayback'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 0) 
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_video_MediaPlayer_pausePlayback'", nullptr);
+            return 0;
+        }
+        cobj->pausePlayback();
+        lua_settop(tolua_S, 1);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "axui.MediaPlayer:pausePlayback",argc, 0);
+    return 0;
+
+#if _AX_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_ax_video_MediaPlayer_pausePlayback'.",&tolua_err);
+#endif
+
+    return 0;
+}
+int lua_ax_video_MediaPlayer_resumePlayback(lua_State* tolua_S)
+{
+    int argc = 0;
+    ax::ui::MediaPlayer* cobj = nullptr;
+    bool ok  = true;
+
+#if _AX_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if _AX_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"axui.MediaPlayer",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (ax::ui::MediaPlayer*)tolua_tousertype(tolua_S,1,0);
+
+#if _AX_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_ax_video_MediaPlayer_resumePlayback'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 0) 
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_video_MediaPlayer_resumePlayback'", nullptr);
+            return 0;
+        }
+        cobj->resumePlayback();
+        lua_settop(tolua_S, 1);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "axui.MediaPlayer:resumePlayback",argc, 0);
+    return 0;
+
+#if _AX_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_ax_video_MediaPlayer_resumePlayback'.",&tolua_err);
+#endif
+
+    return 0;
+}
 int lua_ax_video_MediaPlayer_stop(lua_State* tolua_S)
 {
     int argc = 0;
@@ -1258,6 +1352,8 @@ int lua_register_ax_video_MediaPlayer(lua_State* tolua_S)
         tolua_function(tolua_S,"setStyle",lua_ax_video_MediaPlayer_setStyle);
         tolua_function(tolua_S,"setPlayRate",lua_ax_video_MediaPlayer_setPlayRate);
         tolua_function(tolua_S,"play",lua_ax_video_MediaPlayer_play);
+        tolua_function(tolua_S,"pausePlayback",lua_ax_video_MediaPlayer_pausePlayback);
+        tolua_function(tolua_S,"resumePlayback",lua_ax_video_MediaPlayer_resumePlayback);
         tolua_function(tolua_S,"stop",lua_ax_video_MediaPlayer_stop);
         tolua_function(tolua_S,"seekTo",lua_ax_video_MediaPlayer_seekTo);
         tolua_function(tolua_S,"getCurrentTime",lua_ax_video_MediaPlayer_getCurrentTime);
