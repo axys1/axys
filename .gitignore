@@ -225,6 +225,8 @@ tests/cpp-tests/Content
 tests/fairygui-tests/Content
 tests/live2d-tests/Content
 tests/unit-tests/Content
+tests/*-tests/build
+tests/*-tests/build_*
 *.patch
 
 /cache

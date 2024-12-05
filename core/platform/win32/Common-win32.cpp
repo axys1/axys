@@ -2,6 +2,7 @@
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2013-2016 Chukong Technologies Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
 
 https://axmol.dev/
 
@@ -36,7 +37,7 @@ void messageBox(const char* pszMsg, const char* pszTitle)
 {
     std::wstring wsMsg   = ntcvt::from_chars(pszMsg);
     std::wstring wsTitle = ntcvt::from_chars(pszTitle);
-    MessageBoxW(nullptr, wsMsg.c_str(), wsTitle.c_str(), MB_OK);
+    MessageBoxW(nullptr, wsMsg.c_str(), wsTitle.c_str(), MB_OK | MB_TOPMOST);
 }
 
 }

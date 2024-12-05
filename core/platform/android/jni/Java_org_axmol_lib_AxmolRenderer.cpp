@@ -70,9 +70,9 @@ JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolRenderer_nativeInsertText(JNIEnv*
     ax::IMEDispatcher::sharedDispatcher()->dispatchInsertText(pszText, strlen(pszText));
 }
 
-JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolRenderer_nativeDeleteBackward(JNIEnv*, jclass)
+JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolRenderer_nativeDeleteBackward(JNIEnv*, jclass, jint numChars)
 {
-    ax::IMEDispatcher::sharedDispatcher()->dispatchDeleteBackward();
+    ax::IMEDispatcher::sharedDispatcher()->dispatchDeleteBackward(numChars);
 }
 
 JNIEXPORT jstring JNICALL Java_org_axmol_lib_AxmolRenderer_nativeGetContentText(JNIEnv* env, jclass)

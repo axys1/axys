@@ -6,7 +6,7 @@
 
 ## astcenc
 - [![Upstream](https://img.shields.io/github/v/release/ARM-software/astc-encoder?label=Upstream)](https://github.com/ARM-software/astc-encoder)
-- Version: 4.8.0
+- Version: 5.1.0
 - License: Apache-2.0
 
 ## Box2D
@@ -22,7 +22,7 @@
 
 ## c-ares
 - [![Upstream](https://img.shields.io/github/v/release/c-ares/c-ares?label=Upstream)](https://github.com/c-ares/c-ares)
-- Version: 1.33.1
+- Version: 1.34.3
 - License: MIT
 
 ## Chipmunk2D
@@ -47,7 +47,7 @@
 
 ## curl
 - [![Upstream](https://img.shields.io/github/v/release/curl/curl?label=Upstream)](https://github.com/curl/curl)
-- Version: 8.10.1
+- Version: 8.11.0
 - License: Curl (MIT/X)
 
 ## doctest
@@ -68,6 +68,7 @@
 ## {fmt}
 - [![Upstream](https://img.shields.io/github/v/release/fmtlib/fmt?label=Upstream)](https://github.com/fmtlib/fmt)
 - Version: 11.0.2
+
 - License: MIT
 
 ## FreeType
@@ -123,7 +124,7 @@
 
 - luajit
   - Upstream: https://github.com/LuaJIT/LuaJIT
-  - Version: 2.1-87ae18a
+  - Version: 2.1-fe71d0f
   - License: MIT
 
 - tolua

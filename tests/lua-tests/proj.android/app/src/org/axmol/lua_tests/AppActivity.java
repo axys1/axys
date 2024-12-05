@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2015-2016 Chukong Technologies Inc.
  Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2019-present Axmol Engine contributors (see AUTHORS.md).
 
  https://axmol.dev/
 
@@ -49,15 +50,15 @@ public class AppActivity extends AxmolActivity{
             return;
         }
         // DO OTHER INITIALIZATION BELOW
-        
+
     }
 
     @Override
-    public Cocos2dxGLSurfaceView onCreateView() {
-        Cocos2dxGLSurfaceView glSurfaceView = new Cocos2dxGLSurfaceView(this);
+    public AxmolGLSurfaceView onCreateView() {
+        AxmolGLSurfaceView glSurfaceView = new AxmolGLSurfaceView(this);
         // Tests should create stencil buffer
         glSurfaceView.setEGLConfigChooser(5, 6, 5, 0, 16, 8);
-        
+
         return glSurfaceView;
     }
 }

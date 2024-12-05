@@ -90,8 +90,8 @@ public class TextInputWrapper implements TextWatcher, OnEditorActionListener {
             new_i += 1;
         }
 
-        for (; old_i < this.mText.length(); ++old_i) {
-            this.mGLSurfaceView.deleteBackward();
+        if (old_i < this.mText.length()) {
+            this.mGLSurfaceView.deleteBackward(this.mText.length() - old_i);
         }
 
         int nModified = s.length() - new_i;
@@ -118,13 +118,13 @@ public class TextInputWrapper implements TextWatcher, OnEditorActionListener {
         if (this.mGLSurfaceView.getEditText() == pTextView && this.isFullScreenEdit()) {
             // user press the action button, delete all old text and insert new text
             if (null != mOriginText) {
-                for (int i = this.mOriginText.length(); i > 0; i--) {
-                    this.mGLSurfaceView.deleteBackward();
+                if (!this.mOriginText.isEmpty()) {
+                    this.mGLSurfaceView.deleteBackward(this.mOriginText.length());
                 }
             }
-            
+
             String text = pTextView.getText().toString();
-            
+
             if (text != null) {
                 /* If user input nothing, translate "\n" to engine. */
                 if ( text.compareTo("") == 0) {
@@ -135,12 +135,12 @@ public class TextInputWrapper implements TextWatcher, OnEditorActionListener {
                     text += '\n';
                 }
             }
-            
+
             final String insertText = text;
             this.mGLSurfaceView.insertText(insertText);
 
         }
-        
+
         if (pActionID == EditorInfo.IME_ACTION_DONE) {
             this.mGLSurfaceView.requestFocus();
         }

@@ -46,6 +46,7 @@ function(ax_link_cxx_prebuilt APP_NAME AX_ROOT_DIR AX_PREBUILT_DIR)
 
     # compile defines can't inherit when link prebuits, so need add manually
     target_compile_definitions(${APP_NAME}
+        PRIVATE YASIO_SSL_BACKEND=1
         PRIVATE AX_GLES_PROFILE=${AX_GLES_PROFILE}
         PRIVATE OPENSSL_SUPPRESS_DEPRECATED=1
         PRIVATE NOUNCRYPT=1
@@ -66,7 +67,7 @@ function(ax_link_cxx_prebuilt APP_NAME AX_ROOT_DIR AX_PREBUILT_DIR)
     ax_config_pred(${APP_NAME} AX_ENABLE_CONSOLE)
 
     if (AX_ISA_SIMD MATCHES "sse")
-        target_compile_definitions(${APP_NAME} PRIVATE AX_USE_SSE=1)
+        target_compile_definitions(${APP_NAME} PRIVATE AX_SSE_INTRINSICS=1)
     endif()
 
     if (BUILD_SHARED_LIBS)

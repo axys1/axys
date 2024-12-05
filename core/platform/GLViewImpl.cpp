@@ -1220,7 +1220,7 @@ void GLViewImpl::onGLFWKeyCallback(GLFWwindow* /*window*/, int key, int /*scanco
         switch (g_keyCodeMap[key])
         {
         case EventKeyboard::KeyCode::KEY_BACKSPACE:
-            IMEDispatcher::sharedDispatcher()->dispatchDeleteBackward();
+            IMEDispatcher::sharedDispatcher()->dispatchDeleteBackward(1);
             break;
         case EventKeyboard::KeyCode::KEY_HOME:
         case EventKeyboard::KeyCode::KEY_KP_HOME:

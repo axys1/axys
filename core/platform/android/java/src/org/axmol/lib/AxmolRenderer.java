@@ -176,15 +176,15 @@ public class AxmolRenderer implements GLSurfaceView.Renderer {
     }
 
     private static native void nativeInsertText(final String text);
-    private static native void nativeDeleteBackward();
+    private static native void nativeDeleteBackward(final int numChars);
     private static native String nativeGetContentText();
 
     public void handleInsertText(final String text) {
         AxmolRenderer.nativeInsertText(text);
     }
 
-    public void handleDeleteBackward() {
-        AxmolRenderer.nativeDeleteBackward();
+    public void handleDeleteBackward(final int numChars) {
+        AxmolRenderer.nativeDeleteBackward(numChars);
     }
 
     public String getContentText() {
