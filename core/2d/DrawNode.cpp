@@ -830,7 +830,7 @@ void DrawNode::_drawPolygon(const Vec2* verts,
 
     auto _vertices = _transform(verts, count, closedPolygon);
 
-    axstd::pod_vector<V2F_C4F_T2F_Triangle> triangleList;
+    axstd::pod_vector<V2F_T2F_C4F_Triangle> triangleList;
 
     int vertex_count = 0;
 
@@ -858,7 +858,7 @@ void DrawNode::_drawPolygon(const Vec2* verts,
             p2t::Point* vec2 = t->GetPoint(1);
             p2t::Point* vec3 = t->GetPoint(2);
 
-            V2F_C4F_T2F_Triangle triangle = {
+            V2F_T2F_C4F_Triangle triangle = {
                 {Vec2(vec1->x, vec1->y), Vec2::ZERO, fillColor},
                 {Vec2(vec2->x, vec2->y), Vec2::ZERO, fillColor},
                 {Vec2(vec3->x, vec3->y), Vec2::ZERO, fillColor},
@@ -885,7 +885,7 @@ void DrawNode::_drawPolygon(const Vec2* verts,
 
     vertex_count *= 3;
 
-    auto triangles = reinterpret_cast<V2F_C4F_T2F_Triangle*>(expandBufferAndGetPointer(_triangles, vertex_count));
+    auto triangles = reinterpret_cast<V2F_T2F_C4F_Triangle*>(expandBufferAndGetPointer(_triangles, vertex_count));
     _trianglesDirty = true;
 
     // start drawing...
@@ -1086,7 +1086,7 @@ void DrawNode::_drawSegment(const Vec2& from,
 
         unsigned int vertex_count = 3 * ((etStart != DrawNode::EndType::Butt) ? 2 : 0) + 3 * 2 +
                                     3 * ((etEnd != DrawNode::EndType::Butt) ? 2 : 0);
-        auto triangles = reinterpret_cast<V2F_C4F_T2F_Triangle*>(expandBufferAndGetPointer(_triangles, vertex_count));
+        auto triangles = reinterpret_cast<V2F_T2F_C4F_Triangle*>(expandBufferAndGetPointer(_triangles, vertex_count));
         _trianglesDirty = true;
 
         int ii = 0;
@@ -1182,7 +1182,7 @@ void DrawNode::_drawSegment(const Vec2& from,
 void DrawNode::_drawDot(const Vec2& pos, float radius, const Color& color)
 {
     unsigned int vertex_count = 2 * 3;
-    auto triangles = reinterpret_cast<V2F_C4F_T2F_Triangle*>(expandBufferAndGetPointer(_triangles, vertex_count));
+    auto triangles = reinterpret_cast<V2F_T2F_C4F_Triangle*>(expandBufferAndGetPointer(_triangles, vertex_count));
     _trianglesDirty = true;
 
     V2F_T2F_C4F a = {Vec2(pos.x - radius, pos.y - radius), Vec2(-1.0f, -1.0f), color};
@@ -1264,7 +1264,7 @@ void DrawNode::_drawTriangle(Vec2* vertices3,
     {
         applyTransform(vertices3, vertices3, vertex_count);
 
-        auto triangles = reinterpret_cast<V2F_C4F_T2F_Triangle*>(expandBufferAndGetPointer(_triangles, vertex_count));
+        auto triangles = reinterpret_cast<V2F_T2F_C4F_Triangle*>(expandBufferAndGetPointer(_triangles, vertex_count));
         _trianglesDirty = true;
 
         triangles[0] = {{vertices3[0], Vec2::ZERO, fillColor},
