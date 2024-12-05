@@ -1271,10 +1271,10 @@ void MediaPlayer::pause()
 void MediaPlayer::resume()
 {
     resumePlayback();
-    Widget::pause();
+    Widget::resume();
 }
 
-void MediaPlayer::pausePlayback() 
+void MediaPlayer::pausePlayback()
 {
     if (!_videoURL.empty())
     {
