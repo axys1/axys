@@ -129,7 +129,6 @@ THE SOFTWARE.
 #include "2d/Node.h"
 #include "2d/NodeGrid.h"
 #include "2d/ParticleBatchNode.h"
-#include "2d/ParticleExamples.h"
 #include "2d/ParticleSystem.h"
 #include "2d/ParticleSystemQuad.h"
 #include "2d/ProgressTimer.h"
