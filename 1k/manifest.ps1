@@ -20,7 +20,7 @@ if ($Global:is_axmol_app -or $Global:is_axmol_engine) {
     # - https://developer.android.com/about/versions/15/behavior-changes-all#16-kb
     # - https://developer.android.google.cn/about/versions/15/behavior-changes-all?hl=zh-cn#16-kb
     # r23d rev: 23.3.12186248
-    # $manifest['ndk'] = 'r23d'
+    $manifest['ndk'] = 'r23d'
 }
 
 # android sdk tools
