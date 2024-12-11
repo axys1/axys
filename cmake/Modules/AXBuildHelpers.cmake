@@ -455,6 +455,8 @@ function(ax_setup_app_config app_name)
         if (_win32_console_app)
             set_source_files_properties(proj.win32/main.cpp PROPERTIES COMPILE_DEFINITIONS _CONSOLE=1)
         endif()
+    elseif(ANDROID)
+        target_link_options(${APP_NAME} PRIVATE "${_16KPAGE_SIZE_LD_FLAGS}")
     endif()
     # auto mark code files for IDE when mark app
     if(XCODE OR VS)

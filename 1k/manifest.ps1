@@ -15,6 +15,12 @@ if ($Global:is_axmol_app -or $Global:is_axmol_engine) {
     $manifest['emsdk'] = '3.1.66~3.1.67+'
     $manifest['jdk'] = '17.0.10~17.0.12+'
     $manifest['vs'] = '16.0+'
+
+    # for android 15 16KB page size support, ndk-r23d only available on ci.android.com, refer:
+    # - https://developer.android.com/about/versions/15/behavior-changes-all#16-kb
+    # - https://developer.android.google.cn/about/versions/15/behavior-changes-all?hl=zh-cn#16-kb
+    # r23d rev: 23.3.12186248
+    # $manifest['ndk'] = 'r23d'
 }
 
 # android sdk tools

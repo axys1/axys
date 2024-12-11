@@ -191,6 +191,12 @@ class _1kiss {
         $stringAsStream.Position = 0
         return (Get-FileHash -InputStream $stringAsStream -Algorithm MD5).Hash
     }
+
+    [void] insert([ref]$arr, $item) {
+        if($item -and !$arr.Value.Contains($item)) {
+            $arr.Value += $item
+        }
+    }
 }
 $1k = [_1kiss]::new()
 
@@ -235,6 +241,8 @@ $channels = @{}
 
 # refer to: https://developer.android.com/studio#command-line-tools-only
 $cmdlinetools_rev = '11076708' # 12.0
+
+$ndk_r23d_rev = '12186248'
 
 $android_sdk_tools = @{
     'build-tools' = '34.0.0'
@@ -729,8 +737,10 @@ function download_and_expand($url, $out, $dest) {
 }
 
 function resolve_path ($path) { if ($1k.isabspath($path)) { $path } else { Join-Path $external_prefix $path } }      
-function fetch_pkg($url, $exrep = $null) {
-    $name = Split-Path $url -Leaf
+function fetch_pkg($url, $exrep = $null, $name = $null) {
+    if(!$name) {
+        $name = Split-Path $url.Split('?')[0] -Leaf
+    }
     $out = Join-Path $external_prefix $name
     $dest = $external_prefix
 
@@ -1130,7 +1140,10 @@ function setup_android_sdk() {
 
     $my_sdk_root = Join-Path $external_prefix 'adt/sdk'
 
-    $sdk_dirs = @("$env:ANDROID_HOME", "$env:ANDROID_SDK_ROOT", $my_sdk_root)
+    $sdk_dirs = @()
+    $1k.insert([ref]$sdk_dirs, $env:ANDROID_HOME)
+    $1k.insert([ref]$sdk_dirs, $env:ANDROID_SDK_ROOT)
+    $1k.insert([ref]$sdk_dirs, $my_sdk_root)
 
     $ndk_minor_base = [int][char]'a'
 
@@ -1219,34 +1232,57 @@ function setup_android_sdk() {
         $matchInfos = (exec_prog -prog $sdkmanager_prog -params "--sdk_root=$sdk_root", '--list' | Select-String 'ndk;')
         if ($null -ne $matchInfos -and $matchInfos.Count -gt 0) {
             $1k.println("Not found suitable android ndk, installing ...")
-
-            $ndks = @{}
-            foreach ($matchInfo in $matchInfos) {
-                $fullVer = $matchInfo.Line.Trim().Split(' ')[0] # "ndk;23.2.8568313"
-                $verNums = $fullVer.Split(';')[1].Split('.')
-                $ndkVer = 'r'
-                $ndkVer += $verNums[0]
-
-                $ndk_minor = [int]$verNums[1]
-                if ($ndk_minor -gt 0) {
-                    $ndkVer += [char]($ndk_minor_base + $ndk_minor)
-                }
-                if (!$ndks.Contains($ndkVer)) {
-                    $ndks.Add($ndkVer, $fullVer)
-                }
-            }
-
-            $ndkFullVer = $ndks[$ndk_ver]
-
-            ((1..10 | ForEach-Object { "yes"; Start-Sleep -Milliseconds 100 }) | . $sdkmanager_prog --licenses --sdk_root=$sdk_root) | Out-Host
-            if (!$ndkOnly) {
-                exec_prog -prog $sdkmanager_prog -params '--verbose', "--sdk_root=$sdk_root", 'platform-tools', 'cmdline-tools;latest', "platforms;$($android_sdk_tools['platforms'])", "build-tools;$($android_sdk_tools['build-tools'])", $ndkFullVer | Out-Host
+            # for android 15 16KB page size support, ndk-r23d only available on ci.android.com, refer:
+            # - https://developer.android.com/about/versions/15/behavior-changes-all#16-kb
+            # - https://developer.android.google.cn/about/versions/15/behavior-changes-all?hl=zh-cn#16-kb
+            # IF fail, you can visit download url by browser:
+            # - https://ci.android.com/builds/submitted/12186248/win64/latest/android-ndk-12186248-windows-x86_64.zip
+            # - https://ci.android.com/builds/submitted/12186248/linux/latest/android-ndk-12186248-linux-x86_64.zip
+            # - https://ci.android.com/builds/submitted/12186248/darwin_mac/latest/android-ndk-12186248-darwin-x86_64.zip
+            $ndk_loc = Join-Path $sdk_root 'ndk'
+            if ($ndk_ver -eq 'r23d') {
+                $_artifact = @("android-ndk-${ndk_r23d_rev}-windows-x86_64.zip",
+                    "android-ndk-${ndk_r23d_rev}-linux-x86_64.zip",
+                    "android-ndk-${ndk_r23d_rev}-darwin-x86_64.zip").Get($HOST_OS)
+                $_target_os = @('win64', 'linux', 'darwin_mac').Get($HOST_OS)
+                . (Join-Path $myRoot 'resolv-url.ps1') -artifact $_artifact -target $_target_os -build_id $ndk_r23d_rev -manifest gcloud -out_var 'artifact_info'
+                $artifact_url = $artifact_info[0].messageData
+                $full_ver = "23.3.${ndk_r23d_rev}"
+                $1k.println("Installing ndk-r23d from ci.android.com ...")
+                $ndk_root = Join-Path $ndk_loc $full_ver
+                fetch_pkg -url $artifact_url -exrep "android-ndk-r23d-canary=$ndk_root" -name $_artifact
+                if (!$1k.isdir($ndk_root)) { throw "Install ndk-r23d fail, please try again" }
             }
             else {
-                exec_prog -prog $sdkmanager_prog -params '--verbose', "--sdk_root=$sdk_root", $ndkFullVer | Out-Host
+                # install ndk by android sdk manager
+                $ndks = @{}
+                foreach ($matchInfo in $matchInfos) {
+                    $fullVer = $matchInfo.Line.Trim().Split(' ')[0] # "ndk;23.2.8568313"
+                    $verNums = $fullVer.Split(';')[1].Split('.')
+                    $ndkVer = 'r'
+                    $ndkVer += $verNums[0]
+
+                    $ndk_minor = [int]$verNums[1]
+                    if ($ndk_minor -gt 0) {
+                        $ndkVer += [char]($ndk_minor_base + $ndk_minor)
+                    }
+                    if (!$ndks.Contains($ndkVer)) {
+                        $ndks.Add($ndkVer, $fullVer)
+                    }
+                }
+
+                $ndkFullVer = $ndks[$ndk_ver]
+
+                ((1..10 | ForEach-Object { "yes"; Start-Sleep -Milliseconds 100 }) | . $sdkmanager_prog --licenses --sdk_root=$sdk_root) | Out-Host
+                if (!$ndkOnly) {
+                    exec_prog -prog $sdkmanager_prog -params '--verbose', "--sdk_root=$sdk_root", 'platform-tools', 'cmdline-tools;latest', "platforms;$($android_sdk_tools['platforms'])", "build-tools;$($android_sdk_tools['build-tools'])", $ndkFullVer | Out-Host
+                }
+                else {
+                    exec_prog -prog $sdkmanager_prog -params '--verbose', "--sdk_root=$sdk_root", $ndkFullVer | Out-Host
+                }
+                $full_ver = $ndkFullVer.Split(';')[1]
+                $ndk_root = (Resolve-Path -Path "$ndk_loc/$full_ver").Path
             }
-            $fullVer = $ndkFullVer.Split(';')[1]
-            $ndk_root = (Resolve-Path -Path "$sdk_root/ndk/$fullVer").Path
         }
     }
 
@@ -1888,21 +1924,35 @@ if (!$setupOnly) {
                     # apply additional build options
                     $BUILD_ALL_OPTIONS += "--parallel", "$($options.j)"
 
-                    if ($options.t) { $cmake_target = $options.t }
-                    if ($cmake_target) { $BUILD_ALL_OPTIONS += '--target', $cmake_target }
+                    
                     $1k.println("BUILD_ALL_OPTIONS=$BUILD_ALL_OPTIONS, Count={0}" -f $BUILD_ALL_OPTIONS.Count)
 
                     # forward non-cmake args to underlaying build toolchain, must at last
+                    $forward_options = @()
                     if (($cmake_generator -eq 'Xcode') -and !$BUILD_ALL_OPTIONS.Contains('--verbose')) {
-                        $BUILD_ALL_OPTIONS += '--', '-quiet'
+                        $forward_options += '--', '-quiet'
                     }
                     $1k.println("cmake --build $BUILD_DIR $BUILD_ALL_OPTIONS")
-                    cmake --build $BUILD_DIR $BUILD_ALL_OPTIONS | Out-Host
-                    if (!$?) {
-                        Set-Location $stored_cwd
-                        exit $LASTEXITCODE
-                    }
 
+                    if ($options.t) { $cmake_target = $options.t }
+                    if ($cmake_target) {
+                        $cmake_targets = $cmake_target.Split(',') | Sort-Object | Get-Unique
+                        foreach ($target in $cmake_targets) {
+                            cmake --build $BUILD_DIR $BUILD_ALL_OPTIONS --target $target $forward_options | Out-Host
+                            if (!$?) {
+                                Set-Location $stored_cwd
+                                exit $LASTEXITCODE
+                            }
+                        }
+                    }
+                    else {
+                        cmake --build $BUILD_DIR $BUILD_ALL_OPTIONS $forward_options | Out-Host
+                        if (!$?) {
+                            Set-Location $stored_cwd
+                            exit $LASTEXITCODE
+                        }
+                    }
+                    
                     if ($options.i) {
                         $install_args = @($BUILD_DIR, '--config', $optimize_flag)
                         cmake --install $install_args | Out-Host
