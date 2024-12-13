@@ -1,5 +1,5 @@
 // sgs spec, define sgs macros and structs, can be include anywhere
-// match with glslcc-1.9.0
+// match with axslcc-1.9.0
 
 #pragma once
 

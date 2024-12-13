@@ -10,7 +10,7 @@
 # add or overwrite tool version like follow
 if ($Global:is_axmol_app -or $Global:is_axmol_engine) {
     $manifest['nuget'] = '5.5.1' # since 5.6.0, requires .net 4.0
-    $manifest['glslcc'] = '1.9.5+'
+    $manifest['axslcc'] = '1.9.6+'
     $manifest['cmake'] = '3.29.3~3.30.5+'
     $manifest['emsdk'] = '3.1.66~3.1.67+'
     $manifest['jdk'] = '17.0.10~17.0.12+'

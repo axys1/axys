@@ -850,18 +850,18 @@ function setup_python3() {
     }
 }
 
-# setup glslcc, not add to path
-function setup_glslcc() {
-    if (!$manifest['glslcc']) { return $null }
-    $glslcc_bin = Join-Path $external_prefix 'glslcc'
-    $glslcc_prog, $glslcc_ver = find_prog -name 'glslcc' -path $glslcc_bin -mode 'BOTH'
-    if ($glslcc_prog) {
-        return $glslcc_prog
+# setup axslcc, not add to path
+function setup_axslcc() {
+    if (!$manifest['axslcc']) { return $null }
+    $axslcc_bin = Join-Path $external_prefix 'axslcc'
+    $axslcc_prog, $axslcc_ver = find_prog -name 'axslcc' -path $axslcc_bin -mode 'BOTH'
+    if ($axslcc_prog) {
+        return $axslcc_prog
     }
 
     $suffix = $('win64.zip', 'linux.tar.gz', 'osx{0}.tar.gz').Get($HOST_OS)
     if ($IsMacOS) {
-        if ([System.VersionEx]$glslcc_ver -ge [System.VersionEx]'1.9.4.1') {
+        if ([System.VersionEx]$axslcc_ver -ge [System.VersionEx]'1.9.4.1') {
             $suffix = $suffix -f "-$HOST_CPU"
         }
         else {
@@ -869,16 +869,16 @@ function setup_glslcc() {
         }
     }
 
-    $glscc_base_url = $mirror_current.glslcc
-    fetch_pkg "$mirror_url_base$glscc_base_url/v$glslcc_ver/glslcc-$glslcc_ver-$suffix" $glslcc_bin
+    $glscc_base_url = $mirror_current.axslcc
+    fetch_pkg "$mirror_url_base$glscc_base_url/v$axslcc_ver/axslcc-$axslcc_ver-$suffix" $axslcc_bin
 
-    $glslcc_prog = (Join-Path $glslcc_bin "glslcc$EXE_SUFFIX")
-    if ($1k.isfile($glslcc_prog)) {
-        $1k.println("Using glslcc: $glslcc_prog, version: $glslcc_ver")
-        return $glslcc_prog
+    $axslcc_prog = (Join-Path $axslcc_bin "axslcc$EXE_SUFFIX")
+    if ($1k.isfile($axslcc_prog)) {
+        $1k.println("Using axslcc: $axslcc_prog, version: $axslcc_ver")
+        return $axslcc_prog
     }
 
-    throw "Install glslcc fail"
+    throw "Install axslcc fail"
 }
 
 function setup_ninja() {
@@ -1578,7 +1578,7 @@ validHostAndToolchain
 
 ########## setup build tools if not installed #######
 
-$null = setup_glslcc
+$null = setup_axslcc
 
 $cmake_prog, $Script:cmake_ver = setup_cmake
 

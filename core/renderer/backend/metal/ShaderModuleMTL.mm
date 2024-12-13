@@ -29,7 +29,7 @@
 #include "yasio/ibstream.hpp"
 #include "yasio/sz.hpp"
 
-#include "glslcc/sgs-spec.h"
+#include "axslcc/sgs-spec.h"
 
 NS_AX_BACKEND_BEGIN
 
