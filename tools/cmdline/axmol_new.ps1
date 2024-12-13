@@ -146,8 +146,8 @@ if($isolated) {
     }
 }
 
-# write .axproj.json
-$axprojInfo = @{ engine_version = $axmolVersion; project_type = $lang }
-Set-Content -Path "$projectDir/.axproj.json" -Value (ConvertTo-Json -InputObject $axprojInfo)
+# write .axproj
+$axprojInfo = "package_name=$packageName`nengine_version=$axmolVersion`nproject_type=$lang"
+Set-Content -Path "$projectDir/.axproj" -Value $axprojInfo
 
 println "Create project $projectName done."
