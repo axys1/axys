@@ -219,3 +219,26 @@ namespace System
 $TrimLastMethod = [ExtensionMethods].GetMethod('TrimLast')
 Update-TypeData -TypeName System.String -MemberName TrimLast -MemberType CodeMethod -Value $TrimLastMethod
 }
+
+
+function ConvertFrom-Props {
+    param(
+        [Parameter(Mandatory=$true)]
+        $InputObject
+    )
+
+    $props = @{}
+
+    foreach($_ in $InputObject) {
+        if ($_ -match "^#.*$") {
+            continue
+        }
+        if ($_ -match "^(.+?)\s*=\s*(.*)$") {
+            $key = $matches[1].Trim()
+            $value = $matches[2].Trim()
+            $props[$key] = $value
+        }
+    }
+
+    return $props
+}

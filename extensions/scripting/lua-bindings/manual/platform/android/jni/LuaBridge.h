@@ -22,8 +22,8 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#ifndef SCRIPT_LUA_PLATFORM_ANDROID_JNI_JAVA_ORG_AXMOL_LIB_AXLUA_JAVA_BRIDEG_H
-#define SCRIPT_LUA_PLATFORM_ANDROID_JNI_JAVA_ORG_AXMOL_LIB_AXLUA_JAVA_BRIDEG_H
+#ifndef SCRIPT_LUA_PLATFORM_ANDROID_JNI_JAVA_dev_axmol_lib_AXLUA_JAVA_BRIDEG_H
+#define SCRIPT_LUA_PLATFORM_ANDROID_JNI_JAVA_dev_axmol_lib_AXLUA_JAVA_BRIDEG_H
 #if defined(__ANDROID__)
 
 #    include <jni.h>
@@ -70,4 +70,4 @@ JNIEXPORT jint JNICALL Java_dev_axmol_lib_LuaBridge_releaseLuaFunction(JNIEnv* e
 #endif
 
 /// @endcond
-#endif  // SCRIPT_LUA_PLATFORM_ANDROID_JNI_JAVA_ORG_AXMOL_LIB_AXLUA_JAVA_BRIDEG_H
+#endif  // SCRIPT_LUA_PLATFORM_ANDROID_JNI_JAVA_dev_axmol_lib_AXLUA_JAVA_BRIDEG_H
