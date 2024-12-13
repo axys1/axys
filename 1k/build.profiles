@@ -35,7 +35,13 @@ jdk=17.0.10~17.0.13+
 
 # The android ndk version
 # as stable as possible @setup.ps1 @gradle @axmol-cmdline
-ndk=r23c
+# for android 15 16KB page size support, ndk-r23d only available on ci.android.com, refer:
+# - https://developer.android.com/about/versions/15/behavior-changes-all#16-kb
+# - https://developer.android.google.cn/about/versions/15/behavior-changes-all?hl=zh-cn#16-kb
+# Android 15 16KB page size only supported by ndk r23 r25 from ci.android.com or r27+
+# In China Mainland, please download from https://pan.baidu.com/s/1neJydxOGTT7aCQvLLwbicw?pwd=qqiq
+# to $AX_ROOT/tools/external/, then run `setup.ps1 -p android`
+ndk=r23d
 
 # The android target sdk version, @gradle
 # as latest as possible

@@ -405,6 +405,7 @@ if (AX_ENABLE_AUDIO)
             target_compile_definitions(3rdparty INTERFACE AL_LIBTYPE_STATIC=1)
         elseif(ANDROID)
             set(ANDROID_SHARED_LOADS "${ANDROID_SHARED_LOADS}System.loadLibrary(\"openal\");" CACHE INTERNAL "Android Shared Loads" )
+            target_link_options(OpenAL PRIVATE "${_16KPAGE_SIZE_LD_FLAGS}")
         endif()
     endif()
 

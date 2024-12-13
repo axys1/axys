@@ -32,6 +32,11 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Android")
     set(PLATFORM_NAME android)
     set(ARCH_ALIAS ${ANDROID_ABI})
+
+    # refer 
+    # - https://developer.android.com/about/versions/15/behavior-changes-all#16-kb
+    # - https://developer.android.google.cn/about/versions/15/behavior-changes-all?hl=zh-cn#16-kb
+    set(_16KPAGE_SIZE_LD_FLAGS "-Wl,-z,max-page-size=16384")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(LINUX TRUE)
     set(PLATFORM_NAME linux)
