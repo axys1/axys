@@ -24,12 +24,12 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-package org.axmol.lua_tests;
+package dev.axmol.lua_tests;
 
 import android.os.Bundle;
-import org.axmol.lib.AxmolActivity;
-import org.axmol.lib.SharedLoader;
-import org.axmol.lib.AxmolGLSurfaceView;
+import dev.axmol.lib.AxmolActivity;
+import dev.axmol.lib.SharedLoader;
+import dev.axmol.lib.AxmolGLSurfaceView;
 
 public class AppActivity extends AxmolActivity{
     static {

@@ -43,7 +43,7 @@ extern "C" size_t __ctype_get_mb_cur_max(void)
 }
 #endif
 
-static const char* applicationHelperClassName = "org.axmol.lib.AxmolEngine";
+static const char* applicationHelperClassName = "dev.axmol.lib.AxmolEngine";
 
 namespace ax
 {

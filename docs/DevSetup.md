@@ -46,8 +46,8 @@ options:
 
 Examples:
 
-- Cpp: `axmol new -p org.axmol.hellocpp -d D:\dev\projects\ -l cpp --portrait HelloCpp`
-- Lua: `axmol new -p org.axmol.hellolua -d D:\dev\projects\ -l lua --portrait HelloLua`
+- Cpp: `axmol new -p dev.axmol.hellocpp -d D:\dev\projects\ -l cpp --portrait HelloCpp`
+- Lua: `axmol new -p dev.axmol.hellolua -d D:\dev\projects\ -l lua --portrait HelloLua`
 
 ## Quick build for all target platforms (recommended)
 

@@ -22,12 +22,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
-package org.axmol.cpp_tests;
+package dev.axmol.cpp_tests;
 
 import android.os.Bundle;
 
-import org.axmol.lib.AxmolActivity;
-import org.axmol.lib.SharedLoader;
+import dev.axmol.lib.AxmolActivity;
+import dev.axmol.lib.SharedLoader;
 
 public class AppActivity extends AxmolActivity {
     static {

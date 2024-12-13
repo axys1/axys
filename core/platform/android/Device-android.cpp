@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include "platform/FileUtils.h"
 #include "yasio/string_view.hpp"
 
-static const char* deviceHelperClassName = "org.axmol.lib.AxmolEngine";
+static const char* deviceHelperClassName = "dev.axmol.lib.AxmolEngine";
 
 namespace ax
 {
@@ -85,7 +85,7 @@ public:
                                        const FontDefinition& textDefinition)
     {
         JniMethodInfo methodInfo;
-        if (!JniHelper::getStaticMethodInfo(methodInfo, "org.axmol.lib.BitmapHelper",
+        if (!JniHelper::getStaticMethodInfo(methodInfo, "dev.axmol.lib.BitmapHelper",
                                             "createTextBitmapShadowStroke",
                                             "([BLjava/lang/String;IIIIIIIIZFFFFZIIIIFZI)Z"))
         {
@@ -112,7 +112,7 @@ public:
 
         /**create bitmap
          * this method call Cococs2dx.createBitmap()(java code) to create the bitmap, the java code
-         * will call Java_org_axmol_lib_BitmapHelper_nativeInitBitmapDC() to init the width, height
+         * will call Java_dev_axmol_lib_BitmapHelper_nativeInitBitmapDC() to init the width, height
          * and data.
          * use this approach to decrease the jni call number
          */
@@ -220,7 +220,7 @@ extern "C" {
  * this method is called by java code to init width, height and pixels data
  */
 JNIEXPORT void JNICALL
-Java_org_axmol_lib_BitmapHelper_nativeInitBitmapDC(JNIEnv* env, jclass, jint width, jint height, jbyteArray pixels)
+Java_dev_axmol_lib_BitmapHelper_nativeInitBitmapDC(JNIEnv* env, jclass, jint width, jint height, jbyteArray pixels)
 {
     int size                    = width * height * 4;
     ax::BitmapDC& bitmapDC = ax::sharedBitmapDC();

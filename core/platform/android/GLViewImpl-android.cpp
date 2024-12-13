@@ -107,7 +107,7 @@ bool GLViewImpl::isOpenGLReady()
 
 void GLViewImpl::end()
 {
-    JniHelper::callStaticVoidMethod("org.axmol.lib.AxmolEngine", "onExit");
+    JniHelper::callStaticVoidMethod("dev.axmol.lib.AxmolEngine", "onExit");
     release();
 }
 
@@ -117,11 +117,11 @@ void GLViewImpl::setIMEKeyboardState(bool bOpen)
 {
     if (bOpen)
     {
-        JniHelper::callStaticVoidMethod("org.axmol.lib.AxmolGLSurfaceView", "openIMEKeyboard");
+        JniHelper::callStaticVoidMethod("dev.axmol.lib.AxmolGLSurfaceView", "openIMEKeyboard");
     }
     else
     {
-        JniHelper::callStaticVoidMethod("org.axmol.lib.AxmolGLSurfaceView", "closeIMEKeyboard");
+        JniHelper::callStaticVoidMethod("dev.axmol.lib.AxmolGLSurfaceView", "closeIMEKeyboard");
     }
 }
 
@@ -269,7 +269,7 @@ Rect GLViewImpl::getSafeAreaRect() const
 
 void GLViewImpl::queueOperation(void (*op)(void*), void* param)
 {
-    JniHelper::callStaticVoidMethod("org.axmol.lib.AxmolEngine", "queueOperation", (jlong)(uintptr_t)op,
+    JniHelper::callStaticVoidMethod("dev.axmol.lib.AxmolEngine", "queueOperation", (jlong)(uintptr_t)op,
                                     (jlong)(uintptr_t)param);
 }
 

@@ -36,7 +36,7 @@ namespace ax
 
 void messageBox(const char* pszMsg, const char* pszTitle)
 {
-    JniHelper::callStaticVoidMethod("org.axmol.lib.AxmolEngine", "showDialog", pszTitle, pszMsg);
+    JniHelper::callStaticVoidMethod("dev.axmol.lib.AxmolEngine", "showDialog", pszTitle, pszMsg);
 }
 
 }
