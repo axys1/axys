@@ -59,6 +59,12 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 }
 #else
 int main(int, char**) {
-    return axmol_main();
+    auto result = axmol_main();
+
+#if AX_OBJECT_LEAK_DETECTION
+    Object::printLeaks();
+#endif
+
+    return result;
 }
 #endif
