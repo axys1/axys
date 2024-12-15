@@ -120,7 +120,7 @@ JNIEXPORT void JNICALL Java_dev_axmol_lib_AxmolRenderer_nativeOnContextLost(JNIE
     director->replaceScene(rootScene);
     director->purgeCachedData();
 
-    JniHelper::callStaticVoidMethod("org/axmol/lib/AxmolEngine", "restartProcess");
+    JniHelper::callStaticVoidMethod("dev/axmol/lib/AxmolEngine", "restartProcess");
 #endif
 }
 
