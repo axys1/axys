@@ -243,7 +243,7 @@ $builtinPlugins = @{
     new    = @{
         proc  = (Join-Path $myRoot 'axmol_new.ps1');
         usage = @"
-usage: axmol new -p org.axmol.hellocpp -d path/to/project -l cpp --portrait <ProjectName>
+usage: axmol new -p dev.axmol.hellocpp -d path/to/project -l cpp --portrait <ProjectName>
 Creates a new project.
 
 positional arguments:
@@ -391,7 +391,7 @@ if (!$sub_args.Contains('-d')) {
 
 if ($args[0] -eq 'new') {
     if (!$sub_args.Contains('-p')) {
-        $sub_opts['p'] = 'org.axmol.demo'
+        $sub_opts['p'] = 'dev.axmol.demo'
     }
     if (!$sub_args.Contains('-l')) {
         $sub_opts['l'] = 'cpp'

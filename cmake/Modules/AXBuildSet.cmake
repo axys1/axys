@@ -23,17 +23,17 @@ endif()
 # hold the extensions list to auto link to app
 set(_AX_EXTENSION_LIBS "" CACHE INTERNAL "extensions for auto link to target application")
 
-# configure android GLSLCC compile output, this is the first include cmake module
+# configure android AXSLCC compile output, this is the first include cmake module
 if (ANDROID)
-    file(TO_NATIVE_PATH "${_AX_ANDROID_PROJECT_DIR}/build/runtime/axslc" _GLSLCC_OUT_DIR)
-    set(GLSLCC_OUT_DIR "${_GLSLCC_OUT_DIR}" CACHE STRING "" FORCE)
-    message(AUTHOR_WARNING "Set GLSLCC_OUT_DIR to ${GLSLCC_OUT_DIR} for android")
+    file(TO_NATIVE_PATH "${_AX_ANDROID_PROJECT_DIR}/build/runtime/axslc" _AXSLCC_OUT_DIR)
+    set(AXSLCC_OUT_DIR "${_AXSLCC_OUT_DIR}" CACHE STRING "" FORCE)
+    message(AUTHOR_WARNING "Set AXSLCC_OUT_DIR to ${AXSLCC_OUT_DIR} for android")
 endif()
 
-# import minimal AXGLSLCC.cmake for shader compiler support
+# import minimal axslcc.cmake for shader compiler support
 # the function: ax_target_compile_shaders avaiable from it
-set(GLSLCC_FIND_PROG_ROOT "${_AX_ROOT}/tools/external/glslcc" "$ENV{AX_ROOT}/tools/external/glslcc")
-include(AXGLSLCC)
+set(AXSLCC_FIND_PROG_ROOT "${_AX_ROOT}/tools/external/axslcc" "$ENV{AX_ROOT}/tools/external/axslcc")
+include(AXSLCC)
 
 # include helper functions
 include(AXBuildHelpers)

@@ -3,7 +3,7 @@
 # PowerShell Param statement : every line must end in #\ except the last line must with <#\
 # And, you can't use backticks in this section        #\
 # refer https://gist.github.com/ryanmaclean/a1f3135f49c1ab3fa7ec958ac3f8babe #\
-param( [string]$gradlewVersion                    #\
+param( [switch]$updateAdt                    #\
 )                                                <#\
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -366,21 +366,23 @@ if (!(Test-Path $prefix -PathType Container)) {
 # setup toolchains: glslcc, cmake, ninja, ndk, jdk, ...
 . $1k_script -setupOnly -prefix $prefix @args
 
-if ($gradlewVersion) {
+if ($updateAdt) {
+    # ---------- Update gradle ----------
+    $gradleVer = $build_profiles['gradle']
     $aproj_source_root = Join-Path $AX_ROOT 'templates/common/proj.android'
     $aproj_source_gradle = Join-Path $aproj_source_root 'build.gradle'
     $aproj_source_gradle_wrapper = Join-Path $aproj_source_root 'gradle/wrapper/'
-    $vernums = $gradlewVersion.Split('.')
+    $vernums = $gradleVer.Split('.')
     if ($vernums.Count -lt 3) {
-        $gradle_tag = "v$gradlewVersion.0"
+        $gradle_tag = "v$gradleVer.0"
     }
     else {
-        $gradle_tag = "v$gradlewVersion"
+        $gradle_tag = "v$gradleVer"
     }
 
     $gradle_settings_file = Join-Path $aproj_source_gradle_wrapper 'gradle-wrapper.properties'
     $settings_content = [System.IO.File]::ReadAllText($gradle_settings_file)
-    $settings_content = [Regex]::Replace($settings_content, 'gradle-.+-bin.zip', "gradle-$gradlewVersion-bin.zip")
+    $settings_content = [Regex]::Replace($settings_content, 'gradle-.+-bin.zip', "gradle-$gradleVer-bin.zip")
     [System.IO.File]::WriteAllText($gradle_settings_file, $settings_content)
 
     # download gradle-wrapper.jar gradlew and gradlew.bat from upstream
@@ -397,11 +399,30 @@ if ($gradlewVersion) {
         Copy-Item (Join-Path $aproj_source_root 'gradlew.bat') $aproj_root -Force
     }
 
-    update_gradle_for_test 'cpp-tests'
-    update_gradle_for_test 'fairygui-tests'
-    update_gradle_for_test 'live2d-tests'
-    update_gradle_for_test 'lua-tests'
-    update_gradle_for_test 'unit-tests'
+    $testList = @('cpp-tests', 'fairygui-tests', 'live2d-tests', 'lua-tests', 'unit-tests')
+    foreach($testName in $testList) {
+        update_gradle_for_test($testName)
+    }
+
+    # ------- Update AGP --------
+    $agpVer = $build_profiles['agp']
+
+    function update_agp($relPath) {
+        $aproj_root = Join-Path $AX_ROOT "$relPath/proj.android"
+        $build_gradle_file = Join-Path $aproj_root 'build.gradle'
+        $build_gradle_content = [System.IO.File]::ReadAllText($build_gradle_file)
+        $update_text = $build_gradle_content -replace '(\d+\.\d+\.\d+)', $agpVer
+        [System.IO.File]::WriteAllText($build_gradle_file, $update_text)
+    }
+    function update_agp_for_test($name) {
+        update_agp "tests/$name"
+    }
+
+    update_agp('templates/common')
+    foreach($testName in $testList) {
+        update_gradle_for_test($testName)
+        update_agp_for_test($testName) 
+    }
 }
 
 if ($IsLinux -and (Test-Path '/etc/wsl.conf' -PathType Leaf)) {

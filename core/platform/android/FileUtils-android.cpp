@@ -27,7 +27,7 @@ THE SOFTWARE.
 #include "platform/android/FileUtils-android.h"
 #include "platform/Common.h"
 #include "platform/android/jni/JniHelper.h"
-#include "platform/android/jni/Java_org_axmol_lib_AxmolEngine.h"
+#include "platform/android/jni/Java_dev_axmol_lib_AxmolEngine.h"
 #include "android/asset_manager.h"
 #include "android/asset_manager_jni.h"
 #include "base/ZipUtils.h"
@@ -205,7 +205,7 @@ bool FileUtilsAndroid::isAbsolutePath(std::string_view strPath) const
 {
     // On Android, there are two situations for full path.
     // 1) Files in APK, e.g. assets/path/path/file.png
-    // 2) Files not in APK, e.g. /data/data/org.axmol.hellocpp/cache/path/path/file.png, or
+    // 2) Files not in APK, e.g. /data/data/dev.axmol.hellocpp/cache/path/path/file.png, or
     // /sdcard/path/path/file.png. So these two situations need to be checked on Android.
     return (strPath[0] == '/' || strPath.find(_defaultResRootPath) == 0);
 }
@@ -305,9 +305,9 @@ std::string FileUtilsAndroid::getNativeWritableAbsolutePath() const
     // Fix for Nexus 10 (Android 4.2 multi-user environment)
     // the path is retrieved through Java Context.getCacheDir() method
 #ifdef AX_USE_ANDROID_EXTERNAL_FILES_DIR
-    std::string path = JniHelper::callStaticStringMethod("org.axmol.lib.AxmolEngine", "getExternalFilesDir");
+    std::string path = JniHelper::callStaticStringMethod("dev.axmol.lib.AxmolEngine", "getExternalFilesDir");
 #else
-    std::string path = JniHelper::callStaticStringMethod("org.axmol.lib.AxmolEngine", "getInternalFilesDir");
+    std::string path = JniHelper::callStaticStringMethod("dev.axmol.lib.AxmolEngine", "getInternalFilesDir");
 #endif
     if (!path.empty())
         path.append("/");

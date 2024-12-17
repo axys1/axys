@@ -300,14 +300,14 @@ set_source_files_properties(
     ${_AX_ROOT}/core/renderer/shaders/colorNormalTexture.frag
     ${_AX_ROOT}/core/renderer/shaders/positionNormalTexture.vert
     ${_AX_ROOT}/core/renderer/shaders/skinPositionNormalTexture.vert
-    PROPERTIES GLSLCC_DEFINES
+    PROPERTIES AXSLCC_DEFINES
     "MAX_DIRECTIONAL_LIGHT_NUM=${AX_MAX_DIRECTIONAL_LIGHT},MAX_POINT_LIGHT_NUM=${AX_MAX_POINT_LIGHT},MAX_SPOT_LIGHT_NUM=${AX_MAX_SPOT_LIGHT}"
 )
 set_source_files_properties(
     ${_AX_ROOT}/core/renderer/shaders/colorNormalTexture.frag
     ${_AX_ROOT}/core/renderer/shaders/positionNormalTexture.vert
     ${_AX_ROOT}/core/renderer/shaders/skinPositionNormalTexture.vert
-    PROPERTIES GLSLCC_OUTPUT1 "USE_NORMAL_MAPPING=1"
+    PROPERTIES AXSLCC_OUTPUT1 "USE_NORMAL_MAPPING=1"
 )
 ax_target_compile_shaders(${_AX_CORE_LIB} FILES ${BUILTIN_SHADER_SOURCES})
 

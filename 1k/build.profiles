@@ -1,0 +1,76 @@
+#
+# The cross platform build profiles, DO NOT MODIFY
+# @hint means just for hint, not managed by axmol build system
+#
+
+# --- region platfom:common
+
+# The axmol shader compiler, legacy name is 'glslcc' before axmol-2.3.0
+axslcc=1.9.6+
+
+# The cmake, @gradle @axmol-cmdline
+# as latest as possible
+cmake=3.30.0~3.31.2+
+
+# The ninja
+ninja=1.10.0~1.12.1+
+
+# --- endregion
+
+# --- region windows
+
+# The nuget, since 5.6.0, requires .net 4.0
+# DNT MODIFY
+nuget=5.5.1.*
+
+# The visual studio version, @axmol-cmdline @verify
+vs=17.0+
+
+# --- endregion
+
+# region platform:android
+
+# The microsoft openjdk, @axmol-cmdline
+jdk=17.0.10~17.0.13+
+
+# The android ndk version
+# as stable as possible @setup.ps1 @gradle @axmol-cmdline
+# for android 15 16KB page size support, ndk-r23d only available on ci.android.com, refer:
+# - https://developer.android.com/about/versions/15/behavior-changes-all#16-kb
+# - https://developer.android.google.cn/about/versions/15/behavior-changes-all?hl=zh-cn#16-kb
+# Android 15 16KB page size only supported by ndk r23 r25 from ci.android.com or r27+
+# In China Mainland, please download from https://pan.baidu.com/s/1neJydxOGTT7aCQvLLwbicw?pwd=qqiq
+# to $AX_ROOT/tools/external/, then run `setup.ps1 -p android`
+ndk=r23d
+
+# The android target sdk version, @gradle
+# as latest as possible
+target_sdk=35
+
+# The android min sdk version, @gradle
+# as min as possible
+min_sdk=17
+
+# The gradle version, @setup.ps1
+# as latest as possible
+gradle=8.11.1
+
+# The android gradle plugin, @setup.ps1
+# as stable as possible, match with build-tools,android-studio
+agp=8.7.3
+
+# The android build-tools, @axmol-cmdline @gradle
+# as stable as possible, match with agp,android-studio
+build-tools=34.0.0
+
+# The android-studio, @hint
+# as latest as possible, but match with agp, build-tools
+android-studio=2024.2.1+
+
+# --- endregion
+
+# --- region platform:wasm
+
+emsdk=3.1.66~3.1.67
+
+# --- endregion

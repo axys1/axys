@@ -27,7 +27,7 @@
 #    include "platform/android/jni/JniHelper.h"
 
 extern "C" {
-JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolMediaEngine_nativeFireEvent(JNIEnv* env, jclass, jlong pME, int arg1)
+JNIEXPORT void JNICALL Java_dev_axmol_lib_AxmolMediaEngine_nativeFireEvent(JNIEnv* env, jclass, jlong pME, int arg1)
 {
     auto mediaEngine = (ax::AndroidMediaEngine*)((uintptr_t)pME);
     if (!mediaEngine)
@@ -36,7 +36,7 @@ JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolMediaEngine_nativeFireEvent(JNIEn
     mediaEngine->_fireMediaEvent((ax::MEMediaEventType)arg1);
 }
 
-JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolMediaEngine_nativeStoreVideoMeta(JNIEnv* env,
+JNIEXPORT void JNICALL Java_dev_axmol_lib_AxmolMediaEngine_nativeStoreVideoMeta(JNIEnv* env,
                                                                                 jclass,
                                                                                 jlong pME,
                                                                                 int outputX,
@@ -54,7 +54,7 @@ JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolMediaEngine_nativeStoreVideoMeta(
     mediaEngine->_storeVideoMeta(outputX, outputY, videoX, videoY, cbcrOffset, rotation, videoPF);
 }
 
-JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolMediaEngine_nativeStoreLastVideoSample(JNIEnv* env,
+JNIEXPORT void JNICALL Java_dev_axmol_lib_AxmolMediaEngine_nativeStoreLastVideoSample(JNIEnv* env,
                                                                                       jclass,
                                                                                       jlong pME,
                                                                                       jobject sampleBuffer,
@@ -69,7 +69,7 @@ JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolMediaEngine_nativeStoreLastVideoS
     mediaEngine->_storeLastVideoSample(sampleData, sampleLen);
 }
 
-JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolMediaEngine_nativeStoreDuration(JNIEnv* env,
+JNIEXPORT void JNICALL Java_dev_axmol_lib_AxmolMediaEngine_nativeStoreDuration(JNIEnv* env,
                                                                                jclass,
                                                                                jlong pME,
                                                                                double duration)
@@ -81,7 +81,7 @@ JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolMediaEngine_nativeStoreDuration(J
     mediaEngine->_storeDuration(duration);
 }
 
-JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolMediaEngine_nativeStoreCurrentTime(JNIEnv* env,
+JNIEXPORT void JNICALL Java_dev_axmol_lib_AxmolMediaEngine_nativeStoreCurrentTime(JNIEnv* env,
                                                                                   jclass,
                                                                                   jlong pME,
                                                                                   double currentTime)
@@ -97,7 +97,7 @@ JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolMediaEngine_nativeStoreCurrentTim
 namespace ax
 {
 
-static const char* className = "org.axmol.lib.AxmolMediaEngine";
+static const char* className = "dev.axmol.lib.AxmolMediaEngine";
 
 AndroidMediaEngine::AndroidMediaEngine()
 {

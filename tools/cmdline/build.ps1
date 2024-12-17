@@ -96,7 +96,7 @@ if (!(Test-Path $1k_script -PathType Leaf)) {
 
 $source_proj_dir = if ($options.d) { $options.d } else { $workDir }
 $Global:is_axmol_engine = ($source_proj_dir -eq $AX_ROOT)
-$Global:is_axmol_app = (Test-Path (Join-Path $source_proj_dir '.axproj.json') -PathType Leaf)
+$Global:is_axmol_app = !!(Get-ChildItem (Join-Path $source_proj_dir '.axproj*'))
 $is_android = $options.p -eq 'android'
 
 # start construct full cmd line

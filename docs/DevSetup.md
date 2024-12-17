@@ -46,8 +46,8 @@ options:
 
 Examples:
 
-- Cpp: `axmol new -p org.axmol.hellocpp -d D:\dev\projects\ -l cpp --portrait HelloCpp`
-- Lua: `axmol new -p org.axmol.hellolua -d D:\dev\projects\ -l lua --portrait HelloLua`
+- Cpp: `axmol new -p dev.axmol.hellocpp -d D:\dev\projects\ -l cpp --portrait HelloCpp`
+- Lua: `axmol new -p dev.axmol.hellolua -d D:\dev\projects\ -l lua --portrait HelloLua`
 
 ## Quick build for all target platforms (recommended)
 
@@ -161,15 +161,15 @@ Please see the [Windows workflow guide](https://github.com/axmolengine/axmol/iss
 
 ### Android (Android Studio)
 
-  1. Install [Android Studio 2024.1.2+](https://developer.android.com/studio).
+  1. Install [Android Studio 2024.2.1+](https://developer.android.com/studio).
   2. When starting Android Studio for the first time, it will guide you through the installation of the SDK and other tools. Please make sure that you do install them.
   3. Start Android Studio and choose [Open an existing Android Studio Project] and select your project. For example, the existing `cpp-test` project located in `axmol\tests\cpp-tests\proj.android`.
   4. Start Android Studio and open 'Tools' -> 'SDKManager', then switch to 'SDK Tools', check the 'Show Package Details' field, and choose the following tools clicking the button 'Apply' to install them:  
      - Android SDK Platform 34  
-     - Android Gradle Plugin (AGP) 8.2.1  
+     - Android Gradle Plugin (AGP) 8.7.3
      - Android SDK Build-Tools 34.0.0 match with AGP, refer to: <https://developer.android.com/studio/releases/gradle-plugin>
-     - Gradle 8.5  
-     - NDK r23c  
+     - Gradle 8.11.1
+     - NDK r23c, if you need support Android 15 16KB page size, you must use r23d or r27+
   5. Wait for the `Gradle sync` to finish.
 
 Note: if you use non-SDK provided CMake, you will need to download `ninja` from <https://github.com/ninja-build/ninja/releases>, and copy `ninja.exe` to CMake's bin directory.

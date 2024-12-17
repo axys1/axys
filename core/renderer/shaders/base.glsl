@@ -4,7 +4,7 @@
 #define SPOTLIGHT TEXCOORD4
 #define SPOTLIGHT_NORM TEXCOORD5
 
-/* follow macro in glslcc too large
+/* follow macro in axslcc too large
     "TANGENT",
     "BINORMAL",
     "BLENDINDICES",

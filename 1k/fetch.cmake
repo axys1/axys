@@ -25,7 +25,7 @@ function(_1kfetch_init)
         find_program(PWSH_PROG NAMES pwsh powershell NO_PACKAGE_ROOT_PATH NO_CMAKE_PATH NO_CMAKE_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH NO_CMAKE_FIND_ROOT_PATH)
     endif()
 
-    execute_process(COMMAND ${PWSH_PROG} ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/resolv-uri.ps1
+    execute_process(COMMAND ${PWSH_PROG} ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/resolv-url.ps1
         -name "1kdist"
         -manifest ${_1kfetch_manifest}
         OUTPUT_VARIABLE _1kdist_url
