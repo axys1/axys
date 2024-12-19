@@ -30,6 +30,8 @@ if ($Global:is_axmol_app -or $Global:is_axmol_engine) {
     $android_sdk_tools['platforms'] = "android-$($build_profiles['target_sdk'])"
 
     $Global:build_profiles = $build_profiles
+
+    $Global:download_path = $1k.realpath("$PSScriptRoot/../cache")
 } else {
     $Global:build_profiles = @{}
 }

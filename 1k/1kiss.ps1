@@ -459,18 +459,23 @@ if (!$TOOLCHAIN_VER) {
 $Global:is_clang = $TOOLCHAIN_NAME -eq 'clang'
 $Global:is_msvc = $TOOLCHAIN_NAME -eq 'msvc'
 
-$external_prefix = if ($options.prefix) { $options.prefix } else { Join-Path $HOME '.1kiss' }
-if (!$1k.isdir($external_prefix)) {
-    $1k.mkdirs($external_prefix)
-}
-
-$1k.println("proj_dir=$((Get-Location).Path), external_prefix=$external_prefix")
-
 # load toolset manifest
 $manifest_file = Join-Path $myRoot 'manifest.ps1'
 if ($1k.isfile($manifest_file)) {
     . $manifest_file
 }
+
+$install_prefix = if ($options.prefix) { $options.prefix } else { Join-Path $HOME '.1kiss' }
+if (!$1k.isdir($install_prefix)) {
+    $1k.mkdirs($install_prefix)
+}
+if ($Global:download_path) {
+    $1k.mkdirs($Global:download_path)
+} else {
+    $Global:download_path = $install_prefix
+}
+
+$1k.println("proj_dir=$((Get-Location).Path), install_prefix=$install_prefix")
 
 # 1kdist
 $sentry_file = Join-Path $myRoot '.gitee'
@@ -745,11 +750,18 @@ function download_and_expand($url, $out, $dest) {
     }
 }
 
-function resolve_path ($path) { if ($1k.isabspath($path)) { $path } else { Join-Path $external_prefix $path } }
+function resolve_path ($path, $prefix = $null) { 
+    if ($1k.isabspath($path)) { 
+        return $path 
+    } else {
+        if(!$prefix) { $prefix = $install_prefix }
+        return Join-Path $prefix $path
+    }
+}
 
 function fetch_pkg($url, $out = $null, $exrep = $null, $prefix = $null) {
-    if (!$out) { $out = Join-Path $external_prefix $(Split-Path $url.Split('?')[0] -Leaf) }
-    else { $out = resolve_path $out }
+    if (!$out) { $out = Join-Path $download_path $(Split-Path $url.Split('?')[0] -Leaf) }
+    else { $out = resolve_path $out $download_path }
 
     $pfn_rename = $null
 
@@ -778,7 +790,7 @@ function fetch_pkg($url, $out = $null, $exrep = $null, $prefix = $null) {
             if ($1k.isdir($inst_dst)) { $1k.rmdirs($inst_dst) }
         }
     } else {
-        $prefix = $external_prefix
+        $prefix = $install_prefix
     }
     
     download_and_expand $url $out $prefix
@@ -879,7 +891,7 @@ else {
 # setup nuget, not add to path
 function setup_nuget() {
     if (!$manifest['nuget']) { return $null }
-    $nuget_bin = Join-Path $external_prefix 'nuget'
+    $nuget_bin = Join-Path $install_prefix 'nuget'
     $nuget_prog, $nuget_ver = find_prog -name 'nuget' -path $nuget_bin -mode 'BOTH' -params 'help' -silent $true
     if (!$nuget_prog) {
         $1k.rmdirs($nuget_bin)
@@ -918,7 +930,7 @@ function setup_python3() {
 # setup axslcc, not add to path
 function setup_axslcc() {
     if (!$manifest['axslcc']) { return $null }
-    $axslcc_bin = Join-Path $external_prefix 'axslcc'
+    $axslcc_bin = Join-Path $install_prefix 'axslcc'
     $axslcc_prog, $axslcc_ver = find_prog -name 'axslcc' -path $axslcc_bin -mode 'BOTH'
     if ($axslcc_prog) {
         return $axslcc_prog
@@ -949,7 +961,7 @@ function setup_axslcc() {
 function setup_ninja() {
     if (!$manifest['ninja']) { return $null }
     $suffix = $('win', 'linux', 'mac').Get($HOST_OS)
-    $ninja_bin = Join-Path $external_prefix 'ninja'
+    $ninja_bin = Join-Path $install_prefix 'ninja'
     $ninja_prog, $ninja_ver = find_prog -name 'ninja'
     if ($ninja_prog) {
         return $ninja_prog
@@ -973,7 +985,7 @@ function setup_cmake($skipOS = $false) {
         return $cmake_prog, $cmake_ver
     }
 
-    $cmake_root = $(Join-Path $external_prefix 'cmake')
+    $cmake_root = $(Join-Path $install_prefix 'cmake')
     $cmake_bin = Join-Path $cmake_root 'bin'
     $cmake_prog, $cmake_ver = find_prog -name 'cmake' -path $cmake_bin -mode 'ONLY' -silent $true
     if (!$cmake_prog) {
@@ -987,7 +999,7 @@ function setup_cmake($skipOS = $false) {
             $cmake_pkg_name = "cmake-$cmake_ver-$HOST_OS_NAME-universal"
         }
 
-        $cmake_pkg_path = Join-Path $external_prefix "$cmake_pkg_name$cmake_suffix"
+        $cmake_pkg_path = Join-Path $install_prefix "$cmake_pkg_name$cmake_suffix"
 
         $assemble_url = $channels['cmake']
         if (!$assemble_url) {
@@ -997,7 +1009,7 @@ function setup_cmake($skipOS = $false) {
             $cmake_url = & $assemble_url -FileName "$cmake_pkg_name$cmake_suffix"
         }
 
-        $cmake_dir = Join-Path $external_prefix $cmake_pkg_name
+        $cmake_dir = Join-Path $install_prefix $cmake_pkg_name
         if ($IsMacOS) {
             $cmake_app_contents = Join-Path $cmake_dir 'CMake.app/Contents'
         }
@@ -1058,7 +1070,7 @@ function ensure_cmake_ninja($cmake_prog, $ninja_prog) {
 
 function setup_nsis() {
     if (!$manifest['nsis']) { return $null }
-    $nsis_bin = Join-Path $external_prefix "nsis"
+    $nsis_bin = Join-Path $install_prefix "nsis"
     $nsis_prog, $nsis_ver = find_prog -name 'nsis' -cmd 'makensis' -params '/VERSION'
     if ($nsis_prog) {
         return $nsis_prog
@@ -1076,11 +1088,11 @@ function setup_nsis() {
 
 function setup_nasm() {
     if (!$manifest['nasm']) { return $null }
-    $nasm_prog, $nasm_ver = find_prog -name 'nasm' -path "$external_prefix/nasm" -mode 'BOTH' -silent $true
+    $nasm_prog, $nasm_ver = find_prog -name 'nasm' -path "$install_prefix/nasm" -mode 'BOTH' -silent $true
 
     if (!$nasm_prog) {
         if ($IsWin) {
-            $nasm_bin = Join-Path $external_prefix "nasm-$nasm_ver"
+            $nasm_bin = Join-Path $install_prefix "nasm-$nasm_ver"
             if (!$1k.isdir($nasm_bin)) {
                 fetch_pkg "https://www.nasm.us/pub/nasm/releasebuilds/$nasm_ver/win64/nasm-$nasm_ver-win64.zip"
             }
@@ -1096,7 +1108,7 @@ function setup_nasm() {
         }
     }
 
-    $nasm_prog, $nasm_ver = find_prog -name 'nasm' -path "$external_prefix/nasm" -mode 'BOTH' -silent $true
+    $nasm_prog, $nasm_ver = find_prog -name 'nasm' -path "$install_prefix/nasm" -mode 'BOTH' -silent $true
     if ($nasm_prog) {
         $1k.println("Using nasm: $nasm_prog, version: $nasm_ver")
     }
@@ -1111,7 +1123,7 @@ function setup_jdk() {
         return $javac_prog
     }
 
-    $jdk_root = Join-Path $external_prefix "jdk"
+    $jdk_root = Join-Path $install_prefix "jdk"
     $java_home = if (!$IsMacOS) { $jdk_root } else { Join-Path $jdk_root 'Contents/Home' }
     $jdk_bin = Join-Path $java_home 'bin'
 
@@ -1155,7 +1167,7 @@ function setup_7z() {
     $7z_cmd_info = Get-Command '7z' -ErrorAction SilentlyContinue
     if (!$7z_cmd_info) {
         if ($IsWin) {
-            $7z_prog = Join-Path $external_prefix '7z2301-x64/7z.exe'
+            $7z_prog = Join-Path $install_prefix '7z2301-x64/7z.exe'
             if (!$1k.isfile($7z_prog)) {
                 fetch_pkg $(devtool_url '7z2301-x64.zip')
             }
@@ -1181,7 +1193,7 @@ function setup_llvm() {
     if (!$manifest.Contains('llvm')) { return $null }
     $clang_prog, $clang_ver = find_prog -name 'llvm' -cmd "clang"
     if (!$clang_prog) {
-        $llvm_root = Join-Path $external_prefix 'LLVM'
+        $llvm_root = Join-Path $install_prefix 'LLVM'
         $llvm_bin = Join-Path $llvm_root 'bin'
         $clang_prog, $clang_ver = find_prog -name 'llvm' -cmd "clang" -path $llvm_bin -silent $true
         if (!$clang_prog) {
@@ -1210,7 +1222,7 @@ function setup_android_sdk() {
         $ndk_ver = $ndk_ver.Substring(0, $ndk_ver.Length - 1)
     }
 
-    $my_sdk_root = Join-Path $external_prefix 'adt/sdk'
+    $my_sdk_root = Join-Path $install_prefix 'adt/sdk'
 
     $sdk_dirs = @()
     $1k.insert([ref]$sdk_dirs, $env:ANDROID_HOME)
@@ -1278,24 +1290,24 @@ function setup_android_sdk() {
         $sdkmanager_prog, $sdkmanager_ver = (find_prog -name 'cmdlinetools' -cmd 'sdkmanager' -path $cmdlinetools_bin -params "--version", "--sdk_root=$sdk_root")
     }
     else {
-        $sdk_root = Join-Path $external_prefix 'adt/sdk'
+        $sdk_root = Join-Path $install_prefix 'adt/sdk'
         if (!$1k.isdir($sdk_root)) {
             $1k.mkdirs($sdk_root)
         }
     }
 
     if (!$sdkmanager_prog) {
-        $cmdlinetools_bin = Join-Path $external_prefix 'cmdline-tools/bin'
+        $cmdlinetools_bin = Join-Path $install_prefix 'cmdline-tools/bin'
         $sdkmanager_prog, $sdkmanager_ver = (find_prog -name 'cmdlinetools' -cmd 'sdkmanager' -path $cmdlinetools_bin -params "--version", "--sdk_root=$sdk_root")
         $suffix = $('win', 'linux', 'mac').Get($HOST_OS)
         if (!$sdkmanager_prog) {
             $1k.println("Installing cmdlinetools version: $sdkmanager_ver ...")
 
             $cmdlinetools_pkg_name = "commandlinetools-$suffix-$($cmdlinetools_rev)_latest.zip"
-            $cmdlinetools_pkg_path = Join-Path $external_prefix $cmdlinetools_pkg_name
+            $cmdlinetools_pkg_path = Join-Path $install_prefix $cmdlinetools_pkg_name
             $cmdlinetools_url = "https://dl.google.com/android/repository/$cmdlinetools_pkg_name"
             download_file $cmdlinetools_url $cmdlinetools_pkg_path
-            Expand-Archive -Path $cmdlinetools_pkg_path -DestinationPath "$external_prefix/"
+            Expand-Archive -Path $cmdlinetools_pkg_path -DestinationPath "$install_prefix/"
             $sdkmanager_prog, $_ = (find_prog -name 'cmdlinetools' -cmd 'sdkmanager' -path $cmdlinetools_bin -params "--version", "--sdk_root=$sdk_root" -silent $True)
             if (!$sdkmanager_prog) {
                 throw "Install cmdlinetools version: $sdkmanager_ver fail"
@@ -1380,7 +1392,7 @@ function setup_emsdk() {
         $1k.println('Not found emcc toolchain in $env:PATH, setup emsdk ...')
         $emsdk_cmd = (Get-Command emsdk -ErrorAction SilentlyContinue)
         if (!$emsdk_cmd) {
-            $emsdk_root = Join-Path $external_prefix 'emsdk'
+            $emsdk_root = Join-Path $install_prefix 'emsdk'
             if (!$1k.isdir($emsdk_root)) {
                 git clone 'https://github.com/emscripten-core/emsdk.git' $emsdk_root
             }
@@ -1461,7 +1473,7 @@ function setup_gclient() {
     # setup gclient tool
     # download depot_tools
     # git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git $gclient_dir
-    $gclient_dir = Join-Path $external_prefix 'depot_tools'
+    $gclient_dir = Join-Path $install_prefix 'depot_tools'
     if (!$1k.isdir($gclient_dir)) {
         if ($IsWin) {
             $1k.mkdirs($gclient_dir)
