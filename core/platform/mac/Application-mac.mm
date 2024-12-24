@@ -93,7 +93,6 @@ int Application::run()
     if (glView->isOpenGLReady())
     {
         director->end();
-        director->mainLoop();
     }
 
     glView->release();
