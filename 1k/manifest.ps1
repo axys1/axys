@@ -24,6 +24,7 @@ if ($Global:is_axmol_app -or $Global:is_axmol_engine) {
     $manifest['cmake'] = $build_profiles['cmake']
 
     $manifest['vs'] = $build_profiles['vs']
+    $manifest['llvm'] = $build_profiles['llvm']
 
     # android sdk tools
     $android_sdk_tools['build-tools'] = $build_profiles['build-tools']
