@@ -12,6 +12,13 @@ import subprocess
 import re
 from contextlib import contextmanager
 
+g_debug_mode = False
+# debug only
+if g_debug_mode:
+    generator_dir = os.path.dirname(__file__) + "/../bindings-generator"
+    sys.path.append(os.path.abspath(generator_dir))
+    from generator import generate_one
+
 g_ndk_root = None
 
 def _check_ndk_root_env():
@@ -191,8 +198,9 @@ def main():
     cxx_generator_root = os.path.abspath(os.path.join(project_root, 'tools/bindings-generator'))
 
     extraFlags = _defaultIncludePath()
-    extraFlags += " -DFMT_USE_CONCEPTS=0"
-    extraFlags += " -DAX_ENABLE_MEDIA=1"
+    extraFlags += ' -DAX_ENABLE_MEDIA=1'
+    extraFlags += ' -D__cpp_coroutines=201703'
+
     
     # save config to file
     if(sys.version_info.major >= 3):
@@ -250,13 +258,18 @@ def main():
                     }
         target = 'lua'
         generator_py = '%s/generator.py' % cxx_generator_root
+
+        global g_debug_mode
         for key in cmd_args.keys():
             args = cmd_args[key]
             cfg = '%s/%s' % (tolua_root, key)
             print('Generating bindings for %s...' % (key[:-4]))
-            command = '"%s" %s %s -s %s -t %s -o %s -n %s' % (python_bin, generator_py, cfg, args[0], target, output_dir, args[1])
-            print(command)
-            _run_cmd(command)
+            if not g_debug_mode:
+                command = '"%s" %s %s -s %s -t %s -o %s -n %s' % (python_bin, generator_py, cfg, args[0], target, output_dir, args[1])
+                print(command)
+                _run_cmd(command)
+            else:
+                generate_one(cfg, args[0], target, output_dir, args[1])
 
         print('---------------------------------')
         print('Generating lua bindings succeeds.')

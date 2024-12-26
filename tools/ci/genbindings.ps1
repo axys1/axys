@@ -9,7 +9,8 @@ $succeed = $true
 if (($stage -band 1)) {
     # ensure prebuilt lib downloaded
     Push-Location $AX_ROOT
-    ./setup.ps1
+    ## setup ndk
+    . ./setup.ps1 -p android
     axmol -c
     Pop-Location
 
@@ -17,10 +18,7 @@ if (($stage -band 1)) {
     $python_cmd = @('python3', 'python')[$IsWin]
 
     &$pip_cmd install PyYAML Cheetah3
-    ## setup ndk
-    $setup_script = (Resolve-Path $AX_ROOT/setup.ps1).Path
 
-    . $setup_script -p android
     echo "after setup py_ver: $(&$python_cmd -V), PATH=$env:PATH"
 
     echo "$ndk_root=$ndk_root"
@@ -30,7 +28,7 @@ if (($stage -band 1)) {
     $lib_path = Join-Path $AX_ROOT "tools/bindings-generator/libclang/$lib_name"
     if (!(Test-Path $lib_path -PathType Leaf)) {
         setup_7z
-        $llvm_ver = '15.0.7'
+        $llvm_ver = $mirror_conf.versions.'llvm'
         $llvm_pkg = "llvm-$llvm_ver.7z"
 
         $prefix = Join-Path $AX_ROOT "cache/devtools"

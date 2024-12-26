@@ -5,7 +5,8 @@
     "kcp": "v1.7-f2aa30e",
     "lz4": "v1.10.0",
     "yaml-cpp": "0.8.0",
-    "sample-assets": "master"
+    "sample-assets": "master",
+    "llvm": "19.1.5"
   },
   "mirrors": {
     "github": {
