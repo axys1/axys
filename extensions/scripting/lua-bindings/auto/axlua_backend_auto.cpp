@@ -879,7 +879,7 @@ int lua_ax_backend_Program_getProgramId(lua_State* tolua_S)
             return 0;
         }
         auto&& ret = cobj->getProgramId();
-        tolua_pushnumber(tolua_S,(lua_Number)ret);
+        #pragma warning NO CONVERSION FROM NATIVE FOR unsigned long long;
         return 1;
     }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "axb.Program:getProgramId",argc, 0);
@@ -1689,6 +1689,53 @@ int lua_ax_backend_ProgramState_getBatchId(lua_State* tolua_S)
 
     return 0;
 }
+int lua_ax_backend_ProgramState_isBatchable(lua_State* tolua_S)
+{
+    int argc = 0;
+    ax::backend::ProgramState* cobj = nullptr;
+    bool ok  = true;
+
+#if _AX_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if _AX_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"axb.ProgramState",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (ax::backend::ProgramState*)tolua_tousertype(tolua_S,1,0);
+
+#if _AX_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_ax_backend_ProgramState_isBatchable'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 0) 
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_backend_ProgramState_isBatchable'", nullptr);
+            return 0;
+        }
+        auto&& ret = cobj->isBatchable();
+        tolua_pushboolean(tolua_S,(bool)ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "axb.ProgramState:isBatchable",argc, 0);
+    return 0;
+
+#if _AX_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_ax_backend_ProgramState_isBatchable'.",&tolua_err);
+#endif
+
+    return 0;
+}
 int lua_ax_backend_ProgramState_updateBatchId(lua_State* tolua_S)
 {
     int argc = 0;
@@ -1847,6 +1894,7 @@ int lua_register_ax_backend_ProgramState(lua_State* tolua_S)
         tolua_function(tolua_S,"getMutableVertexLayout",lua_ax_backend_ProgramState_getMutableVertexLayout);
         tolua_function(tolua_S,"setSharedVertexLayout",lua_ax_backend_ProgramState_setSharedVertexLayout);
         tolua_function(tolua_S,"getBatchId",lua_ax_backend_ProgramState_getBatchId);
+        tolua_function(tolua_S,"isBatchable",lua_ax_backend_ProgramState_isBatchable);
         tolua_function(tolua_S,"updateBatchId",lua_ax_backend_ProgramState_updateBatchId);
         tolua_function(tolua_S,"validateSharedVertexLayout",lua_ax_backend_ProgramState_validateSharedVertexLayout);
     tolua_endmodule(tolua_S);
