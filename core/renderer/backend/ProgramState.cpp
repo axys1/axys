@@ -177,7 +177,7 @@ bool ProgramState::init(Program* program)
     if (programId < ProgramType::BUILTIN_COUNT)
     {
         this->_batchId = programId;
-        this->_isValidBatchId = true;
+        this->_isBatchable = true;
     }
 
     return true;
@@ -186,7 +186,7 @@ bool ProgramState::init(Program* program)
 void ProgramState::updateBatchId()
 {
     _batchId = XXH64(_uniformBuffers.data(), _uniformBuffers.size(), _program->getProgramId());
-    _isValidBatchId = true;
+    _isBatchable = true;
 }
 
 void ProgramState::resetUniforms()
@@ -233,7 +233,7 @@ ProgramState* ProgramState::clone() const
     cp->_vertexLayout    = !_ownVertexLayout ? _vertexLayout : new VertexLayout(*_vertexLayout);
 
     cp->_batchId = this->_batchId;
-    cp->_isValidBatchId = this->_isValidBatchId;
+    cp->_isBatchable = this->_isBatchable;
     return cp;
 }
 

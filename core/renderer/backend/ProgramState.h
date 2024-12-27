@@ -304,7 +304,7 @@ public:
     /*
      * Gets the state of the batch ID. If true, then batch ID is valid
      */
-    bool isValidBatchId() const { return _isValidBatchId; };
+    bool isBatchable() const { return _isBatchable; };
 
     /*
     * Update batchID of current program state, by default, custom program was traits with mutable uniforms
@@ -405,7 +405,7 @@ protected:
     bool _ownVertexLayout       = false;
 
     uint64_t _batchId    = -1;
-    bool _isValidBatchId = false;
+    bool _isBatchable = false;
 
 #if AX_ENABLE_CACHE_TEXTURE_DATA
     EventListenerCustom* _backToForegroundListener = nullptr;
