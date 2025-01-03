@@ -3770,7 +3770,7 @@ void ImFont::BuildLookupTable()
 
 // API is designed this way to avoid exposing the 4K page size
 // e.g. use with IsGlyphRangeUnused(0, 255)
-bool ImFont::IsGlyphRangeUnused(unsigned int c_begin, unsigned int c_last)
+bool ImFont::IsGlyphRangeUnused(unsigned int c_begin, unsigned int c_last) const
 {
     unsigned int page_begin = (c_begin / 4096);
     unsigned int page_last = (c_last / 4096);
@@ -3860,7 +3860,7 @@ void ImFont::AddRemapChar(ImWchar dst, ImWchar src, bool overwrite_dst)
 }
 
 // Find glyph, return fallback if missing
-const ImFontGlyph* ImFont::FindGlyph(ImWchar c)
+const ImFontGlyph* ImFont::FindGlyph(ImWchar c) const
 {
     if (c >= (size_t)IndexLookup.Size)
         return FallbackGlyph;
@@ -3870,7 +3870,7 @@ const ImFontGlyph* ImFont::FindGlyph(ImWchar c)
     return &Glyphs.Data[i];
 }
 
-const ImFontGlyph* ImFont::FindGlyphNoFallback(ImWchar c)
+const ImFontGlyph* ImFont::FindGlyphNoFallback(ImWchar c) const
 {
     if (c >= (size_t)IndexLookup.Size)
         return NULL;
