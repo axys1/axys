@@ -484,12 +484,11 @@ void DrawNode::drawCardinalSpline(PointArray* config,
 
     ssize_t p;
     float lt;
-    float dt;
     float deltaT = 1.0f / config->count();
 
     for (unsigned int i = 0; i < segments; i++)
     {
-        dt = (float)i / segments;
+        float dt = (float)i / segments;
         p  = static_cast<ssize_t>(dt / deltaT);
 
         // Check last control point reached
