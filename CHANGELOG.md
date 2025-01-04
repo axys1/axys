@@ -1,3 +1,19 @@
+## axmol-2.3.1 Jan.5 2025
+
+### Bug fixes
+
+- Fix RenderTexture internal sprite positioning and test cases by @rh101 in https://github.com/axmolengine/axmol/pull/2301
+- Fix imgui compile and link error for wasm by @halx99 in https://github.com/axmolengine/axmol/pull/2297
+
+### Improvements
+
+- Improve CI, raise error when build fail by @halx99
+- Improve DevSetup.md by @rh101 in https://github.com/axmolengine/axmol/pull/2298
+
+### 3rdparty updates
+
+- xxhash: 0.8.2 ==> 0.8.3
+
 ## axmol-2.3.0 Jan.1 2025
 
 ### Significant changes relative to 2.2.x:

@@ -1762,6 +1762,7 @@ elseif ($Global:is_wasm) {
 
 $is_host_target = $Global:is_win32 -or $Global:is_linux -or $Global:is_mac
 $is_host_cpu = $HOST_CPU -eq $TARGET_CPU
+$cmake_target = $null
 
 if (!$setupOnly) {
     $BUILD_DIR = $null
@@ -2030,10 +2031,25 @@ if (!$setupOnly) {
                         $forward_options += '--', '-quiet'
                     }
 
-                    if ($options.t) { $cmake_target = $options.t }
-                    if ($cmake_target) {
-                        $cmake_targets = $cmake_target.Split(',')
-                        foreach ($target in $cmake_targets) {
+                    $cm_targets = $options.t
+
+                    if($cm_targets) {
+                        if($cm_targets -isnot [array]) {
+                            $cm_targets = "$cm_targets".Split(',')
+                        }
+                    } else {
+                        $cm_targets = @()
+                    }
+                    if($cmake_target) {
+                        if ($cm_targets.Contains($cmake_target)) {
+                            $cm_targets += $cmake_target
+                        }
+                    } else {
+                        $cmake_target = $cm_targets[-1]
+                    }
+
+                    if ($cm_targets) {
+                        foreach ($target in $cm_targets) {
                             $1k.println("cmake --build $BUILD_DIR $BUILD_ALL_OPTIONS --target $target")
                             cmake --build $BUILD_DIR $BUILD_ALL_OPTIONS --target $target $forward_options | Out-Host
                             if (!$?) {
