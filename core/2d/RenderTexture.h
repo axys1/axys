@@ -314,12 +314,6 @@ public:
 
     inline backend::RenderTarget* getRenderTarget() const { return _renderTarget; }
 
-    /** Sets the Sprite being used.
-     *
-     * @param sprite A Sprite.
-     */
-    void setSprite(Sprite* sprite);
-
     /** Flag: Use stack matrix computed from scene hierarchy or generate new modelView and projection matrix.
      *
      * @param keepMatrix Whether or not use stack matrix computed from scene hierarchy or generate new modelView and
@@ -398,6 +392,12 @@ public:
     void onExit() override;
 
 protected:
+    /** Sets the Sprite being used.
+     *
+     * @param sprite A Sprite.
+     */
+    void setSprite(Sprite* sprite);
+
     virtual void
     beginWithClear(float r, float g, float b, float a, float depthValue, int stencilValue, ClearFlag flags);
     // renderer caches and callbacks

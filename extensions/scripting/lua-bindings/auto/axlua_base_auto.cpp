@@ -84131,56 +84131,6 @@ int lua_ax_base_RenderTexture_getRenderTarget(lua_State* tolua_S)
 
     return 0;
 }
-int lua_ax_base_RenderTexture_setSprite(lua_State* tolua_S)
-{
-    int argc = 0;
-    ax::RenderTexture* cobj = nullptr;
-    bool ok  = true;
-
-#if _AX_DEBUG >= 1
-    tolua_Error tolua_err;
-#endif
-
-
-#if _AX_DEBUG >= 1
-    if (!tolua_isusertype(tolua_S,1,"ax.RenderTexture",0,&tolua_err)) goto tolua_lerror;
-#endif
-
-    cobj = (ax::RenderTexture*)tolua_tousertype(tolua_S,1,0);
-
-#if _AX_DEBUG >= 1
-    if (!cobj) 
-    {
-        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_ax_base_RenderTexture_setSprite'", nullptr);
-        return 0;
-    }
-#endif
-
-    argc = lua_gettop(tolua_S)-1;
-    if (argc == 1) 
-    {
-        ax::Sprite* arg0;
-
-        ok &= luaval_to_object<ax::Sprite>(tolua_S, 2, "ax.Sprite",&arg0, "ax.RenderTexture:setSprite");
-        if(!ok)
-        {
-            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_RenderTexture_setSprite'", nullptr);
-            return 0;
-        }
-        cobj->setSprite(arg0);
-        lua_settop(tolua_S, 1);
-        return 1;
-    }
-    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "ax.RenderTexture:setSprite",argc, 1);
-    return 0;
-
-#if _AX_DEBUG >= 1
-    tolua_lerror:
-    tolua_error(tolua_S,"#ferror in function 'lua_ax_base_RenderTexture_setSprite'.",&tolua_err);
-#endif
-
-    return 0;
-}
 int lua_ax_base_RenderTexture_setKeepMatrix(lua_State* tolua_S)
 {
     int argc = 0;
@@ -84676,7 +84626,6 @@ int lua_register_ax_base_RenderTexture(lua_State* tolua_S)
         tolua_function(tolua_S,"setAutoDraw",lua_ax_base_RenderTexture_setAutoDraw);
         tolua_function(tolua_S,"getSprite",lua_ax_base_RenderTexture_getSprite);
         tolua_function(tolua_S,"getRenderTarget",lua_ax_base_RenderTexture_getRenderTarget);
-        tolua_function(tolua_S,"setSprite",lua_ax_base_RenderTexture_setSprite);
         tolua_function(tolua_S,"setKeepMatrix",lua_ax_base_RenderTexture_setKeepMatrix);
         tolua_function(tolua_S,"setVirtualViewport",lua_ax_base_RenderTexture_setVirtualViewport);
         tolua_function(tolua_S,"isSharedRenderTarget",lua_ax_base_RenderTexture_isSharedRenderTarget);
