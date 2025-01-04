@@ -3515,8 +3515,17 @@ void DrawNodeSpLinesTest::update(float dt)
 
     drawNode->drawCardinalSpline(array, 0.2f, points.size() * 8, Color4F::GREEN, 20.0f);
     drawNode->drawCardinalSpline(array, 0.2f, points.size() * 8, Color4F::BLUE);
-
     drawNode->drawCardinalSpline(array, 0.2f, points.size() * 16, Color4F(1.0f, 1.0f, 0.5f, 1.0f), 10.0f);
+
+    // Issue #2302 
+    auto array3 = PointArray::create(20);
+    for (int i = 0; i < 10; i++)
+    {
+        array3->addControlPoint(Vec2((i % 2) ? 20 : screen.width - 20, 50 + i * 20));
+        drawNode->drawPoint(array3->getControlPointAtIndex(i), 10, Color4F::BLUE);
+    }
+    drawNode->drawCardinalSpline(array3, 0.1, 20, Color4F::ORANGE);
+
 
     //  drawNode->drawCatmullRom(array, points.size() * 8, Color4F::YELLOW,5);
     // if (points.size()>3)

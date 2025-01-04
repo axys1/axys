@@ -484,22 +484,21 @@ void DrawNode::drawCardinalSpline(PointArray* config,
 
     ssize_t p;
     float lt;
+    float dt;
     float deltaT = 1.0f / config->count();
 
     for (unsigned int i = 0; i < segments; i++)
     {
-        float dt = (float)i / segments;
+        dt = (float)i / segments;
+        p  = static_cast<ssize_t>(dt / deltaT);
 
-        // border
-        if (dt == 1)
+        // Check last control point reached
+        if (p >= (config->count() - 1))
         {
-            p  = config->count() - 1;
-            lt = 1;
-        }
-        else
-        {
-            p  = static_cast<ssize_t>(dt / deltaT);
-            lt = (dt - deltaT * (float)p) / deltaT;
+            _vertices[i] = config->getControlPointAtIndex(config->count() - 1);
+            segments     = i + 1;
+            _vertices.resize(segments);
+            break;
         }
 
         // Interpolate
@@ -508,14 +507,8 @@ void DrawNode::drawCardinalSpline(PointArray* config,
         Vec2 pp2 = config->getControlPointAtIndex(p + 1);
         Vec2 pp3 = config->getControlPointAtIndex(p + 2);
 
-        Vec2 newPos    = ccCardinalSplineAt(pp0, pp1, pp2, pp3, tension, lt);
-        _vertices[i].x = newPos.x;
-        _vertices[i].y = newPos.y;
-        if (newPos == config->getControlPointAtIndex(config->count() - 1) && i > 0)
-        {
-            segments = i + 1;
-            break;
-        }
+        lt           = (dt - deltaT * (float)p) / deltaT;
+        _vertices[i] = ccCardinalSplineAt(pp0, pp1, pp2, pp3, tension, lt);
     }
 
     _drawPoly(_vertices.data(), segments, false, color, thickness, true);
