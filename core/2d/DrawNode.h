@@ -503,6 +503,7 @@ public:
      * @js NA
      */
 
+    void drawColoredTriangle(const Vec2* vertices3, const Color4B* color3);
     void drawTriangle(const Vec2* vertices3, const Color4B& color);
 
     void drawTriangle(const Vec2& p1, const Vec2& p2, const Vec2& p3, const Color4B& color);
@@ -606,6 +607,9 @@ private:
                        const Color4B& fillColor,
                        bool solid      = true,
                        float thickness = 0.0f);
+
+    void _drawColoredTriangle(Vec2* vertices3,
+                       const Color4B* color3);
 
     // Internal function _drawAStar
     void _drawAStar(const Vec2& center,

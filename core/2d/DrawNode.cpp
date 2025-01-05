@@ -731,6 +731,12 @@ void DrawNode::drawSolidCircle(const Vec2& center,
     _drawCircle(center, radius, angle, segments, false, 1.0f, 1.0f, Color4B(), color, true);
 }
 
+void DrawNode::drawColoredTriangle(const Vec2* vertices3, const Color4B* color3)
+{
+    Vec2 vertices[3] = {vertices3[0], vertices3[1], vertices3[2]};
+    _drawColoredTriangle(vertices, color3);
+}
+
 void DrawNode::drawTriangle(const Vec2* vertices3, const Color4B& color)
 {
     Vec2 vertices[3] = {vertices3[0], vertices3[1], vertices3[2]};
@@ -1224,6 +1230,22 @@ void DrawNode::_drawCircle(const Vec2& center,
 
     AX_SAFE_DELETE_ARRAY(_vertices);
 }
+
+void DrawNode::_drawColoredTriangle(Vec2* vertices3,
+                             const Color4B* color3)
+{
+    unsigned int vertex_count = 3;
+
+    applyTransform(vertices3, vertices3, vertex_count);
+
+    auto triangles  = reinterpret_cast<V2F_C4B_T2F_Triangle*>(expandBufferAndGetPointer(_triangles, vertex_count));
+    _trianglesDirty = true;
+
+    triangles[0] = {{vertices3[0], color3[0], Vec2::ZERO},
+                    {vertices3[1], color3[1], Vec2::ZERO},
+                    {vertices3[2], color3[2], Vec2::ZERO}};
+}
+
 
 void DrawNode::_drawTriangle(Vec2* vertices3,
                              const Color4B& borderColor,
