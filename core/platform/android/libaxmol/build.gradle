@@ -35,7 +35,7 @@ android {
 dependencies {
     implementation fileTree(dir: '../java/libs', include: ['*.jar'])
 
-    def media3_version = "1.2.1"
+    def media3_version = "1.5.1"
 
     // refer to: https://developer.android.com/jetpack/androidx/releases/media3?hl=zh-cn#declaring_dependencies
     // For media playback using ExoPlayer
@@ -51,6 +51,7 @@ dependencies {
     //api "androidx.media3:media3-exoplayer-ima:$media3_version"
 
     implementation 'androidx.annotation:annotation:1.7.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
 
     api ('com.google.guava:guava:31.0.1-android') {
         // Exclude dependencies that are only used by Guava at compile time
