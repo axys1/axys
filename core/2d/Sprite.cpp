@@ -434,7 +434,14 @@ void Sprite::setTexture(Texture2D* texture)
     }
 
     if (needsUpdatePS)
-        setProgramState(backend::ProgramType::POSITION_TEXTURE_COLOR);
+    {
+        const PixelFormat pixelFormat = _texture->getPixelFormat();
+
+        if (pixelFormat == PixelFormat::RG8)
+            setProgramState(backend::ProgramType::POSITION_TEXTURE_GRAY_ALPHA);
+        else
+            setProgramState(backend::ProgramType::POSITION_TEXTURE_COLOR);
+    }
     else
         updateProgramStateTexture(_texture);
 }

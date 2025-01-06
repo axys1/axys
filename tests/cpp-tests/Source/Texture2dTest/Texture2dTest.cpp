@@ -437,6 +437,11 @@ void TexturePNG::onEnter()
     ai88->setPosition(s.width / 4.0f, s.height * 3.0f / 4.0f);
     addChild(ai88);
 
+    // grayscale with alpha, gray+alpha shader.
+    auto ai88s = Sprite::create("Images/test_image_ai88.png", PixelFormat::RG8);
+    ai88s->setPosition(s.width / 4.0f, s.height / 2.0f);
+    addChild(ai88s);
+
     // rgb without alpha
     auto rgb888 = Sprite::create("Images/test_image_rgb888.png");
     rgb888->setPosition(s.width * 3.0f / 4.0f, s.height / 4.0f);
@@ -455,7 +460,7 @@ std::string TexturePNG::title() const
 
 std::string TexturePNG::subtitle() const
 {
-    return "LB:I8, LT:AI8\nRB:RGB888, RT: RGBA8888";
+    return "LB:I8, LM: AI8/RG8 pixel format, LT:AI8\nRB:RGB888, RT: RGBA8888";
 }
 
 //------------------------------------------------------------------
@@ -1634,7 +1639,7 @@ void TexturePixelFormat::onEnter()
     Director::getInstance()->getTextureCache()->removeTexture(sprite5->getTexture());
 
     // A8 image (8-bit)
-    auto sprite6 = Sprite::create("Images/test-rgba1.png", PixelFormat::R8); // 
+    auto sprite6 = Sprite::create("Images/test-rgba1.png", PixelFormat::R8); //
     sprite6->setPosition(Vec2(6 * s.width / 7, s.height / 2 - 32));
     addChild(sprite6, 0);
 

@@ -2606,7 +2606,7 @@ void Image::premultiplyAlpha()
         for (int i = 0; i < _width * _height; i++)
         {
             uint8_t* p   = _data + i * 2;
-            twoBytes[i] = ((p[0] * p[1] + 1) >> 8) | (p[1] << 8);
+            twoBytes[i] = ((p[0] * (p[1] + 1)) >> 8) | (p[1] << 8);
         }
     }
 
