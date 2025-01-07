@@ -1,3 +1,78 @@
+## axmol-2.3.1 Jan.5 2025
+
+### Bug fixes
+
+- Fix RenderTexture internal sprite positioning and test cases by @rh101 in https://github.com/axmolengine/axmol/pull/2301
+- Fix imgui compile and link error for wasm by @halx99 in https://github.com/axmolengine/axmol/pull/2297
+- Fix continues drawCardinalSplines() drawing outside the control points on last control point by @aismann in https://github.com/axmolengine/axmol/pull/2303
+
+### Improvements
+
+- Improve CI, raise error when build fail by @halx99
+- Improve DevSetup.md by @rh101 in https://github.com/axmolengine/axmol/pull/2298
+
+### 3rdparty updates
+
+- xxhash: 0.8.2 ==> 0.8.3
+
+## axmol-2.3.0 Jan.1 2025
+
+### Significant changes relative to 2.2.x:
+
+- Add android15 16KB page size support by @halx99 in https://github.com/axmolengine/axmol/pull/2268
+- Improve build profiles by @halx99 in https://github.com/axmolengine/axmol/pull/2273
+- Rename `org.axmol*` to `dev.axmol*` by @halx99 in https://github.com/axmolengine/axmol/pull/2272
+- Rename `glslcc` to `axslcc` by @halx99 in https://github.com/axmolengine/axmol/pull/2271
+- Add support to create a minmal `axmol-bs` package for common cross platform build purpose by @halx99
+- Add vs2022 preview support in 1kiss.ps1 by @halx99
+- Update libclang to 19.1.6 for luabinding generator by @halx99
+- Download package to `cache` instead `tools/external`
+- Add build android `.aab` support via `axmol -p android -aab`
+
+### Bug fixes
+
+- Fix Label create with long string cause random crash in windows by @halx99
+- Fix DrawNode::drawPie(DrawMode::Line, thickness =1) draw a closed line (like DrawMode::Semi) wrong by @aismann in https://github.com/axmolengine/axmol/pull/2217
+- Fix for Android build issue by @rh101 in https://github.com/axmolengine/axmol/pull/2225
+- Fix media player by @ paulocoutinhox in https://github.com/axmolengine/axmol/pull/2257
+- Fix android class name paths incorrect by @rh101 in https://github.com/axmolengine/axmol/pull/2276
+- Fix renderer test case batching by @rh101 in https://github.com/axmolengine/axmol/pull/2291
+
+### Improvements
+
+- Improve DrawNode::drawPie() by @aismann in https://github.com/axmolengine/axmol/pull/2222
+- Metal: enable mipmap support by @smilediver in https://github.com/axmolengine/axmol/pull/2235
+- Add support for selecting all text in editbox via CTRL+A by @rh101 in https://github.com/axmolengine/axmol/pull/2238
+- Ensure that git ignores build folders created in test projects by @rh101 in https://github.com/axmolengine/axmol/pull/2247
+- Detect CTRL+A key combination to select all text in EditBox by @rh101 in https://github.com/axmolengine/axmol/pull/2251
+- Prevent excessive calls to deleteBackward method which may cause crashes on Android by @rh101 in https://github.com/axmolengine/axmol/pull/2248
+- Updated website. by @danialias in https://github.com/axmolengine/axmol/pull/2274
+- Make win32 messageBox always TOPMOST by @aismann in https://github.com/axmolengine/axmol/pull/2221
+- Add printLeaks call to alternative Win32 main method by @rh101 in https://github.com/axmolengine/axmol/pull/2278
+- Add printLeaks call in appropriate location to help developers by @rh101 in https://github.com/axmolengine/axmol/pull/2275
+- Remove TTF Font charCode 65535 limit by @halx99
+- Allow publish from specified commitish for ci
+
+### sdks updates
+
+- emsdk: 3.1.67 ==> 3.1.73
+- AGP: 8.4.0 ==> 8.7.3
+- gradle: 8.8.0 ==> 8.11.1
+- android target sdk: 34 ==> 35
+
+### 3rdparty updates
+
+- astcenc: 4.8.0 ==> 5.1.0
+- c-ares: 1.34.1 ==> 1.34.4
+- curl: 8.10.1 ==> 8.11.1
+- flatbuffers: 24.3.25 ==> 1.1.0-815e6e7
+- fmt: 11.0.1 ==> 11.1.1
+- oboe: 1.9.0 ==> 1.9.3
+- webp: 1.4.0 ==> 1.5.0
+- jpeg-turbo: 3.0.4 ==> 3.1.0
+- luajit: 2.1-97813fb ==> 2.1-f73e649
+- imgui: 1.90.6 ==> 1.91.6
+
 ## axmol-2.2.1 Oct.22 2024
 
 ### Bug fixes

@@ -65,6 +65,8 @@ param(
 
 $myRoot = $PSScriptRoot
 
+$ErrorActionPreference = 'Stop'
+
 $HOST_WIN = 0 # targets: win,uwp,android
 $HOST_LINUX = 1 # targets: linux,android
 $HOST_MAC = 2 # targets: android,ios,osx(macos),tvos,watchos
@@ -216,7 +218,7 @@ $manifest = @{
     # _EMIT_STL_ERROR(STL1000, "Unexpected compiler version, expected Clang xx.x.x or newer.");
     # clang-cl msvc14.37 require 16.0.0+
     # clang-cl msvc14.40 require 17.0.0+
-    llvm         = '17.0.6+'; 
+    llvm         = '17.0.6+';
     gcc          = '9.0.0+';
     cmake        = '3.23.0~3.31.1+';
     ninja        = '1.10.0+';
@@ -243,6 +245,7 @@ $channels = @{}
 $cmdlinetools_rev = '11076708' # 12.0
 
 $ndk_r23d_rev = '12186248'
+# $ndk_r25d_rev = '12161346'
 
 $android_sdk_tools = @{
     'build-tools' = '34.0.0'
@@ -269,6 +272,7 @@ $options = @{
     dm     = $false # dump compiler preprocessors
     i      = $false # perform install
     scope  = 'local'
+    aab    = $false
 }
 
 $optName = $null
@@ -318,7 +322,7 @@ if ($options.xb.GetType() -eq [string]) {
     $options.xb = $options.xb.Split(' ')
 }
 
-$pwsh_ver = $PSVersionTable.PSVersion.ToString()
+[VersionEx]$pwsh_ver = [Regex]::Match($PSVersionTable.PSVersion.ToString(), '(\d+\.)+(\*|\d+)').Value
 if ([VersionEx]$pwsh_ver -lt [VersionEx]"7.0") {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 }
@@ -655,8 +659,8 @@ function find_prog($name, $path = $null, $mode = 'ONLY', $cmd = $null, $params =
         if (!$usefv) {
             $verStr = $(. $cmd @params 2>$null) | Select-Object -First 1
             if ($LASTEXITCODE) {
-                Write-Warning '1kiss: Get version of $cmd fail'
-                $LASTEXITCODE = 0
+                Write-Warning "1kiss: Get version of $cmd fail"
+                $Global:LASTEXITCODE = 0
             }
             if (!$verStr -or $verStr.Contains('--version')) {
                 $verInfo = $cmd_info.Version
@@ -737,7 +741,7 @@ function download_and_expand($url, $out, $dest) {
             tar xf "$out" -C $dest | Out-Host
         }
         elseif ($out.EndsWith('.7z') -or $out.EndsWith('.exe')) {
-            7z x "$out" "-o$dest" -bsp1 -snld -y | Out-Host
+            7z x "$out" "-o$dest" -bsp1 -y | Out-Host
         }
         elseif ($out.EndsWith('.sh')) {
             chmod 'u+x' "$out" | Out-Host
@@ -818,7 +822,7 @@ function find_vs() {
         
         # refer: https://learn.microsoft.com/en-us/visualstudio/install/workload-and-component-ids?view=vs-2022
         $require_comps = @('Microsoft.VisualStudio.Component.VC.Tools.x86.x64', 'Microsoft.VisualStudio.Product.BuildTools')
-        $vs_installs = ConvertFrom-Json "$(&$VSWHERE_EXE -version $required_vs_ver.TrimEnd('+') -format 'json' -requires $require_comps -requiresAny)"
+        $vs_installs = ConvertFrom-Json "$(&$VSWHERE_EXE -version $required_vs_ver.TrimEnd('+') -format 'json' -requires $require_comps -requiresAny -prerelease)"
         $ErrorActionPreference = $eap
 
         if ($vs_installs) {
@@ -1760,6 +1764,7 @@ elseif ($Global:is_wasm) {
 
 $is_host_target = $Global:is_win32 -or $Global:is_linux -or $Global:is_mac
 $is_host_cpu = $HOST_CPU -eq $TARGET_CPU
+$cmake_target = $null
 
 if (!$setupOnly) {
     $BUILD_DIR = $null
@@ -1949,11 +1954,12 @@ if (!$setupOnly) {
             $build_tool_dir = Split-Path $build_tool -Parent
             Push-Location $build_tool_dir
             if (!$configOnly) {
+                $build_task = @('assemble', 'bundle')[$options.aab]
                 if ($optimize_flag -eq 'Debug') {
-                    & $build_tool assembleDebug $CONFIG_ALL_OPTIONS | Out-Host
+                    & $build_tool ${build_task}Debug $CONFIG_ALL_OPTIONS | Out-Host
                 }
                 else {
-                    & $build_tool assembleRelease $CONFIG_ALL_OPTIONS | Out-Host
+                    & $build_tool ${build_task}Release $CONFIG_ALL_OPTIONS | Out-Host
                 }
             }
             else {
@@ -2026,12 +2032,27 @@ if (!$setupOnly) {
                     if (($cmake_generator -eq 'Xcode') -and !$BUILD_ALL_OPTIONS.Contains('--verbose')) {
                         $forward_options += '--', '-quiet'
                     }
-                    $1k.println("cmake --build $BUILD_DIR $BUILD_ALL_OPTIONS")
 
-                    if ($options.t) { $cmake_target = $options.t }
-                    if ($cmake_target) {
-                        $cmake_targets = $cmake_target.Split(',') | Sort-Object | Get-Unique
-                        foreach ($target in $cmake_targets) {
+                    $cm_targets = $options.t
+
+                    if($cm_targets) {
+                        if($cm_targets -isnot [array]) {
+                            $cm_targets = "$cm_targets".Split(',')
+                        }
+                    } else {
+                        $cm_targets = @()
+                    }
+                    if($cmake_target) {
+                        if ($cm_targets.Contains($cmake_target)) {
+                            $cm_targets += $cmake_target
+                        }
+                    } else {
+                        $cmake_target = $cm_targets[-1]
+                    }
+
+                    if ($cm_targets) {
+                        foreach ($target in $cm_targets) {
+                            $1k.println("cmake --build $BUILD_DIR $BUILD_ALL_OPTIONS --target $target")
                             cmake --build $BUILD_DIR $BUILD_ALL_OPTIONS --target $target $forward_options | Out-Host
                             if (!$?) {
                                 Set-Location $stored_cwd
@@ -2040,6 +2061,7 @@ if (!$setupOnly) {
                         }
                     }
                     else {
+                        $1k.println("cmake --build $BUILD_DIR $BUILD_ALL_OPTIONS")
                         cmake --build $BUILD_DIR $BUILD_ALL_OPTIONS $forward_options | Out-Host
                         if (!$?) {
                             Set-Location $stored_cwd

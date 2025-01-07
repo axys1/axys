@@ -25,14 +25,14 @@ echo > /dev/null <<"out-null"
 $myRoot = $PSScriptRoot
 $AX_ROOT = $myRoot
 
-$Global:is_axmol_app = $true
+$Global:is_axmol_engine = Test-Path $(Join-Path $AX_ROOT 'core/axmol.cpp')
 
 function println($message) { Write-Host "axmol: $message" }
 
 # import VersionEx
 . (Join-Path $PSScriptRoot '1k/extensions.ps1')
 
-$pwsh_ver = [VersionEx]$PSVersionTable.PSVersion.ToString()
+[VersionEx]$pwsh_ver = [Regex]::Match($PSVersionTable.PSVersion.ToString(), '(\d+\.)+(\*|\d+)').Value
 
 function mkdirs([string]$path) {
     if (!(Test-Path $path -PathType Container)) {

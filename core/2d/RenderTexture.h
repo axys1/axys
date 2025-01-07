@@ -314,12 +314,6 @@ public:
 
     inline backend::RenderTarget* getRenderTarget() const { return _renderTarget; }
 
-    /** Sets the Sprite being used.
-     *
-     * @param sprite A Sprite.
-     */
-    void setSprite(Sprite* sprite);
-
     /** Flag: Use stack matrix computed from scene hierarchy or generate new modelView and projection matrix.
      *
      * @param keepMatrix Whether or not use stack matrix computed from scene hierarchy or generate new modelView and
@@ -379,7 +373,31 @@ public:
                                 backend::PixelFormat depthStencilFormat,
                                 bool sharedRenderTarget = true);
 
+    /**
+     * Event callback that is invoked every time when Node enters the 'stage'.
+     * If the Node enters the 'stage' with a transition, this event is called when the transition starts.
+     * During onEnter you can't access a "sister/brother" node.
+     * If you override onEnter, you shall call its parent's one, e.g., Node::onEnter().
+     * @lua NA
+     */
+    void onEnter() override;
+
+    /**
+     * Event callback that is invoked every time the Node leaves the 'stage'.
+     * If the Node leaves the 'stage' with a transition, this event is called when the transition finishes.
+     * During onExit you can't access a sibling node.
+     * If you override onExit, you shall call its parent's one, e.g., Node::onExit().
+     * @lua NA
+     */
+    void onExit() override;
+
 protected:
+    /** Sets the Sprite being used.
+     *
+     * @param sprite A Sprite.
+     */
+    void setSprite(Sprite* sprite);
+
     virtual void
     beginWithClear(float r, float g, float b, float a, float depthValue, int stencilValue, ClearFlag flags);
     // renderer caches and callbacks

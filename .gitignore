@@ -214,9 +214,7 @@ extensions/libccs20
 extensions/libccs19
 extensions/fonteng
 
-tools/bindings-generator/libclang/*.dll
-tools/bindings-generator/libclang/*.dylib
-tools/bindings-generator/libclang/*.so
+tools/bindings-generator/clang/prebuilt/*
 
 templates/lua-template-default/Content/src/axmol
 tests/lua-tests/Content/src/axmol

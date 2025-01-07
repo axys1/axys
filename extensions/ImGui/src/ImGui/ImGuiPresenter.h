@@ -103,8 +103,8 @@ public:
     /// <param name="glyphRange"></param>
     /// <param name="fontConfig"></param>
     void addFont(std::string_view fontFile,
-                 float fontSize          = DEFAULT_FONT_SIZE,
-                 GLYPH_RANGES glyphRange = GLYPH_RANGES::NONE,
+                 float fontSize                 = DEFAULT_FONT_SIZE,
+                 GLYPH_RANGES glyphRange        = GLYPH_RANGES::NONE,
                  const ImFontConfig& fontConfig = ImFontConfig());
     /// <summary>
     /// Add ImGui font with contentZoomFactor and use pre-existing glyph range for the specified font
@@ -169,7 +169,7 @@ public:
                const ImVec4& border_col = ImVec4(0, 0, 0, 0));
     void image(Sprite* sprite,
                const ImVec2& size,
-               bool keepAspectRatio = true,
+               bool keepAspectRatio     = true,
                const ImVec4& tint_col   = ImVec4(1, 1, 1, 1),
                const ImVec4& border_col = ImVec4(0, 0, 0, 0));
     void image(SpriteFrame* spriteFrame,
@@ -181,18 +181,15 @@ public:
                      const ImVec2& size,
                      const ImVec2& uv0      = ImVec2(0, 0),
                      const ImVec2& uv1      = ImVec2(1, 1),
-                     int frame_padding      = -1,
                      const ImVec4& bg_col   = ImVec4(0, 0, 0, 0),
                      const ImVec4& tint_col = ImVec4(1, 1, 1, 1));
     bool imageButton(Sprite* sprite,
                      const ImVec2& size,
-                     int frame_padding      = -1,
                      const ImVec4& bg_col   = ImVec4(0, 0, 0, 0),
                      const ImVec4& tint_col = ImVec4(1, 1, 1, 1));
 
     void node(Node* node, const ImVec4& tint_col = ImVec4(1, 1, 1, 1), const ImVec4& border_col = ImVec4(0, 0, 0, 0));
     bool nodeButton(Node* node,
-                    int frame_padding      = -1,
                     const ImVec4& bg_col   = ImVec4(0, 0, 0, 0),
                     const ImVec4& tint_col = ImVec4(1, 1, 1, 1));
 
@@ -211,7 +208,7 @@ public:
     void removeGlyphRanges(std::string_view key);
     void clearGlyphRanges();
     static void mergeFontGlyphs(ImFont* dst, ImFont* src, ImWchar start, ImWchar end);
-    int getCCRefId(Object* p);
+    int objectRef(Object* p);
 
 private:
     static void loadCustomFonts(void*);
@@ -233,12 +230,12 @@ private:
 
     std::unordered_map<uint32_t, ImGuiLoop> _renderLoops;
 
-    std::unordered_map<Object*, int> usedCCRefIdMap;
+    std::unordered_map<Object*, int> _objsRefIdMap;
     // cocos objects should be retained until next frame
-    Vector<Object*> usedCCRef;
+    Vector<Object*> _usedObjs;
 
     hlookup::string_map<std::vector<ImWchar>> _glyphRanges;
-    std::unordered_set<uintptr_t> _usedGlyphRanges; // there should be one intance of "each glyph ranges"
+    std::unordered_set<uintptr_t> _usedGlyphRanges;  // there should be one intance of "each glyph ranges"
     // temporarily stores the current erased/replaced ranges, gets cleared in the next `loadCustomFonts` interation
     std::vector<std::vector<ImWchar>> _eraseGlyphRanges;
 

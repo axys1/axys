@@ -5,6 +5,9 @@ param(
 
 # Set-StrictMode -Version Latest
 
+# clear last exit code
+$Global:LASTEXITCODE = 0
+
 # pwsh function alias
 function println($message) { Write-Host "axmol: $message" }
 
@@ -282,6 +285,7 @@ options:
   -c: no build, only generate native project files (vs .sln, xcodeproj)
   -d: specify project dir to compile, i.e. -d /path/your/project/
   -f: force generate native project files. Useful if no changes are detected, such as with resource updates.
+  -aab: this is a switch option, if present, will build android .aab instead .apk
   -u: request upgrade prebuilt 3rd
  examples:
    - win32:

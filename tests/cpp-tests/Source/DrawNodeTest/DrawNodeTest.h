@@ -81,7 +81,7 @@ protected:
         "drawDot",
         "drawPoint",
         "drawPoints",
-        "drawTriangle",
+        "draw(Colored)Triangle",
         "drawSegment",
         "drawSolidTriangle",
         "drawSolidCircle",

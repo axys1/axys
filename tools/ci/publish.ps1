@@ -57,6 +57,7 @@ $excludes = @(
     'tmp'
     'temp'
     'tools/external'
+    'tools/bindings-generator/clang/prebuilt'
     'axmol-*.zip'
     'out'
     '*/_x/*'
@@ -64,19 +65,25 @@ $excludes = @(
 
 $pkg_file_name = "axmol-$version.zip"
 $pkg_file_path = $(Join-Path $AX_ROOT $pkg_file_name)
-
-Write-Host "Creating package $pkg_file_path ..."
-
-$compress_args = @{
+$main_pkg_compress_args = @{
     Path             = $AX_ROOT
-    CompressionLevel = 'Optimal'
+    CompressionLevel = 'SmallestSize'
     DestinationPath  = $pkg_file_path
     RelativeBasePath = $AX_ROOT
     Exclude          = $excludes
     Prefix           = "axmol-$version"
 }
 
-# Compress-Archive @compress -PassThru
+$bs_pkg_file_name = "axmol-bs-$version.zip"
+$bs_pkg_file_path = $(Join-Path $AX_ROOT $bs_pkg_file_name)
+$bs_pkg_compress_args = @{
+    Path             = @("$AX_ROOT/1k", "$AX_ROOT/setup.ps1", "$AX_ROOT/core/axmolver.h.in", "$AX_ROOT/tools/cmdline")
+    CompressionLevel = 'Optimal'
+    DestinationPath  = $bs_pkg_file_path
+    RelativeBasePath = $AX_ROOT
+    Exclude          = $excludes
+    Prefix           = "axmol-bs-$version"
+}
 
 function Compress-ArchiveEx() {
     param(
@@ -224,6 +231,7 @@ public class UnixFileStream : FileStream
         'Optimal'       = [System.IO.Compression.CompressionLevel]::Optimal 
         'Fastest'       = [System.IO.Compression.CompressionLevel]::Fastest
         'NoCompression' = [System.IO.Compression.CompressionLevel]::NoCompression
+        'SmallestSize'  = [System.IO.Compression.CompressionLevel]::SmallestSize
     }[$CompressionLevel]
 
     [array]$Excludes = $Exclude
@@ -341,21 +349,29 @@ else {
     $release_note = Join-Path $AX_ROOT "release_note_draft.txt"
 }
 
+# save release note
 New-Item -Path $release_note -ItemType File -Value $release_note_content -Force
 
-# Compress-Archive @compress_args
-$total = Compress-ArchiveEx @compress_args -Force
+# create axmol build system package
+Write-Host "Creating build system package $bs_pkg_file_path ..."
+$total= Compress-ArchiveEx @bs_pkg_compress_args -Force
+$bs_md5_digest = (Get-FileHash $bs_pkg_file_path -Algorithm MD5).Hash
+Write-Host "Create build system package $bs_pkg_file_path done, ${total} files found, MD5: $bs_md5_digest"
 
+# create main package
+Write-Host "Creating main package $pkg_file_path ..."
+$total = Compress-ArchiveEx @main_pkg_compress_args -Force
 $md5_digest = (Get-FileHash $pkg_file_path -Algorithm MD5).Hash
-
-Write-Host "Create package $pkg_file_path done, ${total} files found, MD5: $md5_digest"
+Write-Host "Create main package $pkg_file_path done, ${total} files found, MD5: $md5_digest"
 
 Pop-Location
 
+[System.IO.File]::AppendAllText($release_note, "## MD5 Hash of the release artifacts`n  - ``${pkg_file_name}``: $md5_digest`n  - ``${bs_pkg_file_name}``: $bs_md5_digest")
+
 if ($env:GITHUB_ACTIONS -eq 'true') {
-    [System.IO.File]::AppendAllText($release_note, "## MD5 Hash of the release artifacts`n  - ``${pkg_file_name}``: $md5_digest")
     echo "release_tag=v$version" >> ${env:GITHUB_OUTPUT}
     echo "release_pkg=$pkg_file_name" >> ${env:GITHUB_OUTPUT}
+    echo "bs_release_pkg=$bs_pkg_file_name" >> ${env:GITHUB_OUTPUT}
     echo "release_note=$release_note" >> ${env:GITHUB_OUTPUT}
     echo "prerelease=$prerelease" >> ${env:GITHUB_OUTPUT}
 }

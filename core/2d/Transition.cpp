@@ -1129,7 +1129,6 @@ void TransitionCrossFade::onEnter()
         return;
     }
 
-    inTexture->getSprite()->setAnchorPoint(Vec2(0.5f, 0.5f));
     inTexture->setPosition(size.width / 2, size.height / 2);
     inTexture->setAnchorPoint(Vec2(0.5f, 0.5f));
 
@@ -1141,7 +1140,7 @@ void TransitionCrossFade::onEnter()
     // create the second render texture for outScene
     RenderTexture* outTexture =
         RenderTexture::create((int)size.width, (int)size.height, backend::PixelFormat::RGBA8, PixelFormat::D24S8, false);
-    outTexture->getSprite()->setAnchorPoint(Vec2(0.5f, 0.5f));
+
     outTexture->setPosition(size.width / 2, size.height / 2);
     outTexture->setAnchorPoint(Vec2(0.5f, 0.5f));
 
