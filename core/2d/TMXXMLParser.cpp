@@ -139,6 +139,7 @@ void TMXMapInfo::internalInit(std::string_view tmxFileName, std::string_view res
     _layerAttribs      = TMXLayerAttribNone;
     _parentElement     = TMXPropertyNone;
     _currentFirstGID   = -1;
+    _currentAssetPath  = "";
 }
 
 bool TMXMapInfo::initWithXML(std::string_view tmxString, std::string_view resourcePath)
