@@ -50,6 +50,8 @@ enum class LanguageType
 {
     ENGLISH = 0,
     CHINESE,
+    CHINESE_SIMPLIFIED,
+    CHINESE_TRADITIONAL,
     FRENCH,
     ITALIAN,
     GERMAN,
