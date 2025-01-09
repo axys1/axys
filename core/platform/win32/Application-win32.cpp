@@ -164,13 +164,13 @@ LanguageType Application::getCurrentLanguage()
         switch (subLanguageID)
         {
         case SUBLANG_CHINESE_SIMPLIFIED:
-            ret = LanguageType::CHINESE_SIMPLIFIED;
+            ret = LanguageType::CHINESE;
             break;
         case SUBLANG_CHINESE_TRADITIONAL:
             ret = LanguageType::CHINESE_TRADITIONAL;
             break;
         default:
-            ret = LanguageType::CHINESE_TRADITIONAL;
+            ret = LanguageType::CHINESE;
             break;
         }
         break;
