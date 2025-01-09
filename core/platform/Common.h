@@ -49,7 +49,8 @@ void AX_DLL messageBox(const char* msg, const char* title);
 enum class LanguageType
 {
     ENGLISH = 0,
-    CHINESE,
+    CHINESE_SIMPLIFIED,
+    CHINESE_TRADITIONAL,
     FRENCH,
     ITALIAN,
     GERMAN,
