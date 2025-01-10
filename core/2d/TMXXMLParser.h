@@ -417,6 +417,7 @@ protected:
     int _currentFirstGID;
     bool _recordFirstGID;
     std::string _externalTilesetFilename;
+    std::string _currentAssetPath;
     //! current property key
     std::string _currentPropertyKey;
 };

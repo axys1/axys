@@ -14,8 +14,9 @@
 
   1. Download or clone Axmol from GitHub ([https://github.com/axmolengine/axmol](https://github.com/axmolengine/axmol)).
   2. Enter `axmol` root directory.
-  3. Run `setup.ps1` in windows powershell or (macOS/Linux/ArchLinux terminal). Restart the console after it has finished for environment variables to take effect.
-  4. Ensure that the C / C++ compiler toolset is installed on your host machine.
+  3. Run `setup.ps1` in windows powershell or (macOS/Linux/ArchLinux terminal).
+  4. Restart the console after it has finished for environment variables to take effect.
+  5. Ensure that the C / C++ compiler toolset is installed on your host machine.
      - Windows: Visual Studio 2022 with desktop workflow
      - macOS: XCode 14.2+
      - Linux: GCC (G++)
@@ -159,22 +160,25 @@ First, perform the steps 1. to 6., or the Windows UWP step above (if not is alre
 
 Please see the [Windows workflow guide](https://github.com/axmolengine/axmol/issues/564).
 
-### Android (Android Studio)
+### Android (with Android Studio)
 
   1. Install [Android Studio 2024.2.1+](https://developer.android.com/studio).
   2. When starting Android Studio for the first time, it will guide you through the installation of the SDK and other tools. Please make sure that you do install them.
-  3. Start Android Studio and choose [Open an existing Android Studio Project] and select your project. For example, the existing `cpp-test` project located in `axmol\tests\cpp-tests\proj.android`.
-  4. Start Android Studio and open 'Tools' -> 'SDKManager', then switch to 'SDK Tools', check the 'Show Package Details' field, and choose the following tools clicking the button 'Apply' to install them:  
+  3. Ensure that the ANDROID_HOME environment variable is set up correctly to point to the Android SDK folder.
+  4. Open a *new* Powershell instance, and enter the `axmol` root directory in Powershell.
+  5. Run `./setup.ps1 -p android` to download the a supported version of the NDK, which in this case is r23d. You can set a project to use a different version of the NDK.
+  6. Start Android Studio and choose [Open an existing Android Studio Project] and select your project. For example, the existing `cpp-test` project located in `axmol\tests\cpp-tests\proj.android`.
+  7. Start Android Studio and open 'Tools' -> 'SDKManager', then switch to 'SDK Tools', check the 'Show Package Details' field, and choose the following tools clicking the button 'Apply' to install them:  
      - Android SDK Platform 34  
      - Android Gradle Plugin (AGP) 8.7.3
      - Android SDK Build-Tools 34.0.0 match with AGP, refer to: <https://developer.android.com/studio/releases/gradle-plugin>
      - Gradle 8.11.1
      - NDK r23c, if you need support Android 15 16KB page size, you must use r23d or r27+
-  5. Wait for the `Gradle sync` to finish.
+  8. Wait for the `Gradle sync` to finish.
 
 Note: if you use non-SDK provided CMake, you will need to download `ninja` from <https://github.com/ninja-build/ninja/releases>, and copy `ninja.exe` to CMake's bin directory.
   
-### Android Studio (without Android Studio)
+### Android (without Android Studio)
 
   1. Download [Android command-tools](https://developer.android.com/studio#command-tools).
   2. Install Android devtools. Example in Windows:
@@ -190,6 +194,8 @@ Note: if you use non-SDK provided CMake, you will need to download `ninja` from 
   # Goto xxx\proj.android
   .\gradlew.bat assembleRelease -P__1K_ARCHS=arm64-v8a --parallel --info
   ```
+  3. Enter `axmol` root directory in Powershell.
+  4. Run `./setup.ps1 -p android` to download the minimum required NDK, which in this case is r23d. You can set a project to use a different version of the NDK, but this is the minimum version.
 
 ### iOS, tvOS and macOS
 
