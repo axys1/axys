@@ -111393,6 +111393,23 @@ int lua_ax_base_FastTMXTiledMap_initWithTMXFile(lua_State* tolua_S)
         tolua_pushboolean(tolua_S,(bool)ret);
         return 1;
     }
+    if (argc == 2) 
+    {
+        std::string_view arg0;
+        bool arg1;
+
+        ok &= luaval_to_std_string_view(tolua_S, 2,&arg0, "ax.FastTMXTiledMap:initWithTMXFile");
+
+        ok &= luaval_to_boolean(tolua_S, 3,&arg1, "ax.FastTMXTiledMap:initWithTMXFile");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_FastTMXTiledMap_initWithTMXFile'", nullptr);
+            return 0;
+        }
+        auto&& ret = cobj->initWithTMXFile(arg0, arg1);
+        tolua_pushboolean(tolua_S,(bool)ret);
+        return 1;
+    }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "ax.FastTMXTiledMap:initWithTMXFile",argc, 1);
     return 0;
 
@@ -111446,6 +111463,26 @@ int lua_ax_base_FastTMXTiledMap_initWithXML(lua_State* tolua_S)
         tolua_pushboolean(tolua_S,(bool)ret);
         return 1;
     }
+    if (argc == 3) 
+    {
+        std::string_view arg0;
+        std::string_view arg1;
+        bool arg2;
+
+        ok &= luaval_to_std_string_view(tolua_S, 2,&arg0, "ax.FastTMXTiledMap:initWithXML");
+
+        ok &= luaval_to_std_string_view(tolua_S, 3,&arg1, "ax.FastTMXTiledMap:initWithXML");
+
+        ok &= luaval_to_boolean(tolua_S, 4,&arg2, "ax.FastTMXTiledMap:initWithXML");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_FastTMXTiledMap_initWithXML'", nullptr);
+            return 0;
+        }
+        auto&& ret = cobj->initWithXML(arg0, arg1, arg2);
+        tolua_pushboolean(tolua_S,(bool)ret);
+        return 1;
+    }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "ax.FastTMXTiledMap:initWithXML",argc, 2);
     return 0;
 
@@ -111484,6 +111521,21 @@ int lua_ax_base_FastTMXTiledMap_create(lua_State* tolua_S)
         object_to_luaval<ax::FastTMXTiledMap>(tolua_S, "ax.FastTMXTiledMap",(ax::FastTMXTiledMap*)ret);
         return 1;
     }
+    if (argc == 2)
+    {
+        std::string_view arg0;
+        bool arg1;
+        ok &= luaval_to_std_string_view(tolua_S, 2,&arg0, "ax.FastTMXTiledMap:create");
+        ok &= luaval_to_boolean(tolua_S, 3,&arg1, "ax.FastTMXTiledMap:create");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_FastTMXTiledMap_create'", nullptr);
+            return 0;
+        }
+        auto&& ret = ax::FastTMXTiledMap::create(arg0, arg1);
+        object_to_luaval<ax::FastTMXTiledMap>(tolua_S, "ax.FastTMXTiledMap",(ax::FastTMXTiledMap*)ret);
+        return 1;
+    }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "ax.FastTMXTiledMap:create",argc, 1);
     return 0;
 #if _AX_DEBUG >= 1
@@ -111519,6 +111571,23 @@ int lua_ax_base_FastTMXTiledMap_createWithXML(lua_State* tolua_S)
             return 0;
         }
         auto&& ret = ax::FastTMXTiledMap::createWithXML(arg0, arg1);
+        object_to_luaval<ax::FastTMXTiledMap>(tolua_S, "ax.FastTMXTiledMap",(ax::FastTMXTiledMap*)ret);
+        return 1;
+    }
+    if (argc == 3)
+    {
+        std::string_view arg0;
+        std::string_view arg1;
+        bool arg2;
+        ok &= luaval_to_std_string_view(tolua_S, 2,&arg0, "ax.FastTMXTiledMap:createWithXML");
+        ok &= luaval_to_std_string_view(tolua_S, 3,&arg1, "ax.FastTMXTiledMap:createWithXML");
+        ok &= luaval_to_boolean(tolua_S, 4,&arg2, "ax.FastTMXTiledMap:createWithXML");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_FastTMXTiledMap_createWithXML'", nullptr);
+            return 0;
+        }
+        auto&& ret = ax::FastTMXTiledMap::createWithXML(arg0, arg1, arg2);
         object_to_luaval<ax::FastTMXTiledMap>(tolua_S, "ax.FastTMXTiledMap",(ax::FastTMXTiledMap*)ret);
         return 1;
     }
