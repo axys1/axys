@@ -1058,7 +1058,7 @@ void DrawNode::_drawSegment(const Vec2& from,
     Vec2 vertices[2] = {from, to};
     applyTransform(vertices, vertices, 2);
 
-    if (thickness == 1.0f && !properties.drawOrder)
+    if (thickness <= 1.0f && !properties.drawOrder)
     {
         auto line = expandBufferAndGetPointer(_lines, 2);
         _linesDirty = true;
@@ -1068,12 +1068,16 @@ void DrawNode::_drawSegment(const Vec2& from,
     }
     else
     {
+        float fS = Director::getInstance()->getGLView()->getFrameSize().width;
+        float dS = Director::getInstance()->getGLView()->getDesignResolutionSize().width;
+        float factor = 2 * fS / dS;
+
         Vec2 a  = vertices[0];
         Vec2 b  = vertices[1];
         Vec2 n  = ((b - a).getPerp()).getNormalized();
         Vec2 t  = n.getPerp();
-        Vec2 nw = n * thickness;
-        Vec2 tw = t * thickness;
+        Vec2 nw = n * thickness/ factor;
+        Vec2 tw = t * thickness/ factor;
         Vec2 v0 = b - (nw + tw);
         Vec2 v1 = b + (nw - tw);
         Vec2 v2 = b - nw;
