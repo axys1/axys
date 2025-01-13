@@ -444,7 +444,7 @@ void BMFontConfiguration::parseCommonArguments(const char* line)
     auto tmp = strstr(line, "lineHeight=") + 11;
     sscanf(tmp, "%d", &_commonHeight);
 
-#if _AX_DEBUG > 0
+#if defined(_AX_DEBUG) && _AX_DEBUG > 0
     // scaleW. sanity check
     int value;
     tmp = strstr(tmp, "scaleW=") + 7;
@@ -590,12 +590,7 @@ FontFNT* FontFNT::create(std::string_view fntFilePath)
     tempFont->autorelease();
     return tempFont;
 }
-#ifndef AX_CORE_PROFILE
-FontFNT* FontFNT::create(std::string_view fntFilePath, const Vec2& imageOffset)
-{
-    return create(fntFilePath, Rect(imageOffset.x, imageOffset.y, 0, 0), false);
-}
-#endif
+
 FontFNT::FontFNT(BMFontConfiguration* theContfig, const Rect& imageRect, bool imageRotated)
     : _configuration(theContfig), _imageRectInPoints(AX_RECT_PIXELS_TO_POINTS(imageRect)), _imageRotated(imageRotated)
 {
