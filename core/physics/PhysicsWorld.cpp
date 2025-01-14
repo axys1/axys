@@ -317,14 +317,14 @@ static cpSpaceDebugColor ColorForShape(cpShape* shape, cpDataPointer /*data*/)
 
 void PhysicsWorld::debugDraw()
 {
-    if (_debugDraw == nullptr)
+    if (!_debugDraw)
     {
-        _debugDraw = DrawNode::create();
-        _debugDraw->setIsolated(true);
-        _debugDraw->retain();
-        auto scene = Director::getInstance()->getRunningScene();
-        scene->addChild(_debugDraw);
-        _debugDraw->setGlobalZOrder(scene->getGlobalZOrder());
+        return;
+    }
+
+    if (!_debugDraw->getParent())
+    {
+        Director::getInstance()->getRunningScene()->addChild(_debugDraw);
     }
 
     cpSpaceDebugDrawOptions drawOptions = {
@@ -857,10 +857,19 @@ void PhysicsWorld::removeAllBodies()
 
 void PhysicsWorld::setDebugDrawMask(int mask)
 {
-    if (mask == DEBUGDRAW_NONE && _debugDraw)
+    if (mask == DEBUGDRAW_NONE)
     {
-        _debugDraw->removeFromParent();
-        AX_SAFE_RELEASE_NULL(_debugDraw);
+        if (_debugDraw)
+        {
+            _debugDraw->removeFromParent();
+            AX_SAFE_RELEASE_NULL(_debugDraw);
+        }
+    }
+    else if (!_debugDraw)
+    {
+        _debugDraw = DrawNode::create();
+        _debugDraw->setIsolated(true);
+        _debugDraw->retain();
     }
 
     _debugDrawMask = mask;
