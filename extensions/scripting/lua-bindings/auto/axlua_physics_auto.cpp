@@ -12649,6 +12649,53 @@ int lua_ax_physics_PhysicsWorld_getDebugDrawMask(lua_State* tolua_S)
 
     return 0;
 }
+int lua_ax_physics_PhysicsWorld_getDebugDraw(lua_State* tolua_S)
+{
+    int argc = 0;
+    ax::PhysicsWorld* cobj = nullptr;
+    bool ok  = true;
+
+#if _AX_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if _AX_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"ax.PhysicsWorld",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (ax::PhysicsWorld*)tolua_tousertype(tolua_S,1,0);
+
+#if _AX_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_ax_physics_PhysicsWorld_getDebugDraw'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 0) 
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_physics_PhysicsWorld_getDebugDraw'", nullptr);
+            return 0;
+        }
+        auto&& ret = cobj->getDebugDraw();
+        object_to_luaval<ax::DrawNode>(tolua_S, "ax.DrawNode",(ax::DrawNode*)ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "ax.PhysicsWorld:getDebugDraw",argc, 0);
+    return 0;
+
+#if _AX_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_ax_physics_PhysicsWorld_getDebugDraw'.",&tolua_err);
+#endif
+
+    return 0;
+}
 int lua_ax_physics_PhysicsWorld_setAutoStep(lua_State* tolua_S)
 {
     int argc = 0;
@@ -12832,6 +12879,7 @@ int lua_register_ax_physics_PhysicsWorld(lua_State* tolua_S)
         tolua_function(tolua_S,"setPreUpdateCallback",lua_ax_physics_PhysicsWorld_setPreUpdateCallback);
         tolua_function(tolua_S,"setPostUpdateCallback",lua_ax_physics_PhysicsWorld_setPostUpdateCallback);
         tolua_function(tolua_S,"getDebugDrawMask",lua_ax_physics_PhysicsWorld_getDebugDrawMask);
+        tolua_function(tolua_S,"getDebugDraw",lua_ax_physics_PhysicsWorld_getDebugDraw);
         tolua_function(tolua_S,"setAutoStep",lua_ax_physics_PhysicsWorld_setAutoStep);
         tolua_function(tolua_S,"isAutoStep",lua_ax_physics_PhysicsWorld_isAutoStep);
         tolua_function(tolua_S,"step",lua_ax_physics_PhysicsWorld_step);
