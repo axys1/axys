@@ -1646,7 +1646,7 @@ function preprocess_ios([string[]]$inputOptions) {
 }
 
 function preprocess_wasm([string[]]$inputOptions) {
-    if ($options.p -eq 'wasm64') { $inputOptions += '-DCMAKE_C_FLAGS="-Wno-experimental -sMEMORY64"', '-DCMAKE_CXX_FLAGS="-Wno-experimental -sMEMORY64"', '-DEMSCRIPTEN_SYSTEM_PROCESSOR=x86_64' }
+    if ($options.p -eq 'wasm64') { $inputOptions += '-DCMAKE_C_FLAGS="-sMEMORY64"', '-DCMAKE_CXX_FLAGS="-sMEMORY64"', '-DEMSCRIPTEN_SYSTEM_PROCESSOR=x86_64' }
     return $inputOptions
 }
 
