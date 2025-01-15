@@ -224,6 +224,11 @@ public:
   }
   void push_back(value_type&& val) { push_back(val); }
   void push_back(const value_type& val) { emplace_back(val); }
+  void pop_back()
+  {
+    if (!empty())
+      _Eos(size() - 1);
+  }
   template <typename... _Valty>
   inline value_type& emplace_back(_Valty&&... val)
   {

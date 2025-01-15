@@ -10668,8 +10668,8 @@ int lua_ax_fairygui_GGraph_drawRect(lua_State* tolua_S)
         double arg0;
         double arg1;
         int arg2;
-        ax::Color4B arg3;
-        ax::Color4B arg4;
+        ax::Color arg3;
+        ax::Color arg4;
 
         ok &= luaval_to_number(tolua_S, 2,&arg0, "fgui.GGraph:drawRect");
 
@@ -10677,9 +10677,9 @@ int lua_ax_fairygui_GGraph_drawRect(lua_State* tolua_S)
 
         ok &= luaval_to_int32(tolua_S, 4,(int *)&arg2, "fgui.GGraph:drawRect");
 
-        ok &=luaval_to_color4b(tolua_S, 5, &arg3, "fgui.GGraph:drawRect");
+        ok &=luaval_to_color(tolua_S, 5, &arg3, "fgui.GGraph:drawRect");
 
-        ok &=luaval_to_color4b(tolua_S, 6, &arg4, "fgui.GGraph:drawRect");
+        ok &=luaval_to_color(tolua_S, 6, &arg4, "fgui.GGraph:drawRect");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_fairygui_GGraph_drawRect'", nullptr);
@@ -10730,8 +10730,8 @@ int lua_ax_fairygui_GGraph_drawEllipse(lua_State* tolua_S)
         double arg0;
         double arg1;
         int arg2;
-        ax::Color4B arg3;
-        ax::Color4B arg4;
+        ax::Color arg3;
+        ax::Color arg4;
 
         ok &= luaval_to_number(tolua_S, 2,&arg0, "fgui.GGraph:drawEllipse");
 
@@ -10739,9 +10739,9 @@ int lua_ax_fairygui_GGraph_drawEllipse(lua_State* tolua_S)
 
         ok &= luaval_to_int32(tolua_S, 4,(int *)&arg2, "fgui.GGraph:drawEllipse");
 
-        ok &=luaval_to_color4b(tolua_S, 5, &arg3, "fgui.GGraph:drawEllipse");
+        ok &=luaval_to_color(tolua_S, 5, &arg3, "fgui.GGraph:drawEllipse");
 
-        ok &=luaval_to_color4b(tolua_S, 6, &arg4, "fgui.GGraph:drawEllipse");
+        ok &=luaval_to_color(tolua_S, 6, &arg4, "fgui.GGraph:drawEllipse");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_ax_fairygui_GGraph_drawEllipse'", nullptr);
@@ -10790,16 +10790,16 @@ int lua_ax_fairygui_GGraph_drawPolygon(lua_State* tolua_S)
     if (argc == 5) 
     {
         int arg0;
-        ax::Color4B arg1;
-        ax::Color4B arg2;
+        ax::Color arg1;
+        ax::Color arg2;
         const ax::Vec2* arg3;
         int arg4;
 
         ok &= luaval_to_int32(tolua_S, 2,(int *)&arg0, "fgui.GGraph:drawPolygon");
 
-        ok &=luaval_to_color4b(tolua_S, 3, &arg1, "fgui.GGraph:drawPolygon");
+        ok &=luaval_to_color(tolua_S, 3, &arg1, "fgui.GGraph:drawPolygon");
 
-        ok &=luaval_to_color4b(tolua_S, 4, &arg2, "fgui.GGraph:drawPolygon");
+        ok &=luaval_to_color(tolua_S, 4, &arg2, "fgui.GGraph:drawPolygon");
 
         ok &= luaval_to_object<const ax::Vec2>(tolua_S, 5, "ax.Vec2",&arg3, "fgui.GGraph:drawPolygon");
 
@@ -10852,15 +10852,15 @@ int lua_ax_fairygui_GGraph_drawRegularPolygon(lua_State* tolua_S)
     if (argc == 4) 
     {
         int arg0;
-        ax::Color4B arg1;
-        ax::Color4B arg2;
+        ax::Color arg1;
+        ax::Color arg2;
         int arg3;
 
         ok &= luaval_to_int32(tolua_S, 2,(int *)&arg0, "fgui.GGraph:drawRegularPolygon");
 
-        ok &=luaval_to_color4b(tolua_S, 3, &arg1, "fgui.GGraph:drawRegularPolygon");
+        ok &=luaval_to_color(tolua_S, 3, &arg1, "fgui.GGraph:drawRegularPolygon");
 
-        ok &=luaval_to_color4b(tolua_S, 4, &arg2, "fgui.GGraph:drawRegularPolygon");
+        ok &=luaval_to_color(tolua_S, 4, &arg2, "fgui.GGraph:drawRegularPolygon");
 
         ok &= luaval_to_int32(tolua_S, 5,(int *)&arg3, "fgui.GGraph:drawRegularPolygon");
         if(!ok)
@@ -10875,16 +10875,16 @@ int lua_ax_fairygui_GGraph_drawRegularPolygon(lua_State* tolua_S)
     if (argc == 5) 
     {
         int arg0;
-        ax::Color4B arg1;
-        ax::Color4B arg2;
+        ax::Color arg1;
+        ax::Color arg2;
         int arg3;
         double arg4;
 
         ok &= luaval_to_int32(tolua_S, 2,(int *)&arg0, "fgui.GGraph:drawRegularPolygon");
 
-        ok &=luaval_to_color4b(tolua_S, 3, &arg1, "fgui.GGraph:drawRegularPolygon");
+        ok &=luaval_to_color(tolua_S, 3, &arg1, "fgui.GGraph:drawRegularPolygon");
 
-        ok &=luaval_to_color4b(tolua_S, 4, &arg2, "fgui.GGraph:drawRegularPolygon");
+        ok &=luaval_to_color(tolua_S, 4, &arg2, "fgui.GGraph:drawRegularPolygon");
 
         ok &= luaval_to_int32(tolua_S, 5,(int *)&arg3, "fgui.GGraph:drawRegularPolygon");
 
@@ -10901,17 +10901,17 @@ int lua_ax_fairygui_GGraph_drawRegularPolygon(lua_State* tolua_S)
     if (argc == 6) 
     {
         int arg0;
-        ax::Color4B arg1;
-        ax::Color4B arg2;
+        ax::Color arg1;
+        ax::Color arg2;
         int arg3;
         double arg4;
         const float* arg5;
 
         ok &= luaval_to_int32(tolua_S, 2,(int *)&arg0, "fgui.GGraph:drawRegularPolygon");
 
-        ok &=luaval_to_color4b(tolua_S, 3, &arg1, "fgui.GGraph:drawRegularPolygon");
+        ok &=luaval_to_color(tolua_S, 3, &arg1, "fgui.GGraph:drawRegularPolygon");
 
-        ok &=luaval_to_color4b(tolua_S, 4, &arg2, "fgui.GGraph:drawRegularPolygon");
+        ok &=luaval_to_color(tolua_S, 4, &arg2, "fgui.GGraph:drawRegularPolygon");
 
         ok &= luaval_to_int32(tolua_S, 5,(int *)&arg3, "fgui.GGraph:drawRegularPolygon");
 
@@ -10931,8 +10931,8 @@ int lua_ax_fairygui_GGraph_drawRegularPolygon(lua_State* tolua_S)
     if (argc == 7) 
     {
         int arg0;
-        ax::Color4B arg1;
-        ax::Color4B arg2;
+        ax::Color arg1;
+        ax::Color arg2;
         int arg3;
         double arg4;
         const float* arg5;
@@ -10940,9 +10940,9 @@ int lua_ax_fairygui_GGraph_drawRegularPolygon(lua_State* tolua_S)
 
         ok &= luaval_to_int32(tolua_S, 2,(int *)&arg0, "fgui.GGraph:drawRegularPolygon");
 
-        ok &=luaval_to_color4b(tolua_S, 3, &arg1, "fgui.GGraph:drawRegularPolygon");
+        ok &=luaval_to_color(tolua_S, 3, &arg1, "fgui.GGraph:drawRegularPolygon");
 
-        ok &=luaval_to_color4b(tolua_S, 4, &arg2, "fgui.GGraph:drawRegularPolygon");
+        ok &=luaval_to_color(tolua_S, 4, &arg2, "fgui.GGraph:drawRegularPolygon");
 
         ok &= luaval_to_int32(tolua_S, 5,(int *)&arg3, "fgui.GGraph:drawRegularPolygon");
 
@@ -32463,7 +32463,7 @@ int lua_ax_fairygui_GTween_toVec4(lua_State* tolua_S)
 #endif
     return 0;
 }
-int lua_ax_fairygui_GTween_toColor4B(lua_State* tolua_S)
+int lua_ax_fairygui_GTween_toColor32(lua_State* tolua_S)
 {
     int argc = 0;
     bool ok  = true;
@@ -32480,26 +32480,26 @@ int lua_ax_fairygui_GTween_toColor4B(lua_State* tolua_S)
 
     if (argc == 3)
     {
-        ax::Color4B arg0;
-        ax::Color4B arg1;
+        ax::Color32 arg0;
+        ax::Color32 arg1;
         double arg2;
-        ok &=luaval_to_color4b(tolua_S, 2, &arg0, "fgui.GTween:toColor4B");
-        ok &=luaval_to_color4b(tolua_S, 3, &arg1, "fgui.GTween:toColor4B");
-        ok &= luaval_to_number(tolua_S, 4,&arg2, "fgui.GTween:toColor4B");
+        ok &=luaval_to_color32(tolua_S, 2, &arg0, "fgui.GTween:toColor32");
+        ok &=luaval_to_color32(tolua_S, 3, &arg1, "fgui.GTween:toColor32");
+        ok &= luaval_to_number(tolua_S, 4,&arg2, "fgui.GTween:toColor32");
         if(!ok)
         {
-            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_fairygui_GTween_toColor4B'", nullptr);
+            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_fairygui_GTween_toColor32'", nullptr);
             return 0;
         }
-        auto&& ret = fairygui::GTween::toColor4B(arg0, arg1, arg2);
+        auto&& ret = fairygui::GTween::toColor32(arg0, arg1, arg2);
         object_to_luaval<fairygui::GTweener>(tolua_S, "fgui.GTweener",(fairygui::GTweener*)ret);
         return 1;
     }
-    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "fgui.GTween:toColor4B",argc, 3);
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "fgui.GTween:toColor32",argc, 3);
     return 0;
 #if _AX_DEBUG >= 1
     tolua_lerror:
-    tolua_error(tolua_S,"#ferror in function 'lua_ax_fairygui_GTween_toColor4B'.",&tolua_err);
+    tolua_error(tolua_S,"#ferror in function 'lua_ax_fairygui_GTween_toColor32'.",&tolua_err);
 #endif
     return 0;
 }
@@ -32839,7 +32839,7 @@ int lua_register_ax_fairygui_GTween(lua_State* tolua_S)
         tolua_function(tolua_S,"toVec2", lua_ax_fairygui_GTween_toVec2);
         tolua_function(tolua_S,"toVec3", lua_ax_fairygui_GTween_toVec3);
         tolua_function(tolua_S,"toVec4", lua_ax_fairygui_GTween_toVec4);
-        tolua_function(tolua_S,"toColor4B", lua_ax_fairygui_GTween_toColor4B);
+        tolua_function(tolua_S,"toColor32", lua_ax_fairygui_GTween_toColor32);
         tolua_function(tolua_S,"toDouble", lua_ax_fairygui_GTween_toDouble);
         tolua_function(tolua_S,"delayedCall", lua_ax_fairygui_GTween_delayedCall);
         tolua_function(tolua_S,"shake", lua_ax_fairygui_GTween_shake);

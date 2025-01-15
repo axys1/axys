@@ -1657,7 +1657,7 @@ void MeshRendererWithOBBPerformanceTest::update(float dt)
 
         Vec3 corners[8] = {};
         _obbt.getCorners(corners);
-        _drawDebug->drawCube(corners, Color4F(0, 0, 1, 1));
+        _drawDebug->drawCube(corners, Color(0, 0, 1, 1));
     }
     if (_obb.size() > 0)
     {
@@ -1667,7 +1667,7 @@ void MeshRendererWithOBBPerformanceTest::update(float dt)
         {
             Vec3 corners[8] = {};
             _obb[i].getCorners(corners);
-            _drawOBB->drawCube(corners, _obbt.intersects(_obb[i]) ? Color4F(1, 0, 0, 1) : Color4F(0, 1, 0, 1));
+            _drawOBB->drawCube(corners, _obbt.intersects(_obb[i]) ? Color(1, 0, 0, 1) : Color(0, 1, 0, 1));
         }
     }
 }
@@ -2010,7 +2010,7 @@ void UseCaseMeshRenderer::switchCase()
     }
     else if (_caseIdx == 1)  // use case 2, ui - 3d - ui, last ui should on the top
     {
-        auto layer = LayerColor::create(Color4B(0, 0, 100, 255), s.width / 2.f, s.height / 2.f);
+        auto layer = LayerColor::create(Color32(0, 0, 100, 255), s.width / 2.f, s.height / 2.f);
         layer->setPosition(s.width * 0.25f, s.height * 0.25f);
         layer->setGlobalZOrder(-1);
         addChild(layer);
@@ -2056,7 +2056,7 @@ void UseCaseMeshRenderer::menuCallback_Message(Object* sender)
     {
         // create a new message layer on the top
         auto s            = layer->getContentSize();
-        auto messagelayer = LayerColor::create(Color4B(100, 100, 0, 255));
+        auto messagelayer = LayerColor::create(Color32(100, 100, 0, 255));
         messagelayer->setContentSize(Size(s.width * 0.5f, s.height * 0.5f));
         messagelayer->setPosition(Vec2(s.width * 0.25f, s.height * 0.25f));
         auto label = Label::create();
@@ -2558,7 +2558,7 @@ void CameraBackgroundClearTest::switch_CameraClearMode(ax::Object* sender)
     }
     else if (type == CameraBackgroundBrush::BrushType::DEPTH)
     {
-        _camera->setBackgroundBrush(CameraBackgroundBrush::createColorBrush(Color4F(1.f, 0.f, 0.f, 1.f), 1.f));
+        _camera->setBackgroundBrush(CameraBackgroundBrush::createColorBrush(Color(1.f, 0.f, 0.f, 1.f), 1.f));
         _label->setString("Color Clear Brush");
     }
     else if (type == CameraBackgroundBrush::BrushType::COLOR)

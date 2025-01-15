@@ -24,10 +24,10 @@ class semaphore {
 #else
     using native_type = sem_t;
 #endif
-    native_type mSem;
+    native_type mSem{};
 
 public:
-    semaphore(unsigned int initial=0);
+    explicit semaphore(unsigned int initial=0);
     semaphore(const semaphore&) = delete;
     ~semaphore();
 

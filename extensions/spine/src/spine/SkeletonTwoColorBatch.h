@@ -38,9 +38,9 @@
 namespace spine {
 	struct V3F_C4B_C4B_T2F {
 		axmol::Vec3 position;
-		axmol::Color4B color;
-		axmol::Color4B color2;
-		axmol::Tex2F texCoords;
+		axmol::Color32 color;
+		axmol::Color32 color2;
+		axmol::Tex2F texCoord;
 	};
 
 	struct TwoColorTriangles {

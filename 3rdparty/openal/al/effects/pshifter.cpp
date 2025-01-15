@@ -4,11 +4,12 @@
 #include "AL/al.h"
 #include "AL/efx.h"
 
-#include "alc/effects/base.h"
+#include "alc/context.h"
+#include "alnumeric.h"
 #include "effects.h"
 
-#ifdef ALSOFT_EAX
-#include "alnumeric.h"
+#if ALSOFT_EAX
+#include "al/eax/effect.h"
 #include "al/eax/exception.h"
 #include "al/eax/utils.h"
 #endif // ALSOFT_EAX
@@ -16,80 +17,67 @@
 
 namespace {
 
-void Pshifter_setParamf(EffectProps*, ALenum param, float)
-{ throw effect_exception{AL_INVALID_ENUM, "Invalid pitch shifter float property 0x%04x", param}; }
-void Pshifter_setParamfv(EffectProps*, ALenum param, const float*)
+constexpr EffectProps genDefaultProps() noexcept
 {
-    throw effect_exception{AL_INVALID_ENUM, "Invalid pitch shifter float-vector property 0x%04x",
-        param};
-}
-
-void Pshifter_setParami(EffectProps *props, ALenum param, int val)
-{
-    switch(param)
-    {
-    case AL_PITCH_SHIFTER_COARSE_TUNE:
-        if(!(val >= AL_PITCH_SHIFTER_MIN_COARSE_TUNE && val <= AL_PITCH_SHIFTER_MAX_COARSE_TUNE))
-            throw effect_exception{AL_INVALID_VALUE, "Pitch shifter coarse tune out of range"};
-        props->Pshifter.CoarseTune = val;
-        break;
-
-    case AL_PITCH_SHIFTER_FINE_TUNE:
-        if(!(val >= AL_PITCH_SHIFTER_MIN_FINE_TUNE && val <= AL_PITCH_SHIFTER_MAX_FINE_TUNE))
-            throw effect_exception{AL_INVALID_VALUE, "Pitch shifter fine tune out of range"};
-        props->Pshifter.FineTune = val;
-        break;
-
-    default:
-        throw effect_exception{AL_INVALID_ENUM, "Invalid pitch shifter integer property 0x%04x",
-            param};
-    }
-}
-void Pshifter_setParamiv(EffectProps *props, ALenum param, const int *vals)
-{ Pshifter_setParami(props, param, vals[0]); }
-
-void Pshifter_getParami(const EffectProps *props, ALenum param, int *val)
-{
-    switch(param)
-    {
-    case AL_PITCH_SHIFTER_COARSE_TUNE:
-        *val = props->Pshifter.CoarseTune;
-        break;
-    case AL_PITCH_SHIFTER_FINE_TUNE:
-        *val = props->Pshifter.FineTune;
-        break;
-
-    default:
-        throw effect_exception{AL_INVALID_ENUM, "Invalid pitch shifter integer property 0x%04x",
-            param};
-    }
-}
-void Pshifter_getParamiv(const EffectProps *props, ALenum param, int *vals)
-{ Pshifter_getParami(props, param, vals); }
-
-void Pshifter_getParamf(const EffectProps*, ALenum param, float*)
-{ throw effect_exception{AL_INVALID_ENUM, "Invalid pitch shifter float property 0x%04x", param}; }
-void Pshifter_getParamfv(const EffectProps*, ALenum param, float*)
-{
-    throw effect_exception{AL_INVALID_ENUM, "Invalid pitch shifter float vector-property 0x%04x",
-        param};
-}
-
-EffectProps genDefaultProps() noexcept
-{
-    EffectProps props{};
-    props.Pshifter.CoarseTune = AL_PITCH_SHIFTER_DEFAULT_COARSE_TUNE;
-    props.Pshifter.FineTune   = AL_PITCH_SHIFTER_DEFAULT_FINE_TUNE;
+    PshifterProps props{};
+    props.CoarseTune = AL_PITCH_SHIFTER_DEFAULT_COARSE_TUNE;
+    props.FineTune = AL_PITCH_SHIFTER_DEFAULT_FINE_TUNE;
     return props;
 }
 
 } // namespace
 
-DEFINE_ALEFFECT_VTABLE(Pshifter);
-
 const EffectProps PshifterEffectProps{genDefaultProps()};
 
-#ifdef ALSOFT_EAX
+void PshifterEffectHandler::SetParami(ALCcontext *context, PshifterProps &props, ALenum param, int val)
+{
+    switch(param)
+    {
+    case AL_PITCH_SHIFTER_COARSE_TUNE:
+        if(!(val >= AL_PITCH_SHIFTER_MIN_COARSE_TUNE && val <= AL_PITCH_SHIFTER_MAX_COARSE_TUNE))
+            context->throw_error(AL_INVALID_VALUE, "Pitch shifter coarse tune out of range");
+        props.CoarseTune = val;
+        return;
+
+    case AL_PITCH_SHIFTER_FINE_TUNE:
+        if(!(val >= AL_PITCH_SHIFTER_MIN_FINE_TUNE && val <= AL_PITCH_SHIFTER_MAX_FINE_TUNE))
+            context->throw_error(AL_INVALID_VALUE, "Pitch shifter fine tune out of range");
+        props.FineTune = val;
+        return;
+    }
+
+    context->throw_error(AL_INVALID_ENUM, "Invalid pitch shifter integer property {:#04x}",
+        as_unsigned(param));
+}
+void PshifterEffectHandler::SetParamiv(ALCcontext *context, PshifterProps &props, ALenum param, const int *vals)
+{ SetParami(context, props, param, *vals); }
+
+void PshifterEffectHandler::SetParamf(ALCcontext *context, PshifterProps&, ALenum param, float)
+{ context->throw_error(AL_INVALID_ENUM, "Invalid pitch shifter float property {:#04x}", as_unsigned(param)); }
+void PshifterEffectHandler::SetParamfv(ALCcontext *context, PshifterProps &props, ALenum param, const float *vals)
+{ SetParamf(context, props, param, *vals); }
+
+void PshifterEffectHandler::GetParami(ALCcontext *context, const PshifterProps &props, ALenum param, int *val)
+{
+    switch(param)
+    {
+    case AL_PITCH_SHIFTER_COARSE_TUNE: *val = props.CoarseTune; return;
+    case AL_PITCH_SHIFTER_FINE_TUNE: *val = props.FineTune; return;
+    }
+
+    context->throw_error(AL_INVALID_ENUM, "Invalid pitch shifter integer property {:#04x}",
+        as_unsigned(param));
+}
+void PshifterEffectHandler::GetParamiv(ALCcontext *context, const PshifterProps &props, ALenum param, int *vals)
+{ GetParami(context, props, param, vals); }
+
+void PshifterEffectHandler::GetParamf(ALCcontext *context, const PshifterProps&, ALenum param, float*)
+{ context->throw_error(AL_INVALID_ENUM, "Invalid pitch shifter float property {:#04x}", as_unsigned(param)); }
+void PshifterEffectHandler::GetParamfv(ALCcontext *context, const PshifterProps &props, ALenum param, float *vals)
+{ GetParamf(context, props, param, vals); }
+
+
+#if ALSOFT_EAX
 namespace {
 
 using PitchShifterCommitter = EaxCommitter<EaxPitchShifterCommitter>;
@@ -138,32 +126,30 @@ template<>
     throw Exception{message};
 }
 
-template<>
-bool PitchShifterCommitter::commit(const EaxEffectProps &props)
+bool EaxPitchShifterCommitter::commit(const EAXPITCHSHIFTERPROPERTIES &props)
 {
-    if(props == mEaxProps)
+    if(auto *cur = std::get_if<EAXPITCHSHIFTERPROPERTIES>(&mEaxProps); cur && *cur == props)
         return false;
 
     mEaxProps = props;
-
-    auto &eaxprops = std::get<EAXPITCHSHIFTERPROPERTIES>(props);
-    mAlProps.Pshifter.CoarseTune = static_cast<int>(eaxprops.lCoarseTune);
-    mAlProps.Pshifter.FineTune = static_cast<int>(eaxprops.lFineTune);
+    mAlProps = [&]{
+        PshifterProps ret{};
+        ret.CoarseTune = static_cast<int>(props.lCoarseTune);
+        ret.FineTune = static_cast<int>(props.lFineTune);
+        return ret;
+    }();
 
     return true;
 }
 
-template<>
-void PitchShifterCommitter::SetDefaults(EaxEffectProps &props)
+void EaxPitchShifterCommitter::SetDefaults(EaxEffectProps &props)
 {
     props = EAXPITCHSHIFTERPROPERTIES{EAXPITCHSHIFTER_DEFAULTCOARSETUNE,
         EAXPITCHSHIFTER_DEFAULTFINETUNE};
 }
 
-template<>
-void PitchShifterCommitter::Get(const EaxCall &call, const EaxEffectProps &props_)
+void EaxPitchShifterCommitter::Get(const EaxCall &call, const EAXPITCHSHIFTERPROPERTIES &props)
 {
-    auto &props = std::get<EAXPITCHSHIFTERPROPERTIES>(props_);
     switch(call.get_property_id())
     {
     case EAXPITCHSHIFTER_NONE: break;
@@ -174,10 +160,8 @@ void PitchShifterCommitter::Get(const EaxCall &call, const EaxEffectProps &props
     }
 }
 
-template<>
-void PitchShifterCommitter::Set(const EaxCall &call, EaxEffectProps &props_)
+void EaxPitchShifterCommitter::Set(const EaxCall &call, EAXPITCHSHIFTERPROPERTIES &props)
 {
-    auto &props = std::get<EAXPITCHSHIFTERPROPERTIES>(props_);
     switch(call.get_property_id())
     {
     case EAXPITCHSHIFTER_NONE: break;

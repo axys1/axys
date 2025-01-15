@@ -1723,12 +1723,12 @@ std::string RichText::stringWithColor3B(const ax::Color3B& color3b)
     return std::string(buf, 7);
 }
 
-std::string RichText::stringWithColor4B(const ax::Color4B& color4b)
+std::string RichText::stringWithColor32(const ax::Color32& Color32)
 {
-    int r = color4b.r;
-    int g = color4b.g;
-    int b = color4b.b;
-    int a = color4b.a;
+    int r = Color32.r;
+    int g = Color32.g;
+    int b = Color32.b;
+    int a = Color32.a;
     char buf[10];
     snprintf(buf, sizeof(buf), "#%02x%02x%02x%02x", r, g, b, a);
     return std::string(buf, 9);
@@ -1805,18 +1805,18 @@ void RichText::formatText(bool force)
                             label, elmtText->_url, [this](std::string_view url) { openUrl(url); }));
                     if (elmtText->_flags & RichElementText::OUTLINE_FLAG)
                     {
-                        label->enableOutline(Color4B(elmtText->_outlineColor), elmtText->_outlineSize);
+                        label->enableOutline(Color32(elmtText->_outlineColor), elmtText->_outlineSize);
                     }
                     if (elmtText->_flags & RichElementText::SHADOW_FLAG)
                     {
-                        label->enableShadow(Color4B(elmtText->_shadowColor), elmtText->_shadowOffset,
+                        label->enableShadow(Color32(elmtText->_shadowColor), elmtText->_shadowOffset,
                                             elmtText->_shadowBlurRadius);
                     }
                     if (elmtText->_flags & RichElementText::GLOW_FLAG)
                     {
-                        label->enableGlow(Color4B(elmtText->_glowColor));
+                        label->enableGlow(Color32(elmtText->_glowColor));
                     }
-                    label->setTextColor(Color4B(elmtText->_color));
+                    label->setTextColor(Color32(elmtText->_color));
 
                     label->setName(elmtText->_id);
 
@@ -2138,13 +2138,13 @@ void RichText::handleTextRenderer(std::string_view text,
                 textRenderer->addComponent(UrlTouchListenerComponent::create(
                     textRenderer, url, [this](std::string_view url) { openUrl(url); }));
             if (flags & RichElementText::OUTLINE_FLAG)
-                textRenderer->enableOutline(Color4B(outlineColor), outlineSize);
+                textRenderer->enableOutline(Color32(outlineColor), outlineSize);
             if (flags & RichElementText::SHADOW_FLAG)
-                textRenderer->enableShadow(Color4B(shadowColor), shadowOffset, shadowBlurRadius);
+                textRenderer->enableShadow(Color32(shadowColor), shadowOffset, shadowBlurRadius);
             if (flags & RichElementText::GLOW_FLAG)
-                textRenderer->enableGlow(Color4B(glowColor));
+                textRenderer->enableGlow(Color32(glowColor));
 
-            textRenderer->setTextColor(Color4B(color));
+            textRenderer->setTextColor(Color32(color));
             textRenderer->setOpacity(opacity);
 
             if (isFirstLabel && !id.empty())

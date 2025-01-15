@@ -78,7 +78,6 @@ set(_AX_BASE_HEADER
     base/Scheduler.h
     base/EventType.h
     base/IMEDispatcher.h
-    base/PaddedString.h
     base/JsonWriter.h
     base/JobSystem.h
     )
@@ -138,11 +137,6 @@ set(_AX_BASE_SRC
     base/astc.cpp
     ${_AX_BASE_SPECIFIC_SRC}
     )
-
-if(NOT AX_CORE_PROFILE)
-    set(_AX_BASE_HEADER ${_AX_BASE_HEADER} base/AsyncTaskPool.h)
-    set(_AX_BASE_SRC ${_AX_BASE_SRC} base/AsyncTaskPool.cpp)
-endif()
 
 if(AX_ENABLE_CONSOLE)
     set(_AX_BASE_HEADER ${_AX_BASE_HEADER} base/Console.h)
