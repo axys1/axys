@@ -777,7 +777,7 @@ public:
     bool initWithDuration(float t, Scene* scene);
 
 protected:
-    Color4B _color;
+    Color32 _color;
 
 private:
     AX_DISALLOW_COPY_AND_ASSIGN(TransitionFade);
