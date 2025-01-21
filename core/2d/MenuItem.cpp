@@ -53,18 +53,18 @@ MenuItem* MenuItem::create()
     return MenuItem::create((const ccMenuCallback&)nullptr);
 }
 
-MenuItem* MenuItem::create(const ccMenuCallback& callback)
+MenuItem* MenuItem::create(const ccMenuCallback& callbackClick)
 {
     MenuItem* ret = new MenuItem();
-    ret->initWithCallback(callback);
+    ret->initWithCallback(callbackClick);
     ret->autorelease();
     return ret;
 }
 
-bool MenuItem::initWithCallback(const ccMenuCallback& callback)
+bool MenuItem::initWithCallback(const ccMenuCallback& callbackClick)
 {
     setAnchorPoint(Vec2(0.5f, 0.5f));
-    _callback = callback;
+    _callbackClick = callbackClick;
     _enabled  = true;
     _selected = false;
     return true;
@@ -75,20 +75,28 @@ MenuItem::~MenuItem() {}
 void MenuItem::selected()
 {
     _selected = true;
+    if (_callbackSelected)
+    {
+        _callbackSelected(this);
+    }
 }
 
 void MenuItem::unselected()
 {
     _selected = false;
+    if (_callbackUnSelected)
+    {
+        _callbackUnSelected(this);
+    }
 }
 
 void MenuItem::activate()
 {
     if (_enabled)
     {
-        if (_callback)
+        if (_callbackClick)
         {
-            _callback(this);
+            _callbackClick(this);
         }
 #if AX_ENABLE_SCRIPT_BINDING
         BasicScriptData data(this);
@@ -119,9 +127,15 @@ bool MenuItem::isSelected() const
     return _selected;
 }
 
-void MenuItem::setCallback(const ccMenuCallback& callback)
+void MenuItem::setCallback(const ccMenuCallback& callbackClick)
 {
-    _callback = callback;
+    _callbackClick = callbackClick;
+}
+
+void MenuItem::setCallbackSelected(const ccMenuCallback& callbackSelected, const ccMenuCallback& callbackUnSelected)
+{
+    _callbackSelected   = callbackSelected;
+    _callbackUnSelected = callbackUnSelected;
 }
 
 std::string MenuItem::getDescription() const

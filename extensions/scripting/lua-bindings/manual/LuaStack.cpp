@@ -238,7 +238,7 @@ bool LuaStack::init()
 
     tolua_script_handler_mgr_open(_state);
 
-    // add cocos2dx loader
+    // add axmol loader
     addLuaLoader(axlua_loader);
 
     return true;

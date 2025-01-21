@@ -1,3 +1,32 @@
+## axmol-2.3.2 Jan.21 2025
+
+## Bug fixes
+
+- Fix bit op error on lua < 5.4 by @halx99
+- Fix luajit luaL_openlibs crash on android by @halx99
+- Fix setup.ps1 Error in parsing PowerShell and OS versions by @halx99
+- Fix cpp template scene listeners leaked by @halx99
+
+## Improvements
+
+- Fix clang19 compile warnings
+- Improve 7z cmdline compatibility
+- DrawNode: new method: drawColoredTriangle(const Vec2* vertices3, const Color4B* color3) by @aismann in https://github.com/axmolengine/axmol/pull/2305
+- Committing luabindings for commit 5c84ccd by @axmol-bot in https://github.com/axmolengine/axmol/pull/2307
+- Correctly load resources that exist in a different folder to TMX file by @rh101 in https://github.com/axmolengine/axmol/pull/2316
+- Update DevSetup.md for Android by @rh101 in https://github.com/axmolengine/axmol/pull/2319
+- Add support for the creation of layers that are set to invisible in tilemap by @rh101 in https://github.com/axmolengine/axmol/pull/2321
+- Committing luabindings for commit 2212048 by @axmol-bot in https://github.com/axmolengine/axmol/pull/2323
+- Issue Template: Add Documentation_report.md  by @aismann in https://github.com/axmolengine/axmol/pull/2326
+- Use correct color type to fix debug drawing in PhysicsWorld by @rh101 in https://github.com/axmolengine/axmol/pull/2334
+- Committing luabindings for commit 3da481f by @axmol-bot in https://github.com/axmolengine/axmol/pull/2335
+- Add more fine-grained callbacks supports for MenuItem by @MartinLutherSu in https://github.com/axmolengine/axmol/pull/2342
+
+### 3rdparty updates
+
+- libpng: 1.6.44 ==> 1.6.45
+- fmt: 11.1.1 ==> 11.1.2
+
 ## axmol-2.3.1 Jan.5 2025
 
 ### Bug fixes

@@ -63,7 +63,7 @@ public:
     /** Creates a MenuItem with no target/selector. */
     static MenuItem* create();
     /** Creates a MenuItem with a target/selector. */
-    static MenuItem* create(const ccMenuCallback& callback);
+    static MenuItem* create(const ccMenuCallback& callbackClick);
 
     /** Returns the outside box. */
     Rect rect() const;
@@ -86,7 +86,14 @@ public:
      * @endcode
      * @lua NA
      */
-    void setCallback(const ccMenuCallback& callback);
+    void setCallback(const ccMenuCallback& callbackClick);
+
+    /** Set the callback of selected and unselected state to the menu item.
+     * @js NA
+     * @lua NA
+     */
+    void setCallbackSelected(const ccMenuCallback& callbackSelected   = nullptr,
+                             const ccMenuCallback& callbackUnSelected = nullptr);
 
     /**
      * @js NA
@@ -96,7 +103,9 @@ public:
     /**
      * @js ctor
      */
-    MenuItem() : _selected(false), _enabled(false), _callback(nullptr) {}
+    MenuItem() : _selected(false), _enabled(false), _callbackClick(nullptr)
+               , _callbackSelected(nullptr), _callbackUnSelected(nullptr)
+    {}
     /**
      * @js NA
      * @lua NA
@@ -106,13 +115,15 @@ public:
     /** Initializes a MenuItem with a target/selector.
      * @lua NA
      */
-    bool initWithCallback(const ccMenuCallback& callback);
+    bool initWithCallback(const ccMenuCallback& callbackClick);
 
 protected:
     bool _selected;
     bool _enabled;
     // callback
-    ccMenuCallback _callback;
+    ccMenuCallback _callbackClick;
+    ccMenuCallback _callbackSelected;
+    ccMenuCallback _callbackUnSelected;
 
 private:
     AX_DISALLOW_COPY_AND_ASSIGN(MenuItem);
