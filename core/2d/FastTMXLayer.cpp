@@ -1041,8 +1041,9 @@ void TMXTileAnimTask::stop()
 
 void TMXTileAnimTask::setCurrFrame()
 {
-    _layer->setTileGID(_animation->_frames[_currentFrame]._tileID, _tilePosition, (TMXTileFlags)_flag);
-    _currentFrame = (_currentFrame + 1) % _frameCount;
+    _currentFrame = _nextFrame;
+    _layer->setTileGID((int)_animation->_frames[_currentFrame]._tileID, _tilePosition, (TMXTileFlags)_flag);
+    _nextFrame = (_currentFrame + 1) % _frameCount;
 }
 
 TMXTileAnimTask* TMXTileAnimTask::create(FastTMXLayer* layer, TMXTileAnimInfo* animation, const Vec2& tilePos, uint32_t flag)
