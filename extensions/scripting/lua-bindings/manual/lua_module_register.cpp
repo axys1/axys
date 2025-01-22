@@ -63,7 +63,9 @@ int lua_module_register(lua_State* L)
     register_ui_module(L);
     register_extension_module(L);
     // TODO arnold
+#if defined(AX_ENABLE_EXT_SPINE)
     register_spine_module(L);
+#endif // defined(AX_ENABLE_EXT_SPINE)
     register_cocos3d_module(L);
     register_audioengine_module(L);
 #if defined(AX_ENABLE_3D_PHYSICS) && AX_ENABLE_BULLET_INTEGRATION
@@ -72,7 +74,9 @@ int lua_module_register(lua_State* L)
 #if defined(AX_ENABLE_NAVMESH)
     register_navmesh_module(L);
 #endif
+#if defined(AX_ENABLE_EXT_FAIRYGUI)
     register_fairygui_module(L);
+#endif // defined(AX_ENABLE_EXT_FAIRYGUI)
     // register extensions: yaiso, lua-cjson
     lua_register_extensions(L);
     return 1;

@@ -24,6 +24,7 @@
  ****************************************************************************/
 #ifndef SCRIPTING_AXLUA_SPINE_MANUAL_H
 #define SCRIPTING_AXLUA_SPINE_MANUAL_H
+#if defined(AX_ENABLE_EXT_SPINE)
 
 #ifdef __cplusplus
 extern "C" {
@@ -53,4 +54,7 @@ TOLUA_API int register_spine_module(lua_State* L);
 
 // end group
 /// @}
+
+#endif // defined(AX_ENABLE_EXT_SPINE)
+
 #endif // #ifndef COCOS_SCRIPTING_LUA_BINDINGS_LUA_COCOS2DX_SPINE_MANUAL_H
