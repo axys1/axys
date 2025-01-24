@@ -1,3 +1,4 @@
+#if defined(AX_ENABLE_EXT_FAIRYGUI)
 #include "axlua_fairygui_manual.hpp"
 #include "lua-bindings/auto/axlua_fairygui_auto.hpp"
 #include "lua-bindings/manual/tolua_fix.h"
@@ -1103,3 +1104,5 @@ int register_fairygui_module(lua_State* L)
     lua_pop(L, 1);
     return 1;
 }
+
+#endif // defined(AX_ENABLE_EXT_FAIRYGUI)
