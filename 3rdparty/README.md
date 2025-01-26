@@ -32,7 +32,7 @@
 
 ## Clipper2
 - [![Upstream](https://img.shields.io/github/v/tag/AngusJohnson/Clipper2?label=Upstream)](https://github.com/AngusJohnson/Clipper2)
-- Version: 1.4.0
+- Version: 1.5.0
 - License: BSL-1.0
 
 ## ConcurrentQueue
@@ -157,7 +157,7 @@
 - Version: 1.0.1
 - License: Apache-2.0
 
-## oboe (Adnroid only)
+## oboe (Android only)
 - [![Upstream](https://img.shields.io/github/v/tag/google/oboe?label=Upstream)](https://github.com/google/oboe)
 - Version: 1.9.3
 - License: Apache-2.0
