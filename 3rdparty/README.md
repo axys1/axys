@@ -247,11 +247,6 @@
 - Version: 0.8.3
 - License: BSD-2-Clause
 
-## yaml-cpp
-- [![Upstream](https://img.shields.io/github/v/release/jbeder/yaml-cpp?label=Upstream)](https://github.com/jbeder/yaml-cpp)
-- Version: 0.8.0
-- License: MIT
-
 ## yasio
 - [![Upstream](https://img.shields.io/github/v/release/yasio/yasio?label=Upstream)](https://github.com/yasio/yasio)
 - Version: 4.3.1
