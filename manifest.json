@@ -4,7 +4,6 @@
     "oboe": "1.9.3",
     "kcp": "v1.7-f2aa30e",
     "lz4": "v1.10.0",
-    "yaml-cpp": "0.8.0",
     "sample-assets": "master"
   },
   "mirrors": {
@@ -14,7 +13,6 @@
       "oboe": "google/oboe.git",
       "kcp": "skywind3000/kcp.git",
       "lz4": "lz4/lz4.git",
-      "yaml-cpp": "jbeder/yaml-cpp.git",
       "sample-assets": "axmolengine/axmol-sample-assets.git",
       "axslcc": "axmolengine/axslcc/releases/download"
     },
@@ -25,7 +23,6 @@
       "oboe": "simdsoft/oboe.git",
       "kcp": "simdsoft/kcp.git",
       "lz4": "simdsoft/lz4.git",
-      "yaml-cpp": "mirrors/yaml-cpp.git",
       "sample-assets": "simdsoft/axmol-sample-assets.git",
       "axslcc": "simdsoft/axslcc/releases/download"
     }

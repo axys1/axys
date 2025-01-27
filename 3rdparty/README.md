@@ -32,7 +32,7 @@
 
 ## Clipper2
 - [![Upstream](https://img.shields.io/github/v/tag/AngusJohnson/Clipper2?label=Upstream)](https://github.com/AngusJohnson/Clipper2)
-- Version: 1.4.0
+- Version: 1.5.0
 - License: BSL-1.0
 
 ## ConcurrentQueue
@@ -157,7 +157,7 @@
 - Version: 1.0.1
 - License: Apache-2.0
 
-## oboe (Adnroid only)
+## oboe (Android only)
 - [![Upstream](https://img.shields.io/github/v/tag/google/oboe?label=Upstream)](https://github.com/google/oboe)
 - Version: 1.9.3
 - License: Apache-2.0
@@ -246,11 +246,6 @@
 - [![Upstream](https://img.shields.io/github/v/release/Cyan4973/xxHash?label=Upstream)](https://github.com/Cyan4973/xxHash)
 - Version: 0.8.3
 - License: BSD-2-Clause
-
-## yaml-cpp
-- [![Upstream](https://img.shields.io/github/v/release/jbeder/yaml-cpp?label=Upstream)](https://github.com/jbeder/yaml-cpp)
-- Version: 0.8.0
-- License: MIT
 
 ## yasio
 - [![Upstream](https://img.shields.io/github/v/release/yasio/yasio?label=Upstream)](https://github.com/yasio/yasio)

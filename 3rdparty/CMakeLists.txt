@@ -17,7 +17,6 @@ option(AX_WITH_LLHTTP "Build with internal LLHTTP support" ON)
 
 # some libs not depended by axmol
 option(AX_WITH_LZ4 "Build with internal lz4 support" OFF)
-option(AX_WITH_YAML_CPP "Build with yaml-cpp support" OFF)
 
 if(LINUX OR MACOSX OR WINDOWS)
     option(AX_WITH_DOCTEST "Build with doctest support" ON)
@@ -456,20 +455,6 @@ endif()
 if (AX_ENABLE_VLC_MEDIA AND (NOT _AX_HAVE_VLC))
     message(STATUS "Using axmol prebuilt libvlc")
     ax_add_3rd(vlc TARGETS VLC::vlc;VLC::vlccore)
-endif()
-
-# yaml
-if(AX_WITH_YAML_CPP)
-    _1kfetch(yaml-cpp)
-    ax_add_3rd(${yaml-cpp_SOURCE_DIR} NO_LINK
-      TARGETS yaml-cpp
-      OPTIONS
-      "YAML_CPP_BUILD_TESTS OFF"
-      "YAML_CPP_BUILD_TOOLS OFF"
-      "YAML_CPP_BUILD_CONTRIB OFF"
-      "YAML_CPP_INSTALL OFF"
-      "YAML_CPP_CLANG_FORMAT_EXE OFF"
-    )
 endif()
 
 if(AX_WITH_LZ4)
