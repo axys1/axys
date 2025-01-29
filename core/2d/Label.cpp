@@ -26,8 +26,6 @@
  ****************************************************************************/
 
 #include "2d/Label.h"
-#include <algorithm>
-#include <stddef.h>  // offsetof
 #include "base/Types.h"
 #include "2d/Font.h"
 #include "2d/FontAtlasCache.h"
@@ -45,11 +43,38 @@
 #include "base/EventListenerCustom.h"
 #include "base/EventDispatcher.h"
 #include "base/EventCustom.h"
-#include "base/Utils.h"
 #include "2d/FontFNT.h"
-#include "renderer/Shaders.h"
 #include "renderer/backend/ProgramState.h"
 #include "renderer/backend/ProgramStateRegistry.h"
+#include <array>
+#include <cassert>
+#include <cfloat>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <functional>
+#include <string>
+#include <unordered_map>
+#include <vector>
+#include <__msvc_string_view.hpp>
+#include "Node.h"
+#include <base/Config.h>
+#include <base/Enums.h>
+#include <base/Logging.h>
+#include <math/Color.h>
+#include <math/Mat4.h>
+#include <math/Rect.h>
+#include <math/Vec2.h>
+#include <math/Vec4.h>
+#include <PlatformConfig.h>
+#include <PlatformMacros.h>
+#include "../renderer/backend/Enums.h"
+#include "../renderer/backend/Program.h"
+#include "../renderer/backend/ShaderModule.h"
+#include "../renderer/backend/Types.h"
+#include "../renderer/CustomCommand.h"
+#include "../renderer/Texture2D.h"
+#include "../renderer/TextureAtlas.h"
 
 namespace ax
 {
@@ -505,6 +530,7 @@ Label::Label(TextHAlignment hAlignment /* = TextHAlignment::LEFT */,
     , _boldEnabled(false)
     , _underlineNode(nullptr)
     , _strikethroughEnabled(false)
+    , _underlineEnabled(false)
 {
     setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     reset();
@@ -662,6 +688,7 @@ void Label::reset()
         _underlineNode = nullptr;
     }
     _strikethroughEnabled = false;
+    _underlineEnabled = false;
     setRotationSkewX(0);  // reverse italics
 }
 
@@ -1491,6 +1518,7 @@ void Label::enableBold()
 
 void Label::enableUnderline()
 {
+    _underlineEnabled = true;
     // remove it, just in case to prevent adding two or more
     if (!_underlineNode)
     {
@@ -1503,10 +1531,13 @@ void Label::enableUnderline()
 
 void Label::enableStrikethrough()
 {
-    if (!_strikethroughEnabled)
+    _strikethroughEnabled = true;
+    if (!_underlineNode)
     {
-        enableUnderline();
-        _strikethroughEnabled = true;
+        _underlineNode = DrawNode::create();
+        _underlineNode->setGlobalZOrder(getGlobalZOrder());
+        addChild(_underlineNode, 100000);
+        _contentDirty = true;
     }
 }
 
@@ -1560,16 +1591,33 @@ void Label::disableEffect(LabelEffect effect)
         }
         break;
     case ax::LabelEffect::UNDERLINE:
-        if (_underlineNode)
+        _underlineEnabled = false;
+        if (_currentLabelType == LabelType::TTF)
+        {
+            _fontConfig.underline = _underlineEnabled;
+            setTTFConfig(_fontConfig);
+        }
+        _currLabelEffect = LabelEffect::NORMAL;
+        if (_underlineNode && !_strikethroughEnabled)
         {
             removeChild(_underlineNode);
             _underlineNode = nullptr;
         }
+        _contentDirty = true;
         break;
     case ax::LabelEffect::STRIKETHROUGH:
         _strikethroughEnabled = false;
-        // since it is based on underline, disable it as well
-        disableEffect(LabelEffect::UNDERLINE);
+        if (_currentLabelType == LabelType::TTF)
+        {
+            _fontConfig.strikethrough = _strikethroughEnabled;
+            setTTFConfig(_fontConfig);
+        }
+        if (_underlineNode && !_underlineEnabled)
+        {
+            removeChild(_underlineNode);
+            _underlineNode = nullptr;
+        }
+        _contentDirty = true;
         break;
     case LabelEffect::ALL:
     {
@@ -1723,14 +1771,33 @@ void Label::updateContent()
             {
                 float offsety = 0;
                 if (_strikethroughEnabled)
+                {
                     offsety += charheight / 2;
-                // FIXME: Might not work with different vertical alignments
-                float y = (_numberOfLines - i - 1) * charheight + offsety;
+                    // FIXME: Might not work with different vertical alignments
+                    float y = (_numberOfLines - i - 1) * charheight + offsety;
 
-                // Github issue #15214. Uses _displayedColor instead of _textColor for the underline.
-                // This is to have the same behavior of SystemFonts.
-                _underlineNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
-                                         Color4F(_displayedColor), charheight / 6);
+                    // Github issue #15214. Uses _displayedColor instead of _textColor for the underline.
+                    // This is to have the same behavior of SystemFonts.
+                    _underlineNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
+                                             Color4F(_displayedColor), charheight / 6);
+                }
+            }
+
+            // atlas font
+            for (int i = 0; i < _numberOfLines; ++i)
+            {
+                float offsety = 0;
+                if (_underlineEnabled)
+                {
+                    // FIXME: Might not work with different vertical alignments
+                    float y = (_numberOfLines - i - 1) * charheight + offsety;
+
+                    // Github issue #15214. Uses _displayedColor instead of _textColor for the underline.
+                    // This is to have the same behavior of SystemFonts.
+                    _underlineNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
+                                             Color4F(_displayedColor), charheight / 6);
+                }
+
             }
         }
         else if (_textSprite)
@@ -1740,12 +1807,23 @@ void Label::updateContent()
             const auto spriteSize = _textSprite->getContentSize();
 
             if (_strikethroughEnabled)
+            {
                 // FIXME: system fonts don't report the height of the font correctly. only the size of the texture,
                 // which is POT
                 y += spriteSize.height / 2;
-            // FIXME: Might not work with different vertical alignments
-            _underlineNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y),
-                                     Color4F(_textSprite->getDisplayedColor()), spriteSize.height / 6);
+                // FIXME: Might not work with different vertical alignments
+                _underlineNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(_displayedColor),
+                                         spriteSize.height / 6);
+            }
+            if (_underlineEnabled)
+            {
+                // FIXME: system fonts don't report the height of the font correctly. only the size of the texture,
+                // which is POT
+                y -= spriteSize.height / 2;
+                // FIXME: Might not work with different vertical alignments
+                _underlineNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(_displayedColor),
+                                         spriteSize.height / 6);
+            }
         }
     }
 
@@ -2376,10 +2454,19 @@ void Label::updateDisplayedOpacity(uint8_t parentOpacity)
 // that's fine but it should be documented
 void Label::setTextColor(const Color4B& color)
 {
-    AXASSERT(_currentLabelType == LabelType::TTF || _currentLabelType == LabelType::STRING_TEXTURE,
-             "Only supported system font and ttf!");
+    //AXASSERT(_currentLabelType == LabelType::TTF || _currentLabelType == LabelType::STRING_TEXTURE,
+    //         "Only supported system font and ttf!");
 
     if (_currentLabelType == LabelType::STRING_TEXTURE && _textColor != color)
+    {
+        _contentDirty = true;
+    }
+    if (_currentLabelType == LabelType::BMFONT && _textColor != color)
+    {
+        _contentDirty = true;
+    }
+
+        if (_currentLabelType == LabelType::TTF && _textColor != color)
     {
         _contentDirty = true;
     }
@@ -2389,6 +2476,7 @@ void Label::setTextColor(const Color4B& color)
     _textColorF.g = _textColor.g / 255.0f;
     _textColorF.b = _textColor.b / 255.0f;
     _textColorF.a = _textColor.a / 255.0f;
+    setColor(Color3B(color));
 }
 
 void Label::updateColor()

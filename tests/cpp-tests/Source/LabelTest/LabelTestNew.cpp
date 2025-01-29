@@ -83,6 +83,7 @@ public:
 
 NewLabelTests::NewLabelTests()
 {
+    ADD_TEST_CASE(LabelUnderlineStrikethroughMultiline);
     ADD_TEST_CASE(LabelOutlineAndGlowTest);
     ADD_TEST_CASE(LabelTTFDistanceField);
     ADD_TEST_CASE(LabelIssue1336);
@@ -3267,6 +3268,63 @@ std::string LabelUnderlineMultiline::title() const
 std::string LabelUnderlineMultiline::subtitle() const
 {
     return "Underline on TTF and BMfont with multiline";
+}
+
+LabelUnderlineStrikethroughMultiline::LabelUnderlineStrikethroughMultiline()
+{
+    auto s = Director::getInstance()->getWinSize();
+
+
+    // ttf
+    TTFConfig ttfConfig("fonts/arial.ttf", 24);
+    //ttfConfig.underline     = true;
+    //ttfConfig.strikethrough = true;
+
+    const int count = 3;
+    Label* label[count];
+
+    label[0] = Label::createWithSystemFont("Color4B::Red", "fonts/arial.ttf", 20);
+    label[1] = Label::createWithBMFont("fonts/bitmapFontTest5.fnt", "hello underline\nand multiline", TextHAlignment::CENTER, s.width);
+   // addChild(_label1a, 0, kTagBitmapAtlas1);
+    label[2] = Label::createWithTTF(ttfConfig, "setColor(Red) on TTF", TextHAlignment::LEFT, s.width);
+    //addChild(_label2a, 0, kTagBitmapAtlas2);
+
+    for (int i = 0; i < count; i++)
+    {
+        label[i]->setColor(Color3B::GREEN);
+        label[i]->setTextColor(Color4B(0, 0, 255, 100));
+        label[i]->setPosition(Vec2(s.width / 4, s.height * 0.2f * (i+1)));
+        label[i]->enableUnderline();
+        label[i]->enableStrikethrough();
+        addChild(label[i]);
+    }
+
+    auto menuItemU = MenuItemFont::create("disable underline", [&](ax::Object* sender) {
+        for (int i = 0; i < count; i++)
+            label[i]->disableEffect(LabelEffect::UNDERLINE);
+    });
+    menuItemU->setFontSizeObj(12);
+    auto menuItemS = MenuItemFont::create("disable strikethrough", [&](ax::Object* sender) {
+        for (int i = 0; i < count; i++)
+            label[i]->disableEffect(LabelEffect::STRIKETHROUGH);
+    });
+
+    menuItemS->setFontSizeObj(12);
+    auto menu = Menu::create(menuItemU, menuItemS, NULL);
+    addChild(menu);
+
+    menu->setPosition(s.width * 0.8, s.height * 0.25f);
+    menu->alignItemsVertically();
+}
+
+std::string LabelUnderlineStrikethroughMultiline::title() const
+{
+    return "Test for Issue #2328";
+}
+
+std::string LabelUnderlineStrikethroughMultiline::subtitle() const
+{
+    return "Underline + Strikethrough + Color on TTF and BMfont with multiline";
 }
 
 ///

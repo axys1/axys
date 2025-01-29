@@ -844,6 +844,7 @@ protected:
 
     bool _boldEnabled;
     bool _strikethroughEnabled;
+    bool _underlineEnabled;
     bool _lineBreakWithoutSpaces;
     uint8_t _shadowOpacity;
 
