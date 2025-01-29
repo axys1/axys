@@ -3299,12 +3299,14 @@ LabelUnderlineStrikethroughMultiline::LabelUnderlineStrikethroughMultiline()
         addChild(label[i]);
     }
 
-    auto menuItemU = MenuItemFont::create("disable underline", [&](ax::Object* sender) {
+    auto menuItemU = MenuItemFont::create("disable underline", [=](ax::Object* sender) {
+      //  const int count = 3;
         for (int i = 0; i < count; i++)
             label[i]->disableEffect(LabelEffect::UNDERLINE);
     });
     menuItemU->setFontSizeObj(12);
-    auto menuItemS = MenuItemFont::create("disable strikethrough", [&](ax::Object* sender) {
+    auto menuItemS = MenuItemFont::create("disable strikethrough", [=](ax::Object* sender) {
+  //      const int count = 3;
         for (int i = 0; i < count; i++)
             label[i]->disableEffect(LabelEffect::STRIKETHROUGH);
     });

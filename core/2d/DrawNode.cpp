@@ -1072,7 +1072,6 @@ void DrawNode::_drawSegment(const Vec2& from,
 
         float width = thickness / properties.factor;
 
-                AXLOGD("_drawSegment {}  {}", thickness, width);
         Vec2 a  = vertices[0];
         Vec2 b  = vertices[1];
         Vec2 n  = ((b - a).getPerp()).getNormalized();
@@ -1185,7 +1184,6 @@ void DrawNode::_drawSegment(const Vec2& from,
 // Internal function _drawLine => thickness is always 1 (fastes way to draw a line)
 void DrawNode::_drawLine(const Vec2& from, const Vec2& to, const Color4B& color)
 {
-    AXLOGD("{}", __FUNCSIG__);
     Vec2 vertices[2] = {from, to};
     applyTransform(vertices, vertices, 2);
 
