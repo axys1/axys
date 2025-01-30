@@ -11,7 +11,7 @@ Examples:
 ```
 # starts a new project called "My Game" for multi-platform
 
-$ axmol new MyGame -l cpp -p org.axmol.mygame
+$ axmol new MyGame -l cpp -p dev.axmol.mygame
 
 $ cd MyGame
 

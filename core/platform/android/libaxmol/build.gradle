@@ -1,12 +1,16 @@
 apply plugin: 'com.android.library'
+apply from: 'axutils.gradle'
 
 android {
-    namespace "org.axmol.lib"
-    compileSdk PROP_COMPILE_SDK_VERSION.toInteger()
+    namespace "dev.axmol.lib"
+    def buildProfiles = AxmolUtils.resolveBasicBuildProfiles(project)
+    def targetSdk = buildProfiles['targetSdk']
+    def minSdk = buildProfiles['minSdk']
+    compileSdk targetSdk.toInteger()
 
     defaultConfig {
-        minSdkVersion PROP_MIN_SDK_VERSION
-        targetSdkVersion PROP_TARGET_SDK_VERSION
+        minSdkVersion minSdk
+        targetSdkVersion targetSdk
         versionCode 1
         versionName "1.0"
     }

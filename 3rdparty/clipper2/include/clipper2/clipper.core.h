@@ -31,7 +31,7 @@ namespace Clipper2Lib
   public:
     explicit Clipper2Exception(const char* description) :
       m_descr(description) {}
-    virtual const char* what() const throw() override { return m_descr.c_str(); }
+    virtual const char* what() const noexcept override { return m_descr.c_str(); }
   private:
     std::string m_descr;
   };
@@ -88,6 +88,9 @@ namespace Clipper2Lib
       throw Clipper2Exception(undefined_error);
     case range_error_i:
       throw Clipper2Exception(range_error);
+    // Should never happen, but adding this to stop a compiler warning
+    default:
+      throw Clipper2Exception("Unknown error");
     }
 #else
     ++error_code; // only to stop compiler warning
@@ -107,6 +110,10 @@ namespace Clipper2Lib
   //https://en.wikipedia.org/wiki/Nonzero-rule
   enum class FillRule { EvenOdd, NonZero, Positive, Negative };
 
+#ifdef USINGZ
+  using z_type = int64_t;
+#endif
+
   // Point ------------------------------------------------------------------------
 
   template <typename T>
@@ -114,10 +121,10 @@ namespace Clipper2Lib
     T x;
     T y;
 #ifdef USINGZ
-    int64_t z;
+     z_type z;
 
     template <typename T2>
-    inline void Init(const T2 x_ = 0, const T2 y_ = 0, const int64_t z_ = 0)
+    inline void Init(const T2 x_ = 0, const T2 y_ = 0, const z_type z_ = 0)
     {
       if constexpr (std::is_integral_v<T> &&
         is_round_invocable<T2>::value && !std::is_integral_v<T2>)
@@ -137,7 +144,7 @@ namespace Clipper2Lib
     explicit Point() : x(0), y(0), z(0) {};
 
     template <typename T2>
-    Point(const T2 x_, const T2 y_, const int64_t z_ = 0)
+    Point(const T2 x_, const T2 y_, const z_type z_ = 0)
     {
       Init(x_, y_);
       z = z_;
@@ -150,7 +157,7 @@ namespace Clipper2Lib
     }
 
     template <typename T2>
-    explicit Point(const Point<T2>& p, int64_t z_)
+    explicit Point(const Point<T2>& p, z_type z_)
     {
       Init(p.x, p.y, z_);
     }
@@ -160,7 +167,7 @@ namespace Clipper2Lib
       return Point(x * scale, y * scale, z);
     }
 
-    void SetZ(const int64_t z_value) { z = z_value; }
+    void SetZ(const z_type z_value) { z = z_value; }
 
     friend std::ostream& operator<<(std::ostream& os, const Point& point)
     {
@@ -360,6 +367,22 @@ namespace Clipper2Lib
     bool operator==(const Rect<T>& other) const {
       return left == other.left && right == other.right &&
         top == other.top && bottom == other.bottom;
+    }
+
+    Rect<T>& operator+=(const Rect<T>& other)
+    {
+      left = (std::min)(left, other.left);
+      top = (std::min)(top, other.top);
+      right = (std::max)(right, other.right);
+      bottom = (std::max)(bottom, other.bottom);
+      return *this;
+    }
+
+    Rect<T> operator+(const Rect<T>& other) const
+    {
+      Rect<T> result = *this;
+      result += other;
+      return result;
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Rect<T>& rect) {

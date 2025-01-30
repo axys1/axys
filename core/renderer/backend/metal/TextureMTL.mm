@@ -32,7 +32,7 @@ NS_AX_BACKEND_BEGIN
 
 namespace
 {
-MTLSamplerAddressMode toMTLSamplerAddressMode(SamplerAddressMode mode)
+static MTLSamplerAddressMode toMTLSamplerAddressMode(SamplerAddressMode mode)
 {
     MTLSamplerAddressMode ret = MTLSamplerAddressModeRepeat;
     switch (mode)
@@ -53,7 +53,7 @@ MTLSamplerAddressMode toMTLSamplerAddressMode(SamplerAddressMode mode)
     return ret;
 }
 
-MTLSamplerMinMagFilter toMTLSamplerMinMagFilter(SamplerFilter mode)
+static MTLSamplerMinMagFilter toMTLSamplerMinMagFilter(SamplerFilter mode)
 {
     switch (mode)
     {
@@ -70,7 +70,22 @@ MTLSamplerMinMagFilter toMTLSamplerMinMagFilter(SamplerFilter mode)
     }
 }
 
-bool isColorRenderable(PixelFormat textureFormat)
+static MTLSamplerMipFilter toMTLSamplerMipFilter(SamplerFilter mode)
+{
+    switch (mode)
+    {
+    case SamplerFilter::NEAREST_MIPMAP_LINEAR:
+    case SamplerFilter::LINEAR_MIPMAP_LINEAR:
+        return MTLSamplerMipFilterLinear;
+    case SamplerFilter::NEAREST_MIPMAP_NEAREST:
+    case SamplerFilter::LINEAR_MIPMAP_NEAREST:
+        return MTLSamplerMipFilterNearest;
+    default:
+        return MTLSamplerMipFilterNotMipmapped;
+    }
+}
+
+static bool isColorRenderable(PixelFormat textureFormat)
 {
     switch (textureFormat)
     {
@@ -168,6 +183,8 @@ void TextureInfoMTL::recreateSampler(const SamplerDescriptor& descriptor)
         descriptor.minFilter == SamplerFilter::DONT_CARE ? _minFilter : toMTLSamplerMinMagFilter(descriptor.minFilter);
     mtlDescriptor.magFilter =
         descriptor.magFilter == SamplerFilter::DONT_CARE ? _magFilter : toMTLSamplerMinMagFilter(descriptor.magFilter);
+    mtlDescriptor.mipFilter =
+        descriptor.magFilter == SamplerFilter::DONT_CARE ? _mipFilter : toMTLSamplerMipFilter(descriptor.magFilter);
 
     if (_mtlSamplerState)
     {

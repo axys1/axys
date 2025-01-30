@@ -154,7 +154,7 @@ Axmol 引擎在 Cocos2d-x v4.0 的基础上进行迭代和改进。现在速度�
 ## 参考链接
 
 - [1kiss](https://github.com/simdsoft/1kiss): 一个由 PowerShell 编写的能够自动配置各平台编译工具链的跨平台构建工具。
-- [axmolengine/glslcc](https://github.com/axmolengine/glslcc): 一个 glslcc 的分支, 用于 Axmol 引擎跨平台 Shader 编译工作流。
+- [axslcc](https://github.com/axmolengine/axslcc): Axmol 引擎专用跨平台 Shader 编译器（fork 自 `glslcc`)。
 - [Cocos2d-x](https://github.com/cocos2d/cocos2d-x)：原 Cocos2d-x 官方引擎仓库。
 
 ## Axmol 活跃状态

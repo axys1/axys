@@ -533,11 +533,7 @@ int io_transport_ssl::do_ssl_handshake(int& error)
       return -1;
     };
     this->write_cb_ = [this](const void* data, int len, const ip::endpoint*, int& error) { return yssl_write(ssl_, data, len, error); };
-
-    YASIO_KLOGD("[index: %d] the connection #%u <%s> --> <%s> is established.", ctx_->index_, this->id_, this->local_endpoint().to_string().c_str(),
-                this->remote_endpoint().to_string().c_str());
-    get_service().fire_event(ctx_->index_, YEK_ON_OPEN, 0, this);
-
+    get_service().notify_connect_succeed(this);
     error = EWOULDBLOCK;
   }
   else
@@ -1708,15 +1704,18 @@ void io_service::active_transport(transport_handle_t t)
 #endif
   }
   if (!yasio__testbits(ctx->properties_, YCM_SSL))
-  {
-    YASIO__UNUSED_PARAM(s);
-    YASIO_KLOGV("[index: %d] sndbuf=%d, rcvbuf=%d", ctx->index_, s->get_optval<int>(SOL_SOCKET, SO_SNDBUF), s->get_optval<int>(SOL_SOCKET, SO_RCVBUF));
-    YASIO_KLOGD("[index: %d] the connection #%u <%s> --> <%s> is established.", ctx->index_, t->id_, t->local_endpoint().to_string().c_str(),
-                t->remote_endpoint().to_string().c_str());
-    this->fire_event(ctx->index_, YEK_ON_OPEN, 0, t);
-  }
+    notify_connect_succeed(t);
   else if (yasio__testbits(ctx->properties_, YCM_CLIENT))
     this->wakeup();
+}
+void io_service::notify_connect_succeed(transport_handle_t t)
+{
+  auto& s  = t->socket_;
+  auto ctx = t->ctx_;
+  YASIO_KLOGD("[index: %d] the connection #%u <%s> --> <%s> is established(sndbuf=%d, rcvbuf=%d).", ctx->index_, t->id_,
+              t->local_endpoint().to_string().c_str(), t->remote_endpoint().to_string().c_str(), s->get_optval<int>(SOL_SOCKET, SO_SNDBUF),
+              s->get_optval<int>(SOL_SOCKET, SO_RCVBUF));
+  fire_event(ctx->index_, YEK_ON_OPEN, 0, t);
 }
 transport_handle_t io_service::allocate_transport(io_channel* ctx, xxsocket_ptr&& s)
 {

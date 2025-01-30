@@ -98,7 +98,7 @@ THE SOFTWARE.
         [self.myMarkedText release];
         self.myMarkedText = nil;
     }
-    ax::IMEDispatcher::sharedDispatcher()->dispatchDeleteBackward();
+    ax::IMEDispatcher::sharedDispatcher()->dispatchDeleteBackward(1);
 }
 
 - (void)insertText:(nonnull NSString*)text

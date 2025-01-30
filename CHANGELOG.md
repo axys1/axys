@@ -1,4 +1,176 @@
-## axmol-2.2.0 ??
+## axmol-2.3.2 Jan.21 2025
+
+## Bug fixes
+
+- Fix bit op error on lua < 5.4 by @halx99
+- Fix luajit luaL_openlibs crash on android by @halx99
+- Fix setup.ps1 Error in parsing PowerShell and OS versions by @halx99
+- Fix cpp template scene listeners leaked by @halx99
+
+## Improvements
+
+- Fix clang19 compile warnings
+- Improve 7z cmdline compatibility
+- DrawNode: new method: drawColoredTriangle(const Vec2* vertices3, const Color4B* color3) by @aismann in https://github.com/axmolengine/axmol/pull/2305
+- Committing luabindings for commit 5c84ccd by @axmol-bot in https://github.com/axmolengine/axmol/pull/2307
+- Correctly load resources that exist in a different folder to TMX file by @rh101 in https://github.com/axmolengine/axmol/pull/2316
+- Update DevSetup.md for Android by @rh101 in https://github.com/axmolengine/axmol/pull/2319
+- Add support for the creation of layers that are set to invisible in tilemap by @rh101 in https://github.com/axmolengine/axmol/pull/2321
+- Committing luabindings for commit 2212048 by @axmol-bot in https://github.com/axmolengine/axmol/pull/2323
+- Issue Template: Add Documentation_report.md  by @aismann in https://github.com/axmolengine/axmol/pull/2326
+- Use correct color type to fix debug drawing in PhysicsWorld by @rh101 in https://github.com/axmolengine/axmol/pull/2334
+- Committing luabindings for commit 3da481f by @axmol-bot in https://github.com/axmolengine/axmol/pull/2335
+- Add more fine-grained callbacks supports for MenuItem by @MartinLutherSu in https://github.com/axmolengine/axmol/pull/2342
+
+### 3rdparty updates
+
+- libpng: 1.6.44 ==> 1.6.45
+- fmt: 11.1.1 ==> 11.1.2
+
+## axmol-2.3.1 Jan.5 2025
+
+### Bug fixes
+
+- Fix RenderTexture internal sprite positioning and test cases by @rh101 in https://github.com/axmolengine/axmol/pull/2301
+- Fix imgui compile and link error for wasm by @halx99 in https://github.com/axmolengine/axmol/pull/2297
+- Fix continues drawCardinalSplines() drawing outside the control points on last control point by @aismann in https://github.com/axmolengine/axmol/pull/2303
+
+### Improvements
+
+- Improve CI, raise error when build fail by @halx99
+- Improve DevSetup.md by @rh101 in https://github.com/axmolengine/axmol/pull/2298
+
+### 3rdparty updates
+
+- xxhash: 0.8.2 ==> 0.8.3
+
+## axmol-2.3.0 Jan.1 2025
+
+### Significant changes relative to 2.2.x:
+
+- Add android15 16KB page size support by @halx99 in https://github.com/axmolengine/axmol/pull/2268
+- Improve build profiles by @halx99 in https://github.com/axmolengine/axmol/pull/2273
+- Rename `org.axmol*` to `dev.axmol*` by @halx99 in https://github.com/axmolengine/axmol/pull/2272
+- Rename `glslcc` to `axslcc` by @halx99 in https://github.com/axmolengine/axmol/pull/2271
+- Add support to create a minmal `axmol-bs` package for common cross platform build purpose by @halx99
+- Add vs2022 preview support in 1kiss.ps1 by @halx99
+- Update libclang to 19.1.6 for luabinding generator by @halx99
+- Download package to `cache` instead `tools/external`
+- Add build android `.aab` support via `axmol -p android -aab`
+
+### Bug fixes
+
+- Fix Label create with long string cause random crash in windows by @halx99
+- Fix DrawNode::drawPie(DrawMode::Line, thickness =1) draw a closed line (like DrawMode::Semi) wrong by @aismann in https://github.com/axmolengine/axmol/pull/2217
+- Fix for Android build issue by @rh101 in https://github.com/axmolengine/axmol/pull/2225
+- Fix media player by @ paulocoutinhox in https://github.com/axmolengine/axmol/pull/2257
+- Fix android class name paths incorrect by @rh101 in https://github.com/axmolengine/axmol/pull/2276
+- Fix renderer test case batching by @rh101 in https://github.com/axmolengine/axmol/pull/2291
+
+### Improvements
+
+- Improve DrawNode::drawPie() by @aismann in https://github.com/axmolengine/axmol/pull/2222
+- Metal: enable mipmap support by @smilediver in https://github.com/axmolengine/axmol/pull/2235
+- Add support for selecting all text in editbox via CTRL+A by @rh101 in https://github.com/axmolengine/axmol/pull/2238
+- Ensure that git ignores build folders created in test projects by @rh101 in https://github.com/axmolengine/axmol/pull/2247
+- Detect CTRL+A key combination to select all text in EditBox by @rh101 in https://github.com/axmolengine/axmol/pull/2251
+- Prevent excessive calls to deleteBackward method which may cause crashes on Android by @rh101 in https://github.com/axmolengine/axmol/pull/2248
+- Updated website. by @danialias in https://github.com/axmolengine/axmol/pull/2274
+- Make win32 messageBox always TOPMOST by @aismann in https://github.com/axmolengine/axmol/pull/2221
+- Add printLeaks call to alternative Win32 main method by @rh101 in https://github.com/axmolengine/axmol/pull/2278
+- Add printLeaks call in appropriate location to help developers by @rh101 in https://github.com/axmolengine/axmol/pull/2275
+- Remove TTF Font charCode 65535 limit by @halx99
+- Allow publish from specified commitish for ci
+
+### sdks updates
+
+- emsdk: 3.1.67 ==> 3.1.73
+- AGP: 8.4.0 ==> 8.7.3
+- gradle: 8.8.0 ==> 8.11.1
+- android target sdk: 34 ==> 35
+
+### 3rdparty updates
+
+- astcenc: 4.8.0 ==> 5.1.0
+- c-ares: 1.34.1 ==> 1.34.4
+- curl: 8.10.1 ==> 8.11.1
+- flatbuffers: 24.3.25 ==> 1.1.0-815e6e7
+- fmt: 11.0.1 ==> 11.1.1
+- oboe: 1.9.0 ==> 1.9.3
+- webp: 1.4.0 ==> 1.5.0
+- jpeg-turbo: 3.0.4 ==> 3.1.0
+- luajit: 2.1-97813fb ==> 2.1-f73e649
+- imgui: 1.90.6 ==> 1.91.6
+
+## axmol-2.2.1 Oct.22 2024
+
+### Bug fixes
+
+- Fix curl link error on macOS
+
+## axmol-2.2.0 Oct.20 2024
+
+### Significant changes relative to 2.1.5:
+
+- Enable vsync by default by @halx99 in https://github.com/axmolengine/axmol/pull/2118
+- Improve android media player, also fix #2101 by @halx99 in https://github.com/axmolengine/axmol/pull/2109
+- Add build on ubuntu 24.04 support by @halx99 in https://github.com/axmolengine/axmol/pull/2152
+- No longer add sprite as child of RenderTexture by @halx99 in https://github.com/axmolengine/axmol/pull/2149
+- API change too: remove all DrawNode setLineWidth() stuff by @aismann in https://github.com/axmolengine/axmol/pull/2172
+
+### Bug fixes
+
+- Fix invalidated iterator access in `Scheduler::unscheduleAllWithMinPriority()` by @smilediver in https://github.com/axmolengine/axmol/pull/2194
+- Fix label in PauseTest. by @Tosik86 in https://github.com/axmolengine/axmol/pull/2157
+- Fix #2147 full screen incorrect on macOS by @halx99 in https://github.com/axmolengine/axmol/pull/2150
+- Fix RenderTargetGL FBO not recreate when recv EVENT_RENDERER_RECREATED by @halx99 in https://github.com/axmolengine/axmol/pull/2148
+- Fix EventMouse coords by @halx99 in https://github.com/axmolengine/axmol/pull/2141
+- Fix for incorrect bits per pixel set on texture reload by @rh101 in https://github.com/axmolengine/axmol/pull/2138
+- Fix move constructor comment in Data class by @Tosik86 in https://github.com/axmolengine/axmol/pull/2132
+- Fix Node `setPosition()` and `setPositionNormalized()` not switching normalized mode if positions match by @smilediver in https://github.com/axmolengine/axmol/pull/2102
+- Fix issue with widget positioning when using normalized coordinates by @rh101 in https://github.com/axmolengine/axmol/pull/2110
+- Fix RenderTexture data needs to be saved to the cache before the GLSurfaceView context is lost by @rh101 in https://github.com/axmolengine/axmol/pull/2146
+- Fix incorrect static value usage in JNI array methods by @rh101 in https://github.com/axmolengine/axmol/pull/2178
+- Fix #2199 by @halx99 in https://github.com/axmolengine/axmol/pull/2200
+- Fix LuaJit Compilations by @IamSanjid in https://github.com/axmolengine/axmol/pull/2159
+- Fix #2163 by @halx99 in https://github.com/axmolengine/axmol/pull/2166
+- Fix #2169 by @halx99 in https://github.com/axmolengine/axmol/pull/2170
+- fix Crash Sprite when _texture null by @NgVThangBz in https://github.com/axmolengine/axmol/pull/2164
+- Fix dangling ref in `SpriteFrameCache::removeSpriteFramesFromTexture()` by @smilediver in https://github.com/axmolengine/axmol/pull/2106
+- Fix android fps issue when certain animation intervals are set by @rh101 in https://github.com/axmolengine/axmol/pull/2162
+- Fix DownloaderCURL too many open files and other fixes by @smilediver in https://github.com/axmolengine/axmol/pull/2182
+ 
+### Improvements
+
+- [ImGui] Allow setting of custom font config to enable merging of multiple fonts and other features by @rh101 in https://github.com/axmolengine/axmol/pull/2085
+- Update DevSetup.md with iOS simulator build commands by @rh101 in https://github.com/axmolengine/axmol/pull/2087
+- Remove couple bad warnings by @smilediver in https://github.com/axmolengine/axmol/pull/2088
+- Trim trailing whitespace for files in `core` folder by @smilediver in https://github.com/axmolengine/axmol/pull/2089
+- Remove the NS_AX_BEGIN and NS_AX_END macros. by @j-jorge in https://github.com/axmolengine/axmol/pull/2100
+- Remove the USING_NS_AX and NS_AX macros. by @j-jorge in https://github.com/axmolengine/axmol/pull/2103
+- Remove usage of the NS_AX macro. by @j-jorge in https://github.com/axmolengine/axmol/pull/2107
+- Sprite: show stretch warning only if stretching is enabled by @smilediver in https://github.com/axmolengine/axmol/pull/2113
+- Delay load mf.dll, mfplat.dll by @halx99 in https://github.com/axmolengine/axmol/pull/2116
+- Remove unreferenced sprite from test scene by @rh101 in https://github.com/axmolengine/axmol/pull/2119
+- Set RenderTexture content size on creation by @rh101 in https://github.com/axmolengine/axmol/pull/2120
+- Update sweep.h  (fix invalid UTF-8) by @aismann in https://github.com/axmolengine/axmol/pull/2121
+- Math optimizations by @smilediver in https://github.com/axmolengine/axmol/pull/2115
+- DrawNode V2  by @aismann in https://github.com/axmolengine/axmol/pull/2124
+- USe gradle-8.8-bin.zip everywhere by @crazyhappygame in https://github.com/axmolengine/axmol/pull/2134
+- Refine contributing.md guide by @Tosik86 in https://github.com/axmolengine/axmol/pull/2135
+- Allow turn on/off deprecated features by @halx99 in https://github.com/axmolengine/axmol/pull/2136
+- Math: remove and replace GP_ASSERT with AX_ASSERT by @smilediver in https://github.com/axmolengine/axmol/pull/2143
+- Enable cache render data for webgl by default by @halx99 in https://github.com/axmolengine/axmol/pull/2151
+- Fix some compiling deprecated issues by @halx99 in https://github.com/axmolengine/axmol/pull/2154
+- Update DrawNode.cpp (fix #2140) by @aismann in https://github.com/axmolengine/axmol/pull/2158
+- Add (missing) parameter 'drawLineToCenter' to 'drawSolidCircle(...)' by @aismann in https://github.com/axmolengine/axmol/pull/2160
+- Optimize DrawNode by @smilediver in https://github.com/axmolengine/axmol/pull/2165
+- remove DrawPrimitivesTests (Cocos2Dx) (redundant mit DrawNodeTest) by @aismann in https://github.com/axmolengine/axmol/pull/2179
+- move ZwoptexTest to SpriteTest (better add it to the SpriteTest section as removing) by @aismann in https://github.com/axmolengine/axmol/pull/2180
+- Update README.md (thirdparty) by @aismann in https://github.com/axmolengine/axmol/pull/2183
+- `AxmolActivity` refactoring and fixes by @smilediver in https://github.com/axmolengine/axmol/pull/2185
+- Update controller.cpp Add small hint that the DrawNode tests be "not finished": "Node: Draw (WIP)" by @aismann in https://github.com/axmolengine/axmol/pull/2189
+- DrawNode calls: replacing Color4F with Color4B (without the 'test' folder!) by @aismann in https://github.com/axmolengine/axmol/pull/2192
 
 ### sdks updates
 
@@ -6,17 +178,18 @@
 
 ### 3rdparty updates
 
-- glad: 2.0.6 ==> 2.0.7
+- glad: 2.0.6 ==> 2.0.8
 - curl: 8.9.1 ==> 8.10.1
 - simdjson: 3.10.0 ==> 3.10.1
 - libpng: 1.6.43 ==> 1.6.44
-- c-ares: 1.33.0 ==> 1.33.1
+- c-ares: 1.33.0 ==> 1.34.1
 - openssl: 3.3.1 ==> 3.0.15
 - yasio: 4.2.4 ==> 4.3.1
 - jpeg-turbo: 3.0.3 ==> 3.0.4
-- luajit: 2.1-04dca79 ==> 2.1-87ae18a
+- luajit: 2.1-04dca79 ==> 2.1-97813fb
 - simdjson: 3.10.0 ==> 3.10.1
 - rapidjson: 1.1.0-b4a6da3 ==> 1.1.0-815e6e7
+- freetype: 2.13.2 ==> 2.13.3
 
 ## axmol-2.1.5 Aug.11 2024
 

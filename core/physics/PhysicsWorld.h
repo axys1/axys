@@ -366,7 +366,14 @@ public:
      *
      * @return An integer number.
      */
-    int getDebugDrawMask() { return _debugDrawMask; }
+    int getDebugDrawMask() const { return _debugDrawMask; }
+
+    /**
+     * Get the debug draw node
+     *
+     * @return Pointer to draw node, which may be nullptr
+     */
+    DrawNode* getDebugDraw() const { return _debugDraw; }
 
     /**
      * To control the step of physics.

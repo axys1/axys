@@ -311,7 +311,7 @@ static void ImGui_ImplAndroid_ShutdownPlatformInterface()
 
 ////////////////////////// axmol spec /////////////////////////
 
-#define AX_PTR_CAST(v, pointer_type) reinterpret_cast<pointer_type>(v)
+#define AX_PTR_CAST(v, pointer_type) reinterpret_cast<pointer_type>((uintptr_t)v)
 
 
 // fps macro
@@ -519,7 +519,7 @@ IMGUI_IMPL_API void ImGui_ImplAx_DestroyFontsTexture()
     auto bd = ImGui_ImplAndroid_GetBackendData();
     if (bd->FontTexture)
     {
-        ImGui::GetIO().Fonts->TexID = nullptr;
+        ImGui::GetIO().Fonts->TexID = (ImTextureID)0;
         AX_SAFE_RELEASE_NULL(bd->FontTexture);
     }
 }

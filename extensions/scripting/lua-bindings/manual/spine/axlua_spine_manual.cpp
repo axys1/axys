@@ -22,6 +22,7 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
+#if defined(AX_ENABLE_EXT_SPINE)
 #include "lua-bindings/manual/spine/axlua_spine_manual.hpp"
 #include "lua-bindings/auto/axlua_spine_auto.hpp"
 
@@ -615,3 +616,5 @@ int register_spine_module(lua_State* L)
 
     return 1;
 }
+
+#endif // defined(AX_ENABLE_EXT_SPINE)

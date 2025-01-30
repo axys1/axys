@@ -140,7 +140,7 @@ protected:
     bool canAttachWithIME() override;
     bool canDetachWithIME() override;
 
-    void deleteBackward() override;
+    void deleteBackward(size_t numChars) override;
     std::string_view getContentText() override;
 
     void handleDeleteKeyEvent();

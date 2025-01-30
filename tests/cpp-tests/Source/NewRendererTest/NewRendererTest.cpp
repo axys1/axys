@@ -824,7 +824,9 @@ RendererUniformBatch::RendererUniformBatch()
     Size s = Director::getInstance()->getWinSize();
 
     auto blurState  = createBlurProgramState();
+    blurState->updateBatchId();
     auto sepiaState = createSepiaProgramState();
+    sepiaState->updateBatchId();
 
     auto x_inc = s.width / 20;
     auto y_inc = s.height / 6;
@@ -896,8 +898,10 @@ RendererUniformBatch2::RendererUniformBatch2()
 {
     Size s = Director::getInstance()->getWinSize();
 
-    auto blurState  = createBlurProgramState();
+    auto blurState = createBlurProgramState();
+    blurState->updateBatchId();
     auto sepiaState = createSepiaProgramState();
+    sepiaState->updateBatchId();
 
     auto x_inc = s.width / 20;
     auto y_inc = s.height / 6;

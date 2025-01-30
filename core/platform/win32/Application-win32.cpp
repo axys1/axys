@@ -154,12 +154,25 @@ LanguageType Application::getCurrentLanguage()
     LanguageType ret = LanguageType::ENGLISH;
 
     LCID localeID                    = GetUserDefaultLCID();
-    unsigned short primaryLanguageID = localeID & 0xFF;
+
+    unsigned short primaryLanguageID = PRIMARYLANGID(localeID);
+    unsigned short subLanguageID     = SUBLANGID(localeID);
 
     switch (primaryLanguageID)
     {
     case LANG_CHINESE:
-        ret = LanguageType::CHINESE;
+        switch (subLanguageID)
+        {
+        case SUBLANG_CHINESE_SIMPLIFIED:
+            ret = LanguageType::CHINESE;
+            break;
+        case SUBLANG_CHINESE_TRADITIONAL:
+            ret = LanguageType::CHINESE_TRADITIONAL;
+            break;
+        default:
+            ret = LanguageType::CHINESE;
+            break;
+        }
         break;
     case LANG_ENGLISH:
         ret = LanguageType::ENGLISH;

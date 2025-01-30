@@ -40,6 +40,7 @@ THE SOFTWARE.
 #include "ui/UIListView.h"
 #include "ui/UISlider.h"
 #include "ui/UITextField.h"
+#include "ui/UITextFieldEx.h"
 #include "ui/UITextBMFont.h"
 #include "ui/UIPageView.h"
 #include "ui/UIHelper.h"

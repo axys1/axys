@@ -32,7 +32,7 @@
         },
         {
             "action": "rep",
-            "from": "org.axmol.dummy",
+            "from": "dev.axmol.dummy",
             "to": "${packageName}",
             "files": [
                 "proj.android/app/build.gradle",

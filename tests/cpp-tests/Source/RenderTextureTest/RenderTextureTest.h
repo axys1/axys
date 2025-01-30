@@ -121,6 +121,7 @@ class RenderTextureTargetNode : public RenderTextureTest
 private:
     ax::Sprite *sprite1, *sprite2;
     ax::RenderTexture* renderTexture;
+    ax::Vec2 _spriteCenterPosition;
 
 public:
     CREATE_FUNC(RenderTextureTargetNode);

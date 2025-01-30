@@ -450,8 +450,8 @@ Data Device::getTextureDataForText(std::string_view text,
         bi.bmiHeader.biSize = sizeof(bi.bmiHeader);
         AX_BREAK_IF(!GetDIBits(dc.getDC(), dc.getBitmap(), 0, 0, nullptr, (LPBITMAPINFO)&bi, DIB_RGB_COLORS));
 
-        width  = (short)size.cx;
-        height = (short)size.cy;
+        width  = static_cast<int>(size.cx);
+        height = static_cast<int>(size.cy);
 
         // copy pixel data
         bi.bmiHeader.biHeight = (bi.bmiHeader.biHeight > 0) ? -bi.bmiHeader.biHeight : bi.bmiHeader.biHeight;

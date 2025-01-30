@@ -7,16 +7,28 @@
 # 3.30.0: https://gitlab.kitware.com/cmake/cmake/-/merge_requests/9478
 #
 
-# add or overwrite tool version like follow
-if ($Global:is_axmol_app -or $Global:is_axmol_engine) {
-    $manifest['nuget'] = '5.5.1' # since 5.6.0, requires .net 4.0
-    $manifest['glslcc'] = '1.9.5+'
-    $manifest['cmake'] = '3.29.3~3.30.3+'
-    $manifest['emsdk'] = '3.1.66~3.1.67+'
-    $manifest['jdk'] = '17.0.10~17.0.12+'
-    $manifest['vs'] = '16.0+'
-}
+# load cross platform build.profiles
+$build_profiles_file = Join-Path $PSScriptRoot 'build.profiles'
+$build_profiles = ConvertFrom-Props (Get-Content $build_profiles_file)
+
+$manifest['emsdk'] = $build_profiles['emsdk']
+$manifest['jdk'] = $build_profiles['jdk']
+$manifest['ninja'] = $build_profiles['ninja']
+$manifest['ndk'] = $build_profiles['ndk']
+$manifest['cmake'] = $build_profiles['cmake']
+$manifest['vs'] = $build_profiles['vs']
+$manifest['llvm'] = $build_profiles['llvm']
 
 # android sdk tools
-$android_sdk_tools['build-tools'] = '34.0.0' # match with AGP-8.2.1+, android studio 2023.1.1+
-$android_sdk_tools['platforms'] = 'android-34'
+$android_sdk_tools['build-tools'] = $build_profiles['build-tools']
+$android_sdk_tools['platforms'] = "android-$($build_profiles['target_sdk'])"
+
+$Global:build_profiles = $build_profiles
+
+$Global:download_path = $1k.realpath("$PSScriptRoot/../cache")
+	
+# add or overwrite tool version like follow
+if ($Global:is_axmol_app -or $Global:is_axmol_engine) {
+    $manifest['axslcc'] = $build_profiles['axslcc']
+    $manifest['nuget'] = $build_profiles['nuget']
+}

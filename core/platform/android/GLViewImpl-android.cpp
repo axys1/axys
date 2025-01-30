@@ -107,7 +107,7 @@ bool GLViewImpl::isOpenGLReady()
 
 void GLViewImpl::end()
 {
-    JniHelper::callStaticVoidMethod("org.axmol.lib.AxmolEngine", "onExit");
+    JniHelper::callStaticVoidMethod("dev.axmol.lib.AxmolEngine", "onExit");
     release();
 }
 
@@ -117,11 +117,11 @@ void GLViewImpl::setIMEKeyboardState(bool bOpen)
 {
     if (bOpen)
     {
-        JniHelper::callStaticVoidMethod("org.axmol.lib.AxmolGLSurfaceView", "openIMEKeyboard");
+        JniHelper::callStaticVoidMethod("dev.axmol.lib.AxmolGLSurfaceView", "openIMEKeyboard");
     }
     else
     {
-        JniHelper::callStaticVoidMethod("org.axmol.lib.AxmolGLSurfaceView", "closeIMEKeyboard");
+        JniHelper::callStaticVoidMethod("dev.axmol.lib.AxmolGLSurfaceView", "closeIMEKeyboard");
     }
 }
 
@@ -141,9 +141,9 @@ Rect GLViewImpl::getSafeAreaRect() const
     float marginX = DEFAULT_MARGIN_ANDROID / _scaleX;
     float marginY = DEFAULT_MARGIN_ANDROID / _scaleY;
 
-    bool isScreenRound   = JniHelper::callStaticBooleanMethod("org/axmol/lib/AxmolEngine", "isScreenRound");
-    bool hasSoftKeys     = JniHelper::callStaticBooleanMethod("org/axmol/lib/AxmolEngine", "hasSoftKeys");
-    bool isCutoutEnabled = JniHelper::callStaticBooleanMethod("org/axmol/lib/AxmolEngine", "isCutoutEnabled");
+    bool isScreenRound   = JniHelper::callStaticBooleanMethod("dev/axmol/lib/AxmolEngine", "isScreenRound");
+    bool hasSoftKeys     = JniHelper::callStaticBooleanMethod("dev/axmol/lib/AxmolEngine", "hasSoftKeys");
+    bool isCutoutEnabled = JniHelper::callStaticBooleanMethod("dev/axmol/lib/AxmolEngine", "isCutoutEnabled");
 
     float insetTop = 0.0f;
     float insetBottom = 0.0f;
@@ -151,7 +151,7 @@ Rect GLViewImpl::getSafeAreaRect() const
     float insetRight = 0.0f;
 
     static axstd::pod_vector<int32_t> cornerRadii =
-            JniHelper::callStaticIntArrayMethod("org/axmol/lib/AxmolEngine", "getDeviceCornerRadii");
+            JniHelper::callStaticIntArrayMethod("dev/axmol/lib/AxmolEngine", "getDeviceCornerRadii");
 
     if (isScreenRound)
     {
@@ -241,7 +241,7 @@ Rect GLViewImpl::getSafeAreaRect() const
     {
         // screen with enabled cutout area (ex. Google Pixel 3 XL, Huawei P20, Asus ZenFone 5, etc)
         static axstd::pod_vector<int32_t> safeInsets =
-                JniHelper::callStaticIntArrayMethod("org/axmol/lib/AxmolEngine", "getSafeInsets");
+                JniHelper::callStaticIntArrayMethod("dev/axmol/lib/AxmolEngine", "getSafeInsets");
 
         if (safeInsets.size() >= 4)
         {
@@ -269,7 +269,7 @@ Rect GLViewImpl::getSafeAreaRect() const
 
 void GLViewImpl::queueOperation(void (*op)(void*), void* param)
 {
-    JniHelper::callStaticVoidMethod("org.axmol.lib.AxmolEngine", "queueOperation", (jlong)(uintptr_t)op,
+    JniHelper::callStaticVoidMethod("dev.axmol.lib.AxmolEngine", "queueOperation", (jlong)(uintptr_t)op,
                                     (jlong)(uintptr_t)param);
 }
 

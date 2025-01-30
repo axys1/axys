@@ -12,7 +12,7 @@ on:
       
   workflow_dispatch:
 jobs:
-  build:
+  genbindings:
     runs-on: windows-latest
 
     steps:
@@ -25,7 +25,7 @@ jobs:
       with:
         python-version: '3.11.5'
 
-    - name: Build
+    - name: Genbindings
       run: tools\ci\genbindings.ps1
       
     - name: Create pull request

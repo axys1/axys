@@ -232,6 +232,9 @@ bool RenderTexture::initWithWidthAndHeight(int w,
         // retained
         setSprite(Sprite::createWithTexture(_texture2D));
 
+        _sprite->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+        _sprite->setPosition(Vec2(w, h) / 2);
+
 #if defined(AX_USE_GL)
         _sprite->setFlippedY(true);
 #endif
@@ -256,6 +259,24 @@ bool RenderTexture::initWithWidthAndHeight(int w,
     } while (0);
 
     return ret;
+}
+
+void RenderTexture::onEnter()
+{
+    Node::onEnter();
+    if (_sprite)
+    {
+        _sprite->onEnter();
+    }
+}
+
+void RenderTexture::onExit()
+{
+    if (_sprite)
+    {
+        _sprite->onExit();
+    }
+    Node::onExit();
 }
 
 void RenderTexture::setSprite(Sprite* sprite)

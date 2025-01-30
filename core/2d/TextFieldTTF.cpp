@@ -24,6 +24,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
+#include <algorithm>
+
 #include "2d/TextFieldTTF.h"
 
 #include "base/Director.h"
@@ -310,7 +312,7 @@ void TextFieldTTF::insertText(const char* text, size_t len)
     detachWithIME();
 }
 
-void TextFieldTTF::deleteBackward()
+void TextFieldTTF::deleteBackward(size_t numChars)
 {
     size_t len = _inputText.length();
     if (!len)
@@ -319,23 +321,33 @@ void TextFieldTTF::deleteBackward()
         return;
     }
 
-    // get the delete byte number
-    size_t deleteLen = 1;  // default, erase 1 byte
+    // Length of characters to delete is based on input editor, but the actual
+    // length of the displayed text may be less
+    numChars = std::min(numChars, len);
 
-    while (0x80 == (0xC0 & _inputText.at(len - deleteLen)))
+    size_t totalDeleteLen = 0;
+    for (auto i = 0; i < numChars; ++i)
     {
-        ++deleteLen;
+        // get the delete byte number
+        size_t deleteLen = 1;  // default, erase 1 byte
+
+        // Calculate the actual number of bytes to delete for a specific character
+        while (0x80 == (0xC0 & _inputText.at(len - totalDeleteLen - deleteLen)))
+        {
+            ++deleteLen;
+        }
+        totalDeleteLen += deleteLen;
     }
 
     if (_delegate &&
-        _delegate->onTextFieldDeleteBackward(this, _inputText.c_str() + len - deleteLen, static_cast<int>(deleteLen)))
+        _delegate->onTextFieldDeleteBackward(this, _inputText.c_str() + len - totalDeleteLen, static_cast<int>(totalDeleteLen)))
     {
         // delegate doesn't want to delete backwards
         return;
     }
 
     // if all text deleted, show placeholder string
-    if (len <= deleteLen)
+    if (len <= totalDeleteLen)
     {
         _inputText = "";
         _charCount = 0;
@@ -362,7 +374,7 @@ void TextFieldTTF::deleteBackward()
     }
     else
     {
-        std::string text(_inputText.c_str(), len - deleteLen);
+        std::string text(_inputText.c_str(), len - totalDeleteLen);
         setString(text);
     }
 }
