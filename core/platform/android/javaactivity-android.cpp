@@ -107,7 +107,7 @@ JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolRenderer_nativeInit(JNIEnv*, jcla
     }
 }
 
-JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolRenderer_nativeOnContextLost(JNIEnv*, jclass, jbool isColdStart)
+JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolRenderer_nativeOnContextLost(JNIEnv*, jclass, jboolean isColdStart)
 {
 #if AX_ENABLE_RESTART_APPLICATION_ON_CONTEXT_LOST
     auto director = ax::Director::getInstance();
