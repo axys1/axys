@@ -528,7 +528,7 @@ Label::Label(TextHAlignment hAlignment /* = TextHAlignment::LEFT */,
     , _reusedLetter(nullptr)
     , _horizontalKernings(nullptr)
     , _boldEnabled(false)
-    , _underlineNode(nullptr)
+    , _lineDrawNode(nullptr)
     , _strikethroughEnabled(false)
     , _underlineEnabled(false)
 {
@@ -682,10 +682,10 @@ void Label::reset()
     _overflow           = Overflow::NONE;
     _originalFontSize   = 0.0f;
     _boldEnabled        = false;
-    if (_underlineNode)
+    if (_lineDrawNode)
     {
-        removeChild(_underlineNode);
-        _underlineNode = nullptr;
+        removeChild(_lineDrawNode);
+        _lineDrawNode = nullptr;
     }
     _strikethroughEnabled = false;
     _underlineEnabled = false;
@@ -1518,26 +1518,34 @@ void Label::enableBold()
 
 void Label::enableUnderline()
 {
-    _underlineEnabled = true;
-    // remove it, just in case to prevent adding two or more
-    if (!_underlineNode)
+    if (_underlineEnabled)
     {
-        _underlineNode = DrawNode::create();
-        _underlineNode->setGlobalZOrder(getGlobalZOrder());
-        addChild(_underlineNode, 100000);
-        _contentDirty = true;
+        return;
+    }
+    _underlineEnabled = true;
+    _contentDirty     = true;
+    // remove it, just in case to prevent adding two or more
+    if (!_lineDrawNode)
+    {
+        _lineDrawNode = DrawNode::create();
+        _lineDrawNode->setGlobalZOrder(getGlobalZOrder());
+        addChild(_lineDrawNode, 100000);
     }
 }
 
 void Label::enableStrikethrough()
 {
-    _strikethroughEnabled = true;
-    if (!_underlineNode)
+    if (_strikethroughEnabled)
     {
-        _underlineNode = DrawNode::create();
-        _underlineNode->setGlobalZOrder(getGlobalZOrder());
-        addChild(_underlineNode, 100000);
-        _contentDirty = true;
+        return;
+    }
+    _strikethroughEnabled = true;
+    _contentDirty         = true;
+    if (!_lineDrawNode)
+    {
+        _lineDrawNode = DrawNode::create();
+        _lineDrawNode->setGlobalZOrder(getGlobalZOrder());
+        addChild(_lineDrawNode, 100000);
     }
 }
 
@@ -1598,10 +1606,10 @@ void Label::disableEffect(LabelEffect effect)
             setTTFConfig(_fontConfig);
         }
         _currLabelEffect = LabelEffect::NORMAL;
-        if (_underlineNode && !_strikethroughEnabled)
+        if (_lineDrawNode && !_strikethroughEnabled)
         {
-            removeChild(_underlineNode);
-            _underlineNode = nullptr;
+            removeChild(_lineDrawNode);
+            _lineDrawNode = nullptr;
         }
         _contentDirty = true;
         break;
@@ -1612,10 +1620,10 @@ void Label::disableEffect(LabelEffect effect)
             _fontConfig.strikethrough = _strikethroughEnabled;
             setTTFConfig(_fontConfig);
         }
-        if (_underlineNode && !_underlineEnabled)
+        if (_lineDrawNode && !_underlineEnabled)
         {
-            removeChild(_underlineNode);
-            _underlineNode = nullptr;
+            removeChild(_lineDrawNode);
+            _lineDrawNode = nullptr;
         }
         _contentDirty = true;
         break;
@@ -1757,9 +1765,9 @@ void Label::updateContent()
         }
     }
 
-    if (_underlineNode)
+    if (_lineDrawNode)
     {
-        _underlineNode->clear();
+        _lineDrawNode->clear();
 
         if (_numberOfLines)
         {
@@ -1778,7 +1786,7 @@ void Label::updateContent()
 
                     // Github issue #15214. Uses _displayedColor instead of _textColor for the underline.
                     // This is to have the same behavior of SystemFonts.
-                    _underlineNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
+                    _lineDrawNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
                                              Color4F(_displayedColor), charheight / 6);
                 }
             }
@@ -1794,7 +1802,7 @@ void Label::updateContent()
 
                     // Github issue #15214. Uses _displayedColor instead of _textColor for the underline.
                     // This is to have the same behavior of SystemFonts.
-                    _underlineNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
+                    _lineDrawNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
                                              Color4F(_displayedColor), charheight / 6);
                 }
 
@@ -1812,7 +1820,7 @@ void Label::updateContent()
                 // which is POT
                 y += spriteSize.height / 2;
                 // FIXME: Might not work with different vertical alignments
-                _underlineNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(_displayedColor),
+                _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(_displayedColor),
                                          spriteSize.height / 6);
             }
             if (_underlineEnabled)
@@ -1821,7 +1829,7 @@ void Label::updateContent()
                 // which is POT
                 y -= spriteSize.height / 2;
                 // FIXME: Might not work with different vertical alignments
-                _underlineNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(_displayedColor),
+                _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(_displayedColor),
                                          spriteSize.height / 6);
             }
         }
@@ -2414,7 +2422,7 @@ void Label::updateDisplayedColor(const Color3B& parentColor)
         _shadowNode->updateDisplayedColor(_displayedColor);
     }
 
-    if (_underlineNode)
+    if (_lineDrawNode)
     {
         // FIXME: _underlineNode is not a sprite/label. It is a DrawNode
         // and updating its color doesn't work. it must be re-drawn,
@@ -2633,9 +2641,9 @@ void Label::setGlobalZOrder(float globalZOrder)
         }
     }
 
-    if (_underlineNode)
+    if (_lineDrawNode)
     {
-        _underlineNode->setGlobalZOrder(globalZOrder);
+        _lineDrawNode->setGlobalZOrder(globalZOrder);
     }
 
 #if AX_LABEL_DEBUG_DRAW
