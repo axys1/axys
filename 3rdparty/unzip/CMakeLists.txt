@@ -5,6 +5,7 @@ set(target_name ${lib_name})
 project(${lib_name})
 
 set(${target_name}_src
+  ioapi_mem.cpp
   ioapi.c
   unzip.c
 )
