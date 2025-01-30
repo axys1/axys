@@ -297,6 +297,14 @@ public:
      */
     bool getFileData(std::string_view fileName, ResizableBuffer* buffer);
 
+    /**
+     * Get resource file data from a zip file.
+     * @param fileName File name
+     * @param[out] buffer If the file read operation succeeds, if will contain the file byte size.
+     * @return the buffer if successful.
+     */
+    unsigned char *getFileData(std::string_view fileName, ssize_t *size);
+
     std::string getFirstFilename();
     std::string getNextFilename();
 
