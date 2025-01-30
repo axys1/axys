@@ -173,16 +173,9 @@ public class AxmolRenderer implements GLSurfaceView.Renderer {
     }
 
     public void handleOnResume() {
-<<<<<<< HEAD
-        if (mIsPaused || mNextResumeAfterColdStart) {
-            AxmolRenderer.nativeOnResume();
-            mIsPaused = false;
-            mNextResumeAfterColdStart = false;
-=======
         if (gNativeIsPaused) {
             AxmolRenderer.nativeOnResume();
             gNativeIsPaused = false;
->>>>>>> dev
         }
     }
 
