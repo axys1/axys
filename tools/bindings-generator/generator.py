@@ -1257,8 +1257,9 @@ class NativeClass(object):
 
         elif self._current_visibility == cindex.AccessSpecifier.PUBLIC and cursor.kind == cindex.CursorKind.CONSTRUCTOR and not self.is_abstract:
             # Skip copy constructor
-            if cursor.displayname == self.class_name + "(const " + self.namespaced_class_name + " &)":
-                # print("Skip copy constructor: " + cursor.displayname)
+            if cursor.displayname == self.class_name + "(const " + self.namespaced_class_name + " &)" or \
+                cursor.displayname == self.class_name + "(const " + self.class_name + " &)": # llvm-17+
+                print("Skip copy constructor: " + cursor.displayname)
                 return True
 
             m = NativeFunction(cursor)
@@ -1668,6 +1669,7 @@ class Generator(object):
 
         for node in cursor.get_children():
             # print("%s %s - %s" % (">" * depth, node.displayname, node.kind))
+            
             self._deep_iterate(node, depth + 1)
     def scriptname_from_native(self, namespace_class_name, namespace_name):
         script_ns_dict = self.config['conversions']['ns_map']
@@ -1852,45 +1854,28 @@ class Generator(object):
             return "func"
         else:
             return namespace_class_name
-def main():
-
-    from optparse import OptionParser
-
-    parser = OptionParser("usage: %prog [options] {configfile}")
-    parser.add_option("-s", action="store", type="string", dest="section",
-                        help="sets a specific section to be converted")
-    parser.add_option("-t", action="store", type="string", dest="target",
-                        help="specifies the target vm. Will search for TARGET.yaml")
-    parser.add_option("-o", action="store", type="string", dest="outdir",
-                        help="specifies the output directory for generated C++ code")
-    parser.add_option("-n", action="store", type="string", dest="out_file",
-                        help="specifcies the name of the output file, defaults to the prefix in the .ini file")
-
-    (opts, args) = parser.parse_args()
-
+        
+def generate_one(cfg, section, target, outdir, out_file):
     # script directory
     workingdir = os.path.dirname(inspect.getfile(inspect.currentframe()))
 
-    if len(args) == 0:
-        parser.error('invalid number of arguments')
-
     config = ConfigParser()
     config.read('userconf.ini')
-    config.read(args[0])
+    config.read(cfg)
 
     print('Using userconfig \n ', config.items('DEFAULT'))
 
-    clang_lib_path = os.path.join(config.get('DEFAULT', 'cxxgeneratordir'), 'libclang')
-    cindex.Config.set_library_path(clang_lib_path);
+    clang_lib_path = os.path.join(config.get('DEFAULT', 'cxxgeneratordir'), 'clang/prebuilt')
+    cindex.Config.set_library_path(clang_lib_path)
 
     if (0 == len(config.sections())):
         raise Exception("No sections defined in config file")
 
     sections = []
-    if opts.section:
-        if (opts.section in config.sections()):
+    if section != None:
+        if (section in config.sections()):
             sections = []
-            sections.append(opts.section)
+            sections.append(section)
         else:
             raise Exception("Section not found in config file")
     else:
@@ -1906,14 +1891,12 @@ def main():
     if 0 == len(targets):
         raise Exception("No targets defined")
 
-    if opts.target:
-        if (opts.target in targets):
+    if target != None:
+        if (target in targets):
             targets = []
-            targets.append(opts.target)
+            targets.append(target)
 
-    if opts.outdir:
-        outdir = opts.outdir
-    else:
+    if outdir is None:
         outdir = os.path.join(workingdir, "gen")
     if not os.path.exists(outdir):
         os.makedirs(outdir)
@@ -1946,7 +1929,7 @@ def main():
                 'field': config.get(s, 'field') if config.has_option(s, 'field') else None,
                 'rename_functions': config.get(s, 'rename_functions'),
                 'rename_classes': config.get(s, 'rename_classes'),
-                'out_file': opts.out_file or config.get(s, 'prefix'),
+                'out_file': out_file or config.get(s, 'prefix'),
                 'script_control_cpp': config.get(s, 'script_control_cpp') if config.has_option(s, 'script_control_cpp') else 'no',
                 'script_type': t,
                 'macro_judgement': config.get(s, 'macro_judgement') if config.has_option(s, 'macro_judgement') else None,
@@ -1956,6 +1939,24 @@ def main():
                 }
             generator = Generator(gen_opts)
             generator.generate_code()
+
+def main():
+
+    from optparse import OptionParser
+
+    parser = OptionParser("usage: %prog [options] {configfile}")
+    parser.add_option("-s", action="store", type="string", dest="section",
+                        help="sets a specific section to be converted")
+    parser.add_option("-t", action="store", type="string", dest="target",
+                        help="specifies the target vm. Will search for TARGET.yaml")
+    parser.add_option("-o", action="store", type="string", dest="outdir",
+                        help="specifies the output directory for generated C++ code")
+    parser.add_option("-n", action="store", type="string", dest="out_file",
+                        help="specifcies the name of the output file, defaults to the prefix in the .ini file")
+
+    (opts, args) = parser.parse_args()
+
+    generate_one(args[0], opts.section, opts.target, opts.outdir, opts.out_file)
 
 if __name__ == '__main__':
     try:

@@ -425,6 +425,7 @@ protected:
     TMXTileAnimInfo* _animation = nullptr;
     /** Index of the frame that should be drawn currently */
     uint32_t _currentFrame = 0;
+    uint32_t _nextFrame = 0;
     uint32_t _frameCount   = 0;
 };
 

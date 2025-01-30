@@ -429,8 +429,8 @@ Data Device::getTextureDataForText(std::string_view text,
         {
             break;
         }
-        height = (short)info.height;
-        width  = (short)info.width;
+        height = static_cast<int>(info.height);
+        width  = static_cast<int>(info.width);
         ret.fastSet(info.data, width * height * 4);
         hasPremultipliedAlpha = true;
     } while (0);

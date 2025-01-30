@@ -302,6 +302,11 @@ public:
     uint64_t getBatchId() const { return _batchId; };
 
     /*
+     * Gets the state of the batch ID. If true, then batch ID is valid
+     */
+    bool isBatchable() const { return _isBatchable; };
+
+    /*
     * Update batchID of current program state, by default, custom program was traits with mutable uniforms
     * so batch ID was set to -1 indicate batch was disabled
     */
@@ -399,7 +404,8 @@ protected:
     VertexLayout* _vertexLayout = nullptr;
     bool _ownVertexLayout       = false;
 
-    uint64_t _batchId = -1;
+    uint64_t _batchId    = -1;
+    bool _isBatchable = false;
 
 #if AX_ENABLE_CACHE_TEXTURE_DATA
     EventListenerCustom* _backToForegroundListener = nullptr;

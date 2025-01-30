@@ -1264,6 +1264,18 @@ void MediaPlayer::play()
 
 void MediaPlayer::pause()
 {
+    Widget::pause();
+    pausePlayback();
+}
+
+void MediaPlayer::resume()
+{
+    resumePlayback();
+    Widget::resume();
+}
+
+void MediaPlayer::pausePlayback()
+{
     if (!_videoURL.empty())
     {
         auto engine = reinterpret_cast<PrivateVideoDescriptor*>(_videoContext)->_engine;
@@ -1275,7 +1287,7 @@ void MediaPlayer::pause()
     }
 }
 
-void MediaPlayer::resume()
+void MediaPlayer::resumePlayback()
 {
     if (!_videoURL.empty())
     {
@@ -1379,7 +1391,7 @@ void MediaPlayer::onExit()
     Widget::onExit();
 }
 
-void MediaPlayer::addEventListener(const MediaPlayer::ccVideoPlayerCallback& callback)
+void MediaPlayer::addEventListener(const MediaPlayer::VideoPlayerCallback& callback)
 {
     _eventCallback = callback;
 }
@@ -1406,20 +1418,19 @@ ax::ui::Widget* MediaPlayer::createCloneInstance()
 
 void MediaPlayer::copySpecialProperties(Widget* widget)
 {
-    MediaPlayer* videoPlayer = dynamic_cast<MediaPlayer*>(widget);
-    if (videoPlayer)
+    MediaPlayer* mplayer = dynamic_cast<MediaPlayer*>(widget);
+    if (mplayer)
     {
-        _isPlaying              = videoPlayer->_isPlaying;
-        _isLooping              = videoPlayer->_isLooping;
-        _userInputEnabled       = videoPlayer->_userInputEnabled;
-        _styleType              = videoPlayer->_styleType;
-        _fullScreenEnabled      = videoPlayer->_fullScreenEnabled;
-        _fullScreenDirty        = videoPlayer->_fullScreenDirty;
-        _videoURL               = videoPlayer->_videoURL;
-        _keepAspectRatioEnabled = videoPlayer->_keepAspectRatioEnabled;
-        _videoSource            = videoPlayer->_videoSource;
-        _videoPlayerIndex       = videoPlayer->_videoPlayerIndex;
-        _eventCallback          = videoPlayer->_eventCallback;
+        _isPlaying              = mplayer->_isPlaying;
+        _isLooping              = mplayer->_isLooping;
+        _userInputEnabled       = mplayer->_userInputEnabled;
+        _styleType              = mplayer->_styleType;
+        _fullScreenEnabled      = mplayer->_fullScreenEnabled;
+        _fullScreenDirty        = mplayer->_fullScreenDirty;
+        _videoURL               = mplayer->_videoURL;
+        _keepAspectRatioEnabled = mplayer->_keepAspectRatioEnabled;
+        _videoSource            = mplayer->_videoSource;
+        _eventCallback          = mplayer->_eventCallback;
     }
 }
 

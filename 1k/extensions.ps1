@@ -2,7 +2,7 @@
 # So provide a spec VersionEx make [VersionEx]'1.0' -eq [VersionEx]'1.0.0' == true available
 if (-not ([System.Management.Automation.PSTypeName]'System.VersionEx').Type) {
 
-    Add-Type -TypeDefinition @"
+    $code_str = @"
 
 namespace System
 {
@@ -216,6 +216,30 @@ namespace System
 }
 "@
 
-$TrimLastMethod = [ExtensionMethods].GetMethod('TrimLast')
-Update-TypeData -TypeName System.String -MemberName TrimLast -MemberType CodeMethod -Value $TrimLastMethod
+    Add-Type -TypeDefinition $code_str
+    $TrimLastMethod = [ExtensionMethods].GetMethod('TrimLast')
+    Update-TypeData -TypeName System.String -MemberName TrimLast -MemberType CodeMethod -Value $TrimLastMethod
+}
+
+
+function ConvertFrom-Props {
+    param(
+        [Parameter(Mandatory=$true)]
+        $InputObject
+    )
+
+    $props = @{}
+
+    foreach($_ in $InputObject) {
+        if ($_ -match "^#.*$") {
+            continue
+        }
+        if ($_ -match "^(.+?)\s*=\s*(.*)$") {
+            $key = $matches[1].Trim()
+            $value = $matches[2].Trim()
+            $props[$key] = $value
+        }
+    }
+
+    return $props
 }

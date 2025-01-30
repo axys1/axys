@@ -305,6 +305,12 @@ void EditBoxImplWin::_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 {
     switch (uMsg)
     {
+    case WM_KEYDOWN:
+        if (_hasFocus && wParam == 'A' && (GetKeyState(VK_CONTROL) & 0x8000) != 0)  // CTRL+A for "Select All"
+        {
+            ::SendMessageW(_hwndEdit, EM_SETSEL, 0, -1);
+        }
+        break;
     case WM_CHAR:
         if (wParam == VK_RETURN)
         {

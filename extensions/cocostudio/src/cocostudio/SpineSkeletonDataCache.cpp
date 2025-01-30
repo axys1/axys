@@ -1,5 +1,7 @@
 #include "SpineSkeletonDataCache.h"
 
+#if defined(AX_ENABLE_EXT_SPINE)
+
 #if !defined(AX_SPINE_VERSION) || AX_SPINE_VERSION >= 0x030700
 SpineSkeletonDataCache* SpineSkeletonDataCache::getInstance()
 {
@@ -271,3 +273,5 @@ void SpineSkeletonDataCache::removeAllUnusedData(void)
     }
 }
 #endif
+
+#endif // defined(AX_ENABLE_EXT_SPINE)

@@ -1,6 +1,6 @@
 # Add project specific ProGuard rules here.
 # By default, the flags in this file are appended to flags specified
-# in E:\developSoftware\Android\SDK/tools/proguard/proguard-android.txt
+# in ${ANDROID_SDK_ROOT}/tools/proguard/proguard-android.txt
 # You can edit the include path and order by changing the proguardFiles
 # directive in build.gradle.
 #
@@ -16,19 +16,15 @@
 #   public *;
 #}
 
-# Proguard Cocos2d-x for release
--keep public class org.axmol.** { *; }
--dontwarn org.axmol.**
--keep public class com.chukong.** { *; }
--dontwarn com.chukong.**
--keep public class com.huawei.android.** { *; }
--dontwarn com.huawei.android.**
+# Proguard Axmol for release
+-keep public class dev.axmol.** { *; }
+-dontwarn dev.axmol.**
 
 # Proguard Apache HTTP for release
 -keep class org.apache.http.** { *; }
 -dontwarn org.apache.http.**
 
-# Proguard Android Webivew for release. uncomment if you are using a webview in cocos2d-x
+# Proguard Android Webivew for release. uncomment if you are using a webview in axmol
 #-keep public class android.net.http.SslError
 #-keep public class android.webkit.WebViewClient
 

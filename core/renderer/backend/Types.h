@@ -46,6 +46,9 @@ inline TargetBufferFlags getMRTColorFlag(size_t index) noexcept
 
 typedef TargetBufferFlags ClearFlag;
 
+/// @note In Metal, mipmap filter is derived from `magFilter` value: ie `NEAREST_MIPMAP_LINEAR` and
+///     `LINEAR_MIPMAP_LINEAR` will select `LINEAR` filter, while `NEAREST_MIPMAP_NEAREST` and
+///     `LINEAR_MIPMAP_NEAREST` will select `NEAREST` filter.
 struct SamplerDescriptor
 {
     SamplerFilter magFilter         = SamplerFilter::LINEAR;

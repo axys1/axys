@@ -1915,13 +1915,13 @@ void PhysicsIssue9959::onEnter()
     scale9Sprite1->setPosition(origin + visibleSize / 2);
     addChild(scale9Sprite1);
     scale9Sprite1->runAction(RepeatForever::create(
-        Sequence::create(MoveBy::create(2.0f, Vec2(100.0f, 0.0f)), MoveBy::create(2.0f, Vec2(-100.0f, 0.0f)), NULL)));
+        Sequence::create(MoveBy::create(2.0f, Vec2(100.0f, 0.0f)), MoveBy::create(2.0f, Vec2(-100.0f, 0.0f)), nullptr)));
 
     auto scale9Sprite2 = ui::Scale9Sprite::create("Images/blocks.png");
     scale9Sprite2->setPosition(origin + visibleSize / 2 + Vec2(0.0f, 50.0f));
     addChild(scale9Sprite2);
     scale9Sprite2->runAction(
-        RepeatForever::create(Sequence::create(ScaleTo::create(2.0f, 1.5f), ScaleTo::create(2.0f, 1.0f), NULL)));
+        RepeatForever::create(Sequence::create(ScaleTo::create(2.0f, 1.5f), ScaleTo::create(2.0f, 1.0f), nullptr)));
 
     auto scale9Sprite3 = ui::Scale9Sprite::create("Images/blocks.png");
     scale9Sprite3->setPosition(origin + visibleSize / 2 + Vec2(0.0f, -50.0f));

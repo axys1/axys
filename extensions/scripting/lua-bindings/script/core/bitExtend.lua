@@ -15,26 +15,7 @@ elseif major >= 5 and minor >= 2 then
         bit = require('bit32')
     else
         -- note: Lua 5.4+ bit op is 64bit integer
-        bit = {
-            band = function(a, b)
-                return a & b
-            end,
-            bor = function(a, b)
-                return a | b
-            end,
-            bxor = function(a, b)
-                return a ~ b
-            end,
-            bnot = function(a)
-                return ~a
-            end,
-            lshift = function(a, n)
-                return a << n
-            end,
-            rshift = function(a, n)
-                return a >> n
-            end
-        }
+        bit = require('bitop')
     end
     package.loaded['bit'] = bit
 else -- fallback to pure lua implementation, slowest

@@ -36,7 +36,7 @@
 
 extern "C" {
 
-JNIEXPORT jint JNICALL Java_org_axmol_lib_LuaBridge_callLuaFunctionWithString(JNIEnv* env,
+JNIEXPORT jint JNICALL Java_dev_axmol_lib_LuaBridge_callLuaFunctionWithString(JNIEnv* env,
                                                                                              jclass,
                                                                                              jint functionId,
                                                                                              jstring value)
@@ -47,7 +47,7 @@ JNIEXPORT jint JNICALL Java_org_axmol_lib_LuaBridge_callLuaFunctionWithString(JN
 }
 
 JNIEXPORT jint JNICALL
-Java_org_axmol_lib_LuaBridge_callLuaGlobalFunctionWithString(JNIEnv* env,
+Java_dev_axmol_lib_LuaBridge_callLuaGlobalFunctionWithString(JNIEnv* env,
                                                                             jclass,
                                                                             jstring luaFunctionName,
                                                                             jstring value)
@@ -59,14 +59,14 @@ Java_org_axmol_lib_LuaBridge_callLuaGlobalFunctionWithString(JNIEnv* env,
     return ret;
 }
 
-JNIEXPORT jint JNICALL Java_org_axmol_lib_LuaBridge_retainLuaFunction(JNIEnv* env,
+JNIEXPORT jint JNICALL Java_dev_axmol_lib_LuaBridge_retainLuaFunction(JNIEnv* env,
                                                                                      jclass,
                                                                                      jint luaFunctionId)
 {
     return LuaJavaBridge::retainLuaFunctionById(luaFunctionId);
 }
 
-JNIEXPORT jint JNICALL Java_org_axmol_lib_LuaBridge_releaseLuaFunction(JNIEnv* env,
+JNIEXPORT jint JNICALL Java_dev_axmol_lib_LuaBridge_releaseLuaFunction(JNIEnv* env,
                                                                                       jclass,
                                                                                       jint luaFunctionId)
 {

@@ -51,6 +51,7 @@ RenderTextureSave::RenderTextureSave()
     _target = RenderTexture::create(s.width, s.height, backend::PixelFormat::RGBA8);
     _target->retain();
     _target->setPosition(Vec2(s.width / 2, s.height / 2));
+    _target->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 
     // note that the render texture is a Node, and contains a sprite of its texture for convenience,
     // so we can just parent it to the scene like any other Node
@@ -263,6 +264,7 @@ RenderTextureIssue937::RenderTextureIssue937()
     spr_nonpremulti->visit();
     rend->end();
 
+    rend->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     rend->setPosition(Vec2(s.width / 2 + 16, s.height / 2));
 
     addChild(spr_nonpremulti);
@@ -509,6 +511,7 @@ RenderTextureTestDepthStencil::RenderTextureTestDepthStencil()
     _rtx = RenderTexture::create(s.width, s.height, backend::PixelFormat::RGBA4, PixelFormat::D24S8);
 
     _rtx->setPosition(Vec2(s.width * 0.5f, s.height * 0.5f));
+    _rtx->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 
     this->addChild(_rtx);
 }
@@ -613,15 +616,23 @@ RenderTextureTargetNode::RenderTextureTargetNode()
     auto s = Director::getInstance()->getWinSize();
 
     /* Create the render texture */
-    auto renderTexture  = RenderTexture::create(s.width, s.height, backend::PixelFormat::RGBA4);
-    this->renderTexture = renderTexture;
+    renderTexture = RenderTexture::create(s.width, s.height, backend::PixelFormat::RGBA4);
 
     renderTexture->setPosition(Vec2(s.width / 2, s.height / 2));
+    renderTexture->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     // renderTexture->setScale(2.0f);
 
     /* add the sprites to the render texture */
+    _spriteCenterPosition = renderTexture->getContentSize() / 2;
+
+    sprite1->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+    sprite1->setPosition(_spriteCenterPosition);
     renderTexture->addChild(sprite1);
+
+    sprite2->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+    sprite2->setPosition(_spriteCenterPosition);
     renderTexture->addChild(sprite2);
+
     renderTexture->setClearColor(Color4F(0, 0, 0, 0));
     renderTexture->setClearFlags(ClearFlag::COLOR);
 
@@ -658,8 +669,8 @@ void RenderTextureTargetNode::update(float dt)
 {
     static float time = 0;
     float r           = 80;
-    sprite1->setPosition(Vec2(cosf(time * 2) * r, sinf(time * 2) * r));
-    sprite2->setPosition(Vec2(sinf(time * 2) * r, cosf(time * 2) * r));
+    sprite1->setPosition(_spriteCenterPosition + Vec2(cosf(time * 2) * r, sinf(time * 2) * r));
+    sprite2->setPosition(_spriteCenterPosition + Vec2(sinf(time * 2) * r, cosf(time * 2) * r));
 
     time += dt;
 }

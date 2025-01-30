@@ -5,6 +5,9 @@ param(
 
 # Set-StrictMode -Version Latest
 
+# clear last exit code
+$Global:LASTEXITCODE = 0
+
 # pwsh function alias
 function println($message) { Write-Host "axmol: $message" }
 
@@ -243,7 +246,7 @@ $builtinPlugins = @{
     new    = @{
         proc  = (Join-Path $myRoot 'axmol_new.ps1');
         usage = @"
-usage: axmol new -p org.axmol.hellocpp -d path/to/project -l cpp --portrait <ProjectName>
+usage: axmol new -p dev.axmol.hellocpp -d path/to/project -l cpp --portrait <ProjectName>
 Creates a new project.
 
 positional arguments:
@@ -282,6 +285,7 @@ options:
   -c: no build, only generate native project files (vs .sln, xcodeproj)
   -d: specify project dir to compile, i.e. -d /path/your/project/
   -f: force generate native project files. Useful if no changes are detected, such as with resource updates.
+  -aab: this is a switch option, if present, will build android .aab instead .apk
   -u: request upgrade prebuilt 3rd
  examples:
    - win32:
@@ -391,7 +395,7 @@ if (!$sub_args.Contains('-d')) {
 
 if ($args[0] -eq 'new') {
     if (!$sub_args.Contains('-p')) {
-        $sub_opts['p'] = 'org.axmol.demo'
+        $sub_opts['p'] = 'dev.axmol.demo'
     }
     if (!$sub_args.Contains('-l')) {
         $sub_opts['l'] = 'cpp'

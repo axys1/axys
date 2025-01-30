@@ -737,14 +737,7 @@ FontAtlas* FontFNT::newFontAtlas()
         tempDefinition.rotated         = _imageRotated;
 
         // add the new definition
-        if (65535 < fontDef.charID)
-        {
-            AXLOGW("Warning: 65535 < fontDef.charID ({}), ignored", fontDef.charID);
-        }
-        else
-        {
-            tempAtlas->addLetterDefinition(fontDef.charID, tempDefinition);
-        }
+        tempAtlas->addLetterDefinition(fontDef.charID, tempDefinition);
     }
 
     // add the texture (only one texture for now)

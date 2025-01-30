@@ -225,8 +225,8 @@ static void DrawCircle(cpVect p,
                        cpSpaceDebugColor fill,
                        cpDataPointer data)
 {
-    const Color4B fillColor(fill.r, fill.g, fill.b, fill.a);
-    const Color4B outlineColor(outline.r, outline.g, outline.b, outline.a);
+    const Color4F fillColor(fill.r, fill.g, fill.b, fill.a);
+    const Color4F outlineColor(outline.r, outline.g, outline.b, outline.a);
     DrawNode* drawNode = static_cast<DrawNode*>(data);
     float radius       = PhysicsHelper::cpfloat2float(r);
     Vec2 centre        = PhysicsHelper::cpv2vec2(p);
@@ -250,7 +250,7 @@ static void DrawFatSegment(cpVect a,
                            cpSpaceDebugColor /*fill*/,
                            cpDataPointer data)
 {
-    const Color4B outlineColor(outline.r, outline.g, outline.b, outline.a);
+    const Color4F outlineColor(outline.r, outline.g, outline.b, outline.a);
     DrawNode* drawNode = static_cast<DrawNode*>(data);
     drawNode->drawSegment(PhysicsHelper::cpv2vec2(a), PhysicsHelper::cpv2vec2(b),
                           PhysicsHelper::cpfloat2float(r == 0 ? _debugDrawThickness : r), outlineColor);
@@ -268,8 +268,8 @@ static void DrawPolygon(int count,
                         cpSpaceDebugColor fill,
                         cpDataPointer data)
 {
-    const Color4B fillColor(fill.r, fill.g, fill.b, fill.a);
-    const Color4B outlineColor(outline.r, outline.g, outline.b, outline.a);
+    const Color4F fillColor(fill.r, fill.g, fill.b, fill.a);
+    const Color4F outlineColor(outline.r, outline.g, outline.b, outline.a);
     DrawNode* drawNode = static_cast<DrawNode*>(data);
     int num            = count;
     Vec2* seg          = new Vec2[num];
@@ -283,7 +283,7 @@ static void DrawPolygon(int count,
 
 static void DrawDot(cpFloat /*size*/, cpVect pos, cpSpaceDebugColor color, cpDataPointer data)
 {
-    const Color4B dotColor(color.r, color.g, color.b, color.a);
+    const Color4F dotColor(color.r, color.g, color.b, color.a);
     DrawNode* drawNode = static_cast<DrawNode*>(data);
     drawNode->drawDot(PhysicsHelper::cpv2vec2(pos), _debugDrawThickness, dotColor);
 }
@@ -317,11 +317,13 @@ static cpSpaceDebugColor ColorForShape(cpShape* shape, cpDataPointer /*data*/)
 
 void PhysicsWorld::debugDraw()
 {
-    if (_debugDraw == nullptr)
+    if (!_debugDraw)
     {
-        _debugDraw = DrawNode::create();
-        _debugDraw->setIsolated(true);
-        _debugDraw->retain();
+        return;
+    }
+
+    if (!_debugDraw->getParent())
+    {
         Director::getInstance()->getRunningScene()->addChild(_debugDraw);
     }
 
@@ -855,10 +857,19 @@ void PhysicsWorld::removeAllBodies()
 
 void PhysicsWorld::setDebugDrawMask(int mask)
 {
-    if (mask == DEBUGDRAW_NONE && _debugDraw)
+    if (mask == DEBUGDRAW_NONE)
     {
-        _debugDraw->removeFromParent();
-        AX_SAFE_RELEASE_NULL(_debugDraw);
+        if (_debugDraw)
+        {
+            _debugDraw->removeFromParent();
+            AX_SAFE_RELEASE_NULL(_debugDraw);
+        }
+    }
+    else if (!_debugDraw)
+    {
+        _debugDraw = DrawNode::create();
+        _debugDraw->setIsolated(true);
+        _debugDraw->retain();
     }
 
     _debugDrawMask = mask;

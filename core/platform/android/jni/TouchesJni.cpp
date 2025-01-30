@@ -34,20 +34,20 @@ using namespace ax;
 
 extern "C" {
 JNIEXPORT void JNICALL
-Java_org_axmol_lib_AxmolRenderer_nativeTouchesBegin(JNIEnv*, jclass, jint id, jfloat x, jfloat y)
+Java_dev_axmol_lib_AxmolRenderer_nativeTouchesBegin(JNIEnv*, jclass, jint id, jfloat x, jfloat y)
 {
     intptr_t idlong = id;
     ax::Director::getInstance()->getGLView()->handleTouchesBegin(1, &idlong, &x, &y);
 }
 
 JNIEXPORT void JNICALL
-Java_org_axmol_lib_AxmolRenderer_nativeTouchesEnd(JNIEnv*, jclass, jint id, jfloat x, jfloat y)
+Java_dev_axmol_lib_AxmolRenderer_nativeTouchesEnd(JNIEnv*, jclass, jint id, jfloat x, jfloat y)
 {
     intptr_t idlong = id;
     ax::Director::getInstance()->getGLView()->handleTouchesEnd(1, &idlong, &x, &y);
 }
 
-JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolRenderer_nativeTouchesMove(JNIEnv* env,
+JNIEXPORT void JNICALL Java_dev_axmol_lib_AxmolRenderer_nativeTouchesMove(JNIEnv* env,
                                                                                 jclass,
                                                                                 jintArray ids,
                                                                                 jfloatArray xs,
@@ -69,7 +69,7 @@ JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolRenderer_nativeTouchesMove(JNIEnv
     ax::Director::getInstance()->getGLView()->handleTouchesMove(size, idlong, x, y);
 }
 
-JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolRenderer_nativeTouchesCancel(JNIEnv* env,
+JNIEXPORT void JNICALL Java_dev_axmol_lib_AxmolRenderer_nativeTouchesCancel(JNIEnv* env,
                                                                                   jclass,
                                                                                   jintArray ids,
                                                                                   jfloatArray xs,
@@ -114,7 +114,7 @@ static std::unordered_map<int, ax::EventKeyboard::KeyCode> g_keyCodeMap = {
 
 };
 
-JNIEXPORT jboolean JNICALL Java_org_axmol_lib_AxmolRenderer_nativeKeyEvent(JNIEnv*,
+JNIEXPORT jboolean JNICALL Java_dev_axmol_lib_AxmolRenderer_nativeKeyEvent(JNIEnv*,
                                                                                  jclass,
                                                                                  jint keyCode,
                                                                                  jboolean isPressed)

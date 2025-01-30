@@ -80,7 +80,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
     return JNI_VERSION_1_4;
 }
 
-JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolRenderer_nativeInit(JNIEnv*, jclass, jint w, jint h)
+JNIEXPORT void JNICALL Java_dev_axmol_lib_AxmolRenderer_nativeInit(JNIEnv*, jclass, jint w, jint h)
 {
     GLViewImpl::loadGLES2();
 
@@ -120,7 +120,7 @@ JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolRenderer_nativeOnContextLost(JNIE
     director->replaceScene(rootScene);
     director->purgeCachedData();
 
-    JniHelper::callStaticVoidMethod("org/axmol/lib/AxmolEngine", "restartProcess");
+    JniHelper::callStaticVoidMethod("dev/axmol/lib/AxmolEngine", "restartProcess");
 #endif
 
     if(isColdStart)
@@ -131,7 +131,7 @@ JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolRenderer_nativeOnContextLost(JNIE
     }
 }
 
-JNIEXPORT jintArray JNICALL Java_org_axmol_lib_AxmolActivity_getGLContextAttrs(JNIEnv* env, jclass)
+JNIEXPORT jintArray JNICALL Java_dev_axmol_lib_AxmolActivity_getGLContextAttrs(JNIEnv* env, jclass)
 {
     ax::Application::getInstance()->initGLContextAttrs();
     GLContextAttrs _glContextAttrs = GLView::getGLContextAttrs();
@@ -146,7 +146,7 @@ JNIEXPORT jintArray JNICALL Java_org_axmol_lib_AxmolActivity_getGLContextAttrs(J
     return glContextAttrsJava;
 }
 
-JNIEXPORT void JNICALL Java_org_axmol_lib_AxmolRenderer_nativeOnSurfaceChanged(JNIEnv*, jclass, jint w, jint h)
+JNIEXPORT void JNICALL Java_dev_axmol_lib_AxmolRenderer_nativeOnSurfaceChanged(JNIEnv*, jclass, jint w, jint h)
 {
     ax::Application::getInstance()->applicationScreenSizeChanged(w, h);
 }

@@ -161,7 +161,7 @@ Controller::Controller()
 
 void Controller::receiveExternalKeyEvent(int externalKeyCode, bool receive)
 {
-    JniHelper::callStaticVoidMethod("org.axmol.lib.GameControllerHelper", "receiveExternalKeyEvent", _deviceId,
+    JniHelper::callStaticVoidMethod("dev.axmol.lib.GameControllerHelper", "receiveExternalKeyEvent", _deviceId,
                                     externalKeyCode, receive);
 }
 
@@ -169,7 +169,7 @@ void Controller::receiveExternalKeyEvent(int externalKeyCode, bool receive)
 
 extern "C" {
 
-JNIEXPORT void JNICALL Java_org_axmol_lib_GameControllerAdapter_nativeControllerConnected(JNIEnv*,
+JNIEXPORT void JNICALL Java_dev_axmol_lib_GameControllerAdapter_nativeControllerConnected(JNIEnv*,
                                                                                              jclass,
                                                                                              jstring deviceName,
                                                                                              jint controllerID)
@@ -178,7 +178,7 @@ JNIEXPORT void JNICALL Java_org_axmol_lib_GameControllerAdapter_nativeController
     ax::ControllerImpl::onConnected(ax::JniHelper::jstring2string(deviceName), controllerID);
 }
 
-JNIEXPORT void JNICALL Java_org_axmol_lib_GameControllerAdapter_nativeControllerDisconnected(JNIEnv*,
+JNIEXPORT void JNICALL Java_dev_axmol_lib_GameControllerAdapter_nativeControllerDisconnected(JNIEnv*,
                                                                                                 jclass,
                                                                                                 jstring deviceName,
                                                                                                 jint controllerID)
@@ -187,7 +187,7 @@ JNIEXPORT void JNICALL Java_org_axmol_lib_GameControllerAdapter_nativeController
     ax::ControllerImpl::onDisconnected(ax::JniHelper::jstring2string(deviceName), controllerID);
 }
 
-JNIEXPORT void JNICALL Java_org_axmol_lib_GameControllerAdapter_nativeControllerButtonEvent(JNIEnv*,
+JNIEXPORT void JNICALL Java_dev_axmol_lib_GameControllerAdapter_nativeControllerButtonEvent(JNIEnv*,
                                                                                                jclass,
                                                                                                jstring deviceName,
                                                                                                jint controllerID,
@@ -200,7 +200,7 @@ JNIEXPORT void JNICALL Java_org_axmol_lib_GameControllerAdapter_nativeController
                                            isPressed, value, isAnalog);
 }
 
-JNIEXPORT void JNICALL Java_org_axmol_lib_GameControllerAdapter_nativeControllerAxisEvent(JNIEnv*,
+JNIEXPORT void JNICALL Java_dev_axmol_lib_GameControllerAdapter_nativeControllerAxisEvent(JNIEnv*,
                                                                                              jclass,
                                                                                              jstring deviceName,
                                                                                              jint controllerID,

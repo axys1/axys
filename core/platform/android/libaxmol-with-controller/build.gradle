@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    namespace "org.axmol.lib"
+    namespace "dev.axmol.lib"
     compileSdk PROP_COMPILE_SDK_VERSION.toInteger()
 
     defaultConfig {

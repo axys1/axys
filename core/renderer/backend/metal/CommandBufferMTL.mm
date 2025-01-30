@@ -273,7 +273,7 @@ void CommandBufferMTL::setVertexBuffer(Buffer* buffer)
 
 void CommandBufferMTL::setInstanceBuffer(Buffer* buffer) {
     // Vertex instancing transform buffer is bound in index VBO_INSTANCING_BINDING_INDEX.
-    // TODO: sync device binding macros to GLSLCC
+    // TODO: sync device binding macros to AXSLCC
     [_mtlRenderEncoder setVertexBuffer:static_cast<BufferMTL*>(buffer)->getMTLBuffer() offset:0 atIndex:DriverMTL::VBO_INSTANCING_BINDING_INDEX];
 }
 
@@ -503,7 +503,7 @@ void CommandBufferMTL::setUniformBuffer() const
         for (auto& cb : callbackUniforms)
             cb.second(_programState, cb.first);
 
-        // Uniform buffer: glsl-optimizer is bound to index 1, glslcc: bound to 0
+        // Uniform buffer: glsl-optimizer is bound to index 1, axslcc: bound to 0
         constexpr int bindingIndex = DriverMTL::VBO_BINDING_INDEX_START;
         std::size_t bufferSize = 0;
         auto vertexBuffer     = _programState->getVertexUniformBuffer(bufferSize);

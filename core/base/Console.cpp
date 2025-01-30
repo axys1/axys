@@ -382,6 +382,7 @@ Console::~Console()
 
 bool Console::listenOnTCP(int port)
 {
+#ifndef __EMSCRIPTEN__
     using namespace yasio;
     xxsocket sock;
     int ipsv = 0;
@@ -409,6 +410,9 @@ bool Console::listenOnTCP(int port)
         AXLOGI("Console: IPV6 server is listening on {}", ep.to_string());
 
     return listenOnFileDescriptor(sock.release_handle());
+#else
+    return false;
+#endif
 }
 
 bool Console::listenOnFileDescriptor(int fd)
