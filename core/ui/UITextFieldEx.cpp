@@ -617,7 +617,7 @@ void TextFieldEx::insertText(const char* text, size_t len)
     this->closeIME();
 }
 
-void TextFieldEx::deleteBackward()
+void TextFieldEx::deleteBackward(size_t numChars)
 {
     if (!_editable || !this->_enabled || 0 == _charCount)
     {
@@ -634,23 +634,33 @@ void TextFieldEx::deleteBackward()
         return;
     }
 
-    // get the delete byte number
-    size_t deleteLen = 1;  // default, erase 1 byte
+    // Length of characters to delete is based on input editor, but the actual
+    // length of the displayed text may be less
+    numChars = std::min(numChars, len);
 
-    while (0x80 == (0xC0 & _inputText.at(_insertPos - deleteLen)))
+    size_t totalDeleteLen = 0;
+    for (auto i = 0; i < numChars; ++i)
     {
-        ++deleteLen;
+        // get the delete byte number
+        size_t deleteLen = 1;  // default, erase 1 byte
+
+        // Calculate the actual number of bytes to delete for a specific character
+        while (0x80 == (0xC0 & _inputText.at(_insertPos - totalDeleteLen - deleteLen)))
+        {
+            ++deleteLen;
+        }
+        totalDeleteLen += deleteLen;
     }
 
     // if (_delegate && _delegate->onTextFieldDeleteBackward(this, _inputText.c_str() + len - deleteLen,
     // static_cast<int>(deleteLen)))
     //{
-    //     // delegate doesn't wan't to delete backwards
+    //     // delegate doesn't want to delete backwards
     //     return;
     // }
 
     // if all text deleted, show placeholder string
-    if (len <= deleteLen)
+    if (len <= totalDeleteLen)
     {
         __moveCursor(-1);
 
@@ -670,7 +680,7 @@ void TextFieldEx::deleteBackward()
 
     // set new input text
     std::string text = _inputText;  // (inputText.c_str(), len - deleteLen);
-    text.erase(_insertPos - deleteLen, deleteLen);
+    text.erase(_insertPos - totalDeleteLen, totalDeleteLen);
 
     __moveCursor(-1);
 

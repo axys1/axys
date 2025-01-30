@@ -33,7 +33,7 @@
 #include <algorithm>
 #include "xxhash/xxhash.h"
 
-#include "glslcc/sgs-spec.h"
+#include "axslcc/sgs-spec.h"
 
 NS_AX_BACKEND_BEGIN
 
@@ -175,7 +175,10 @@ bool ProgramState::init(Program* program)
 
     const auto programId = program->getProgramId();
     if (programId < ProgramType::BUILTIN_COUNT)
+    {
         this->_batchId = programId;
+        this->_isBatchable = true;
+    }
 
     return true;
 }
@@ -183,6 +186,7 @@ bool ProgramState::init(Program* program)
 void ProgramState::updateBatchId()
 {
     _batchId = XXH64(_uniformBuffers.data(), _uniformBuffers.size(), _program->getProgramId());
+    _isBatchable = true;
 }
 
 void ProgramState::resetUniforms()
@@ -229,6 +233,7 @@ ProgramState* ProgramState::clone() const
     cp->_vertexLayout    = !_ownVertexLayout ? _vertexLayout : new VertexLayout(*_vertexLayout);
 
     cp->_batchId = this->_batchId;
+    cp->_isBatchable = this->_isBatchable;
     return cp;
 }
 

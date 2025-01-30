@@ -44,7 +44,7 @@
 namespace ax
 {
 
-static const char* editBoxClassName = "org.axmol.lib.EditBoxHelper";
+static const char* editBoxClassName = "dev.axmol.lib.EditBoxHelper";
 
 namespace ui
 {
@@ -54,12 +54,12 @@ static void editBoxEditingDidBegin(int index);
 static void editBoxEditingDidChanged(int index, std::string_view text);
 static void editBoxEditingDidEnd(int index, std::string_view text, int action);
 extern "C" {
-JNIEXPORT void JNICALL Java_org_axmol_lib_EditBoxHelper_editBoxEditingDidBegin(JNIEnv*, jclass, jint index)
+JNIEXPORT void JNICALL Java_dev_axmol_lib_EditBoxHelper_editBoxEditingDidBegin(JNIEnv*, jclass, jint index)
 {
     editBoxEditingDidBegin(index);
 }
 
-JNIEXPORT void JNICALL Java_org_axmol_lib_EditBoxHelper_editBoxEditingChanged(JNIEnv* env,
+JNIEXPORT void JNICALL Java_dev_axmol_lib_EditBoxHelper_editBoxEditingChanged(JNIEnv* env,
                                                                                          jclass,
                                                                                          jint index,
                                                                                          jstring text)
@@ -68,7 +68,7 @@ JNIEXPORT void JNICALL Java_org_axmol_lib_EditBoxHelper_editBoxEditingChanged(JN
     editBoxEditingDidChanged(index, textString);
 }
 
-JNIEXPORT void JNICALL Java_org_axmol_lib_EditBoxHelper_editBoxEditingDidEnd(JNIEnv* env,
+JNIEXPORT void JNICALL Java_dev_axmol_lib_EditBoxHelper_editBoxEditingDidEnd(JNIEnv* env,
                                                                                         jclass,
                                                                                         jint index,
                                                                                         jstring text,

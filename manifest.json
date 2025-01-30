@@ -1,31 +1,30 @@
 {
   "versions": {
-    "1kdist": "v92",
-    "oboe": "1.9.0",
+    "1kdist": "v98",
+    "oboe": "1.9.3",
     "kcp": "v1.7-f2aa30e",
     "lz4": "v1.10.0",
-    "yaml-cpp": "0.8.0",
     "sample-assets": "master"
   },
   "mirrors": {
     "github": {
+      "host": "github.com",
       "1kdist": "simdsoft/1kiss/releases/download",
       "oboe": "google/oboe.git",
       "kcp": "skywind3000/kcp.git",
       "lz4": "lz4/lz4.git",
-      "yaml-cpp": "jbeder/yaml-cpp.git",
       "sample-assets": "axmolengine/axmol-sample-assets.git",
-      "glslcc": "axmolengine/glslcc/releases/download"
+      "axslcc": "axmolengine/axslcc/releases/download"
     },
     "gitee":
     {
+      "host": "gitee.com",
       "1kdist": "simdsoft/1kiss/releases/download",
       "oboe": "simdsoft/oboe.git",
       "kcp": "simdsoft/kcp.git",
       "lz4": "simdsoft/lz4.git",
-      "yaml-cpp": "mirrors/yaml-cpp.git",
       "sample-assets": "simdsoft/axmol-sample-assets.git",
-      "glslcc": "simdsoft/glslcc/releases/download"
+      "axslcc": "simdsoft/axslcc/releases/download"
     }
   }
 }

@@ -61,7 +61,7 @@ Data Device::getTextureDataForText(std::string_view text, const FontDefinition& 
 {
     char color[8];
     sprintf(color, "#%02x%02x%02x", textDefinition._fontFillColor.r, textDefinition._fontFillColor.g, textDefinition._fontFillColor.b);
-    unsigned char* ptr = (unsigned char*)EM_ASM_INT({
+    unsigned char* ptr = (unsigned char*)EM_ASM_PTR({
         var lines = UTF8ToString($0).split("\n");
         var linesWidth = [];
         var fontName = UTF8ToString($1);

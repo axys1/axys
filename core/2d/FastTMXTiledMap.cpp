@@ -35,10 +35,10 @@ namespace ax
 
 // implementation FastTMXTiledMap
 
-FastTMXTiledMap* FastTMXTiledMap::create(std::string_view tmxFile)
+FastTMXTiledMap* FastTMXTiledMap::create(std::string_view tmxFile, bool allowInvisibleLayers)
 {
     FastTMXTiledMap* ret = new FastTMXTiledMap();
-    if (ret->initWithTMXFile(tmxFile))
+    if (ret->initWithTMXFile(tmxFile, allowInvisibleLayers))
     {
         ret->autorelease();
         return ret;
@@ -47,10 +47,12 @@ FastTMXTiledMap* FastTMXTiledMap::create(std::string_view tmxFile)
     return nullptr;
 }
 
-FastTMXTiledMap* FastTMXTiledMap::createWithXML(std::string_view tmxString, std::string_view resourcePath)
+FastTMXTiledMap* FastTMXTiledMap::createWithXML(std::string_view tmxString,
+                                                std::string_view resourcePath,
+                                                bool allowInvisibleLayers)
 {
     FastTMXTiledMap* ret = new FastTMXTiledMap();
-    if (ret->initWithXML(tmxString, resourcePath))
+    if (ret->initWithXML(tmxString, resourcePath, allowInvisibleLayers))
     {
         ret->autorelease();
         return ret;
@@ -59,9 +61,9 @@ FastTMXTiledMap* FastTMXTiledMap::createWithXML(std::string_view tmxString, std:
     return nullptr;
 }
 
-bool FastTMXTiledMap::initWithTMXFile(std::string_view tmxFile)
+bool FastTMXTiledMap::initWithTMXFile(std::string_view tmxFile, bool allowInvisibleLayers)
 {
-    AXASSERT(tmxFile.size() > 0, "FastTMXTiledMap: tmx file should not be empty");
+    AXASSERT(!tmxFile.empty(), "FastTMXTiledMap: tmx file should not be empty");
 
     setContentSize(Vec2::ZERO);
 
@@ -72,26 +74,28 @@ bool FastTMXTiledMap::initWithTMXFile(std::string_view tmxFile)
         return false;
     }
     AXASSERT(!mapInfo->getTilesets().empty(), "FastTMXTiledMap: Map not found. Please check the filename.");
-    buildWithMapInfo(mapInfo);
+    buildWithMapInfo(mapInfo, allowInvisibleLayers);
 
     _tmxFile = tmxFile;
 
     return true;
 }
 
-bool FastTMXTiledMap::initWithXML(std::string_view tmxString, std::string_view resourcePath)
+bool FastTMXTiledMap::initWithXML(std::string_view tmxString, std::string_view resourcePath, bool allowInvisibleLayers)
 {
     setContentSize(Vec2::ZERO);
 
     TMXMapInfo* mapInfo = TMXMapInfo::createWithXML(tmxString, resourcePath);
 
     AXASSERT(!mapInfo->getTilesets().empty(), "FastTMXTiledMap: Map not found. Please check the filename.");
-    buildWithMapInfo(mapInfo);
+    buildWithMapInfo(mapInfo, allowInvisibleLayers);
 
     return true;
 }
 
-FastTMXTiledMap::FastTMXTiledMap() : _mapSize(Vec2::ZERO), _tileSize(Vec2::ZERO), _mapInfo(nullptr) {}
+FastTMXTiledMap::FastTMXTiledMap() : _mapSize(Vec2::ZERO), _tileSize(Vec2::ZERO), _mapOrientation(0), _mapInfo(nullptr)
+{
+}
 
 FastTMXTiledMap::~FastTMXTiledMap()
 {
@@ -157,7 +161,7 @@ TMXTilesetInfo* FastTMXTiledMap::tilesetForLayer(TMXLayerInfo* layerInfo, TMXMap
     return nullptr;
 }
 
-void FastTMXTiledMap::buildWithMapInfo(TMXMapInfo* mapInfo)
+void FastTMXTiledMap::buildWithMapInfo(TMXMapInfo* mapInfo, bool allowInvisibleLayers)
 {
     _mapSize        = mapInfo->getMapSize();
     _tileSize       = mapInfo->getTileSize();
@@ -174,25 +178,29 @@ void FastTMXTiledMap::buildWithMapInfo(TMXMapInfo* mapInfo)
     auto& layers = mapInfo->getLayers();
     for (const auto& layerInfo : layers)
     {
-        if (layerInfo->_visible)
+        if (!layerInfo->_visible && !allowInvisibleLayers)
         {
-            FastTMXLayer* child = parseLayer(layerInfo, mapInfo);
-            if (child == nullptr)
-            {
-                idx++;
-                continue;
-            }
-            addChild(child, idx, idx);
-
-            // update content size with the max size
-            const Vec2& childSize = child->getContentSize();
-            Vec2 currentSize      = this->getContentSize();
-            currentSize.width     = std::max(currentSize.width, childSize.width);
-            currentSize.height    = std::max(currentSize.height, childSize.height);
-            this->setContentSize(currentSize);
-
-            idx++;
+            continue;
         }
+
+        FastTMXLayer* child = parseLayer(layerInfo, mapInfo);
+        if (child == nullptr)
+        {
+            idx++;
+            continue;
+        }
+        addChild(child, idx, idx);
+
+        child->setVisible(layerInfo->_visible);
+
+        // update content size with the max size
+        const Vec2& childSize = child->getContentSize();
+        Vec2 currentSize      = this->getContentSize();
+        currentSize.width     = std::max(currentSize.width, childSize.width);
+        currentSize.height    = std::max(currentSize.height, childSize.height);
+        this->setContentSize(currentSize);
+
+        idx++;
     }
 
     _layerCount = idx;
@@ -211,7 +219,7 @@ FastTMXLayer* FastTMXTiledMap::getLayer(std::string_view layerName) const
         FastTMXLayer* layer = dynamic_cast<FastTMXLayer*>(child);
         if (layer)
         {
-            if (layerName.compare(layer->getLayerName()) == 0)
+            if (layerName == layer->getLayerName())
             {
                 return layer;
             }
@@ -226,7 +234,7 @@ TMXObjectGroup* FastTMXTiledMap::getObjectGroup(std::string_view groupName) cons
 {
     AXASSERT(!groupName.empty(), "Invalid group name!");
 
-    if (_objectGroups.size() > 0)
+    if (!_objectGroups.empty())
     {
         for (const auto& objectGroup : _objectGroups)
         {

@@ -6,7 +6,7 @@
 
 ## astcenc
 - [![Upstream](https://img.shields.io/github/v/release/ARM-software/astc-encoder?label=Upstream)](https://github.com/ARM-software/astc-encoder)
-- Version: 4.8.0
+- Version: 5.1.0
 - License: Apache-2.0
 
 ## Box2D
@@ -22,7 +22,7 @@
 
 ## c-ares
 - [![Upstream](https://img.shields.io/github/v/release/c-ares/c-ares?label=Upstream)](https://github.com/c-ares/c-ares)
-- Version: 1.33.1
+- Version: 1.34.4
 - License: MIT
 
 ## Chipmunk2D
@@ -32,7 +32,7 @@
 
 ## Clipper2
 - [![Upstream](https://img.shields.io/github/v/tag/AngusJohnson/Clipper2?label=Upstream)](https://github.com/AngusJohnson/Clipper2)
-- Version: 1.4.0
+- Version: 1.5.0
 - License: BSL-1.0
 
 ## ConcurrentQueue
@@ -47,7 +47,7 @@
 
 ## curl
 - [![Upstream](https://img.shields.io/github/v/release/curl/curl?label=Upstream)](https://github.com/curl/curl)
-- Version: 8.10.1
+- Version: 8.11.1
 - License: Curl (MIT/X)
 
 ## doctest
@@ -62,12 +62,13 @@
 
 ## flatbuffers
 - [![Upstream](https://img.shields.io/github/v/release/google/flatbuffers?label=Upstream)](https://github.com/google/flatbuffers)
-- Version: 24.3.25
+- Version: 24.12.23
 - License: Apache-2.0
 
 ## {fmt}
 - [![Upstream](https://img.shields.io/github/v/release/fmtlib/fmt?label=Upstream)](https://github.com/fmtlib/fmt)
-- Version: 11.0.2
+- Version: 11.1.2
+
 - License: MIT
 
 ## FreeType
@@ -77,7 +78,7 @@
 
 ## Glad
 - [![Upstream](https://img.shields.io/github/v/tag/Dav1dde/glad?label=Upstream)](https://github.com/Dav1dde/glad)
-- Version: 2.0.7
+- Version: 2.0.8
 - License: MIT
 
 ## glfw
@@ -97,7 +98,7 @@
 
 ## jpeg-turbo
 - [![Upstream](https://img.shields.io/github/v/release/libjpeg-turbo/libjpeg-turbo?label=Upstream)](https://github.com/libjpeg-turbo/libjpeg-turbo)
-- Version: 3.0.4
+- Version: 3.1.0
 - License: BSD-style (IJG,BSD-3-Clause,zlib)
 
 ## kcp
@@ -123,7 +124,7 @@
 
 - luajit
   - Upstream: https://github.com/LuaJIT/LuaJIT
-  - Version: 2.1-87ae18a
+  - Version: 2.1-a4f56a4
   - License: MIT
 
 - tolua
@@ -156,9 +157,9 @@
 - Version: 1.0.1
 - License: Apache-2.0
 
-## oboe (Adnroid only)
+## oboe (Android only)
 - [![Upstream](https://img.shields.io/github/v/tag/google/oboe?label=Upstream)](https://github.com/google/oboe)
-- Version: 1.9.0
+- Version: 1.9.3
 - License: Apache-2.0
 
 ## ogg & vorbis
@@ -184,7 +185,7 @@
 
 ## png
 - [![Upstream](https://img.shields.io/github/v/tag/glennrp/libpng?label=Upstream)](https://github.com/glennrp/libpng)
-- Version: 1.6.44
+- Version: 1.6.45
 - License: PNG Reference Library License version 2
 
 ## poly2tri
@@ -233,7 +234,7 @@
 
 ## webp
 - [![Upstream](https://img.shields.io/github/v/tag/webmproject/libwebp?label=Upstream)](https://github.com/webmproject/libwebp)
-- Version: 1.4.0
+- Version: 1.5.0
 - License: Google Inc
 
 ## xsxml
@@ -243,13 +244,8 @@
 
 ## xxHash
 - [![Upstream](https://img.shields.io/github/v/release/Cyan4973/xxHash?label=Upstream)](https://github.com/Cyan4973/xxHash)
-- Version: 0.8.2
+- Version: 0.8.3
 - License: BSD-2-Clause
-
-## yaml-cpp
-- [![Upstream](https://img.shields.io/github/v/release/jbeder/yaml-cpp?label=Upstream)](https://github.com/jbeder/yaml-cpp)
-- Version: 0.8.0
-- License: MIT
 
 ## yasio
 - [![Upstream](https://img.shields.io/github/v/release/yasio/yasio?label=Upstream)](https://github.com/yasio/yasio)

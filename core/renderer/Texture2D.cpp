@@ -549,7 +549,13 @@ bool Texture2D::initWithString(std::string_view text, const FontDefinition& text
     bool hasPremultipliedAlpha;
     Data outData = Device::getTextureDataForText(text, textDef, align, imageWidth, imageHeight, hasPremultipliedAlpha);
     if (outData.isNull())
+        return false;
+
+    const auto maxTextureSize = backend::DriverBase::getInstance()->getMaxTextureSize();
+    if (imageWidth > maxTextureSize || imageHeight > maxTextureSize)
     {
+        AXLOGW("Texture2D::initWithString fail, the texture size:{}x{} too large, max texture size:{}", imageWidth,
+               imageHeight, maxTextureSize);
         return false;
     }
 

@@ -73,6 +73,7 @@ private:
     void _WindowProc(HWND, UINT, WPARAM, LPARAM);
 
     WNDPROC _prevWndProc;
+
     static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
     static LRESULT CALLBACK hookGLFWWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 

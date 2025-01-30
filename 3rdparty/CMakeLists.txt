@@ -17,7 +17,6 @@ option(AX_WITH_LLHTTP "Build with internal LLHTTP support" ON)
 
 # some libs not depended by axmol
 option(AX_WITH_LZ4 "Build with internal lz4 support" OFF)
-option(AX_WITH_YAML_CPP "Build with yaml-cpp support" OFF)
 
 if(LINUX OR MACOSX OR WINDOWS)
     option(AX_WITH_DOCTEST "Build with doctest support" ON)
@@ -376,11 +375,18 @@ if (AX_ENABLE_AUDIO)
                 set(ALSOFT_BACKEND_OPENSL OFF CACHE BOOL "Enable OpenSL backend" FORCE)
                 set(OBOE_SOURCE "${oboe_SOURCE_DIR}" CACHE STRING "Source directory for Oboe." FORCE)
             endif()
-            list(APPEND alsoft_opts "ALSOFT_RTKIT OFF")
+            list(APPEND alsoft_opts "ALSOFT_RTKIT OFF"
+                "ALSOFT_BACKEND_PIPEWIRE OFF"
+                "ALSOFT_BACKEND_PULSEAUDIO OFF"
+                "ALSOFT_BACKEND_ALSA OFF"
+                "ALSOFT_BACKEND_OSS OFF"
+                "ALSOFT_BACKEND_SOLARIS OFF"
+                "ALSOFT_BACKEND_SNDIO OFF"
+                "ALSOFT_BACKEND_JACK OFF"
+                "ALSOFT_BACKEND_PORTAUDIO OFF"
+                "ALSOFT_BACKEND_SDL2 OFF")
             set(ALSOFT_RTKIT OFF CACHE BOOL "Enable RTKit support" FORCE)
-        endif()
-
-        if(WINDOWS)
+        elseif(WINDOWS)
             list(APPEND alsoft_opts "ALSOFT_BACKEND_WASAPI ON" "ALSOFT_BACKEND_WAVE OFF" "ALSOFT_BACKEND_DSOUND OFF" "ALSOFT_BACKEND_WINMM OFF")
         endif()
 
@@ -398,6 +404,7 @@ if (AX_ENABLE_AUDIO)
             target_compile_definitions(3rdparty INTERFACE AL_LIBTYPE_STATIC=1)
         elseif(ANDROID)
             set(ANDROID_SHARED_LOADS "${ANDROID_SHARED_LOADS}System.loadLibrary(\"openal\");" CACHE INTERNAL "Android Shared Loads" )
+            target_link_options(OpenAL PRIVATE "${_16KPAGE_SIZE_LD_FLAGS}")
         endif()
     endif()
 
@@ -448,20 +455,6 @@ endif()
 if (AX_ENABLE_VLC_MEDIA AND (NOT _AX_HAVE_VLC))
     message(STATUS "Using axmol prebuilt libvlc")
     ax_add_3rd(vlc TARGETS VLC::vlc;VLC::vlccore)
-endif()
-
-# yaml
-if(AX_WITH_YAML_CPP)
-    _1kfetch(yaml-cpp)
-    ax_add_3rd(${yaml-cpp_SOURCE_DIR} NO_LINK
-      TARGETS yaml-cpp
-      OPTIONS
-      "YAML_CPP_BUILD_TESTS OFF"
-      "YAML_CPP_BUILD_TOOLS OFF"
-      "YAML_CPP_BUILD_CONTRIB OFF"
-      "YAML_CPP_INSTALL OFF"
-      "YAML_CPP_CLANG_FORMAT_EXE OFF"
-    )
 endif()
 
 if(AX_WITH_LZ4)

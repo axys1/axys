@@ -8,10 +8,10 @@ set(${target_name}_src
   javaactivity-android.cpp
   jni/JniHelper.cpp
   jni/TouchesJni.cpp
-  jni/Java_org_axmol_lib_AxmolEngine.cpp
-  jni/Java_org_axmol_lib_AxmolRenderer.cpp
-  jni/Java_org_axmol_lib_AxmolAccelerometer.cpp
-  jni/Java_org_axmol_lib_BitmapHelper.cpp
+  jni/Java_dev_axmol_lib_AxmolEngine.cpp
+  jni/Java_dev_axmol_lib_AxmolRenderer.cpp
+  jni/Java_dev_axmol_lib_AxmolAccelerometer.cpp
+  jni/Java_dev_axmol_lib_BitmapHelper.cpp
 )
 
 add_library(${target_name} STATIC

@@ -74,6 +74,10 @@ add_library(${target_name} STATIC
         ${HEADER}
         ${SOURCE})
 
+if(WASM)
+    target_compile_definitions(${target_name} PRIVATE EMSCRIPTEN_USE_EMBEDDED_GLFW3=1)
+endif()
+
 target_include_directories(${target_name} 
     PUBLIC src
     PUBLIC src/ImGui/imgui

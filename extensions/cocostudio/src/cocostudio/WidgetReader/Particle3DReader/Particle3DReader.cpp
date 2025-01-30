@@ -24,6 +24,7 @@
 
 #include "platform/FileUtils.h"
 #include "cocostudio/WidgetReader/Particle3DReader/Particle3DReader.h"
+#if defined(AX_ENABLE_EXT_PARTICLE3D)
 
 #include "cocostudio/CSParseBinary_generated.h"
 #include "cocostudio/CSParse3DBinary_generated.h"
@@ -147,3 +148,5 @@ Node* Particle3DReader::createNodeWithFlatBuffers(const flatbuffers::Table* part
     return ret;
 }
 }  // namespace cocostudio
+
+#endif // defined(AX_ENABLE_EXT_PARTICLE3D)

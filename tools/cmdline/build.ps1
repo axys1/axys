@@ -39,7 +39,7 @@ param(
 
 $unhandled_args = @()
 
-$options = @{p = $null; d = $null; xc = @(); xb = @(); }
+$options = @{p = $null; d = $null; xc = @(); xb = @(); t = @() }
 
 $optName = $null
 foreach ($arg in $args) {
@@ -96,7 +96,7 @@ if (!(Test-Path $1k_script -PathType Leaf)) {
 
 $source_proj_dir = if ($options.d) { $options.d } else { $workDir }
 $Global:is_axmol_engine = ($source_proj_dir -eq $AX_ROOT)
-$Global:is_axmol_app = (Test-Path (Join-Path $source_proj_dir '.axproj.json') -PathType Leaf)
+$Global:is_axmol_app = !!(Get-ChildItem (Join-Path $source_proj_dir '.axproj*'))
 $is_android = $options.p -eq 'android'
 
 # start construct full cmd line
@@ -150,14 +150,17 @@ if ($use_gradle) {
 if (!$use_gradle) {
     if (!$cmake_target) {
         # non android, specific cmake target
-        $cmake_targets = @(
-            # project
-            $proj_name,
-            # engine
-            'cpp-tests'
-        )
-        $cmake_target = $cmake_targets[$is_axmol_engine]
-        $options.xb += '--target', $cmake_target
+        if($options.t) {
+            if($options.t -isnot [array]) {
+                $options.t = "$($options.t)".Split(',')
+            }
+        }
+
+        if(!$options.t) {
+            $options.t = @(@($proj_name, 'cpp-tests')[$is_axmol_engine])
+        }
+
+        $cmake_target = $options.t[-1]
     }
 
     if ($is_android -and !"$($options.xc)".Contains('-DANDROID_STL')) {
@@ -196,11 +199,13 @@ if ($forceConfig) {
     $forward_args['forceConfig'] = $true
 }
 
-. $1k_script @1k_args @forward_args @unhandled_args
+$op_name = @('Generate', 'Build')[!$configOnly]
 
-if (!$configOnly) {
-    $1k.pause('Build done')
+. $1k_script @1k_args @forward_args @unhandled_args
+if ($?) {
+    $1k.pause("$op_name success")
+} else {
+    Write-Error "$op_name fail, ret=$LASTEXITCODE"
 }
-else {
-    $1k.pause('Generate done')
-}
+
+exit $LASTEXITCODE

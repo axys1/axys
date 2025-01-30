@@ -243,9 +243,9 @@ public:
   const_iterator end() const YASIO__NOEXCEPT { return begin() + _Mysize; }
 #pragma endregion
 
-  pointer data() YASIO__NOEXCEPT { return _Myfirst ? _Myfirst : reinterpret_cast<pointer>(&_Myfirst); }
-  const_pointer data() const YASIO__NOEXCEPT { return _Myfirst ? _Myfirst : reinterpret_cast<const_pointer>(&_Myfirst); }
-  const_pointer c_str() const YASIO__NOEXCEPT { return this->data(); }
+  pointer data() YASIO__NOEXCEPT { return _Myfirst; }
+  const_pointer data() const YASIO__NOEXCEPT { return _Myfirst; }
+  const_pointer c_str() const YASIO__NOEXCEPT { return _Myfirst ? _Myfirst : reinterpret_cast<pointer>(&_Myfirst);; }
   const_reference operator[](size_type index) const { return this->at(index); }
   reference operator[](size_type index) { return this->at(index); }
   const_reference at(size_type index) const

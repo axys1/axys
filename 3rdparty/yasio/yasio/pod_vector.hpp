@@ -406,8 +406,8 @@ private:
   }
   void _Assign_rv(pod_vector&& rhs)
   {
-    memcpy(this, &rhs, sizeof(rhs));
-    memset(&rhs, 0, sizeof(rhs));
+    memcpy((void*)this, &rhs, sizeof(rhs));
+    memset((void*)&rhs, 0, sizeof(rhs));
   }
   enum class _Reallocation_policy
   {

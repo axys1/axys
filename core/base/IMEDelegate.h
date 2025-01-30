@@ -124,7 +124,7 @@ protected:
     * @js NA
     * @lua NA
     */
-    virtual void deleteBackward() {}
+    virtual void deleteBackward(size_t numChars) {}
 
     /**
     @brief    Called by IMEDispatcher after the user press control key.

@@ -194,7 +194,7 @@ public:
     /**
      * A callback which will be called after specific MediaPlayer event happens.
      */
-    typedef std::function<void(Object*, MediaPlayer::EventType)> ccVideoPlayerCallback;
+    typedef std::function<void(Object*, MediaPlayer::EventType)> VideoPlayerCallback;
 
     /**
      *Static create method for instancing a MediaPlayer.
@@ -261,14 +261,26 @@ public:
     virtual void play();
 
     /**
-     * Pauses playback.
+     * Pauses actions and playback.
      */
     void pause() override;
 
     /**
-     * Resumes playback.
+     * Resumes actions and playback.
      */
     void resume() override;
+
+    /**
+     * @brief Pauses playback
+     * 
+     */
+    void pausePlayback();
+
+    /**
+     * @brief Resumes playback
+     * 
+     */
+    void resumePlayback();
 
     /**
      * Stops playback.
@@ -349,7 +361,7 @@ public:
      *
      * @param callback  The callback that will be run.
      */
-    virtual void addEventListener(const MediaPlayer::ccVideoPlayerCallback& callback);
+    virtual void addEventListener(const MediaPlayer::VideoPlayerCallback& callback);
 
     /**
      * @brief A function which will be called when video is playing.
@@ -406,8 +418,7 @@ protected:
     std::string _videoURL;
     Source _videoSource;
 
-    int _videoPlayerIndex                = -1;
-    ccVideoPlayerCallback _eventCallback = nullptr;
+    VideoPlayerCallback _eventCallback = nullptr;
 
     void* _videoContext = nullptr;
 

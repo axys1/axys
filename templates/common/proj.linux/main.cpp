@@ -32,9 +32,20 @@
 
 using namespace ax;
 
-int main(int argc, char** argv)
+int axmol_main()
 {
     // create the application instance
     AppDelegate app;
     return Application::getInstance()->run();
+}
+
+int main(int argc, char** argv)
+{
+    auto result = axmol_main();
+
+#if AX_OBJECT_LEAK_DETECTION
+    Object::printLeaks();
+#endif
+
+    return result;
 }

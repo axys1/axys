@@ -1,5 +1,5 @@
 include(${_AX_ROOT}/1k/platforms.cmake)
-_1k_deprecated_32bit(axmol 2.2.0)
+_1k_deprecated_32bit(axmol 3.0.0)
 
 if(NOT CMAKE_GENERATOR MATCHES "Ninja")
     set(BUILD_CONFIG_DIR "\$\(Configuration\)/")
@@ -22,11 +22,11 @@ endmacro()
 function(ax_link_cxx_prebuilt APP_NAME AX_ROOT_DIR AX_PREBUILT_DIR)
     # stupid: exclude CMAKE_CXX_FLAGS_DEBUG CMAKE_C_FLAGS_DEBUG to avoid cmake generate
     # .vcxproj with incorrect debug msvc runtime, should be /MDd but got /MD
-    set(GLSLCC_OUT_DIR_PROJ "${GLSLCC_OUT_DIR}")
+    set(AXSLCC_OUT_DIR_PROJ "${AXSLCC_OUT_DIR}")
     load_cache("${AX_ROOT_DIR}/${AX_PREBUILT_DIR}" EXCLUDE thirdparty_LIB_DEPENDS CMAKE_CXX_FLAGS_DEBUG CMAKE_C_FLAGS_DEBUG)
-    set(GLSLCC_OUT_DIR_ENGINE ${GLSLCC_OUT_DIR})
-    set(GLSLCC_OUT_DIR "${GLSLCC_OUT_DIR_PROJ}" CACHE STRING "" FORCE)
-    unset(GLSLCC_OUT_DIR_PROJ)
+    set(AXSLCC_OUT_DIR_ENGINE ${AXSLCC_OUT_DIR})
+    set(AXSLCC_OUT_DIR "${AXSLCC_OUT_DIR_PROJ}" CACHE STRING "" FORCE)
+    unset(AXSLCC_OUT_DIR_PROJ)
 
     message(STATUS "AX_ENABLE_MSEDGE_WEBVIEW2=${AX_ENABLE_MSEDGE_WEBVIEW2}")
     message(STATUS "AX_ENABLE_MFMEDIA=${AX_ENABLE_MFMEDIA}")
@@ -46,6 +46,7 @@ function(ax_link_cxx_prebuilt APP_NAME AX_ROOT_DIR AX_PREBUILT_DIR)
 
     # compile defines can't inherit when link prebuits, so need add manually
     target_compile_definitions(${APP_NAME}
+        PRIVATE YASIO_SSL_BACKEND=1
         PRIVATE AX_GLES_PROFILE=${AX_GLES_PROFILE}
         PRIVATE OPENSSL_SUPPRESS_DEPRECATED=1
         PRIVATE NOUNCRYPT=1
@@ -66,7 +67,7 @@ function(ax_link_cxx_prebuilt APP_NAME AX_ROOT_DIR AX_PREBUILT_DIR)
     ax_config_pred(${APP_NAME} AX_ENABLE_CONSOLE)
 
     if (AX_ISA_SIMD MATCHES "sse")
-        target_compile_definitions(${APP_NAME} PRIVATE AX_USE_SSE=1)
+        target_compile_definitions(${APP_NAME} PRIVATE AX_SSE_INTRINSICS=1)
     endif()
 
     if (BUILD_SHARED_LIBS)
@@ -279,7 +280,7 @@ function(ax_link_cxx_prebuilt APP_NAME AX_ROOT_DIR AX_PREBUILT_DIR)
 
     # prebuilt, need copy axslc folder to target output directory
     get_target_property(rt_output ${APP_NAME} RUNTIME_OUTPUT_DIRECTORY)
-    ax_sync_target_res(${APP_NAME} LINK_TO "${rt_output}/${CMAKE_CFG_INTDIR}/axslc" FOLDERS ${GLSLCC_OUT_DIR_ENGINE} SYNC_TARGET_ID axslc-builtin)
+    ax_sync_target_res(${APP_NAME} LINK_TO "${rt_output}/${CMAKE_CFG_INTDIR}/axslc" FOLDERS ${AXSLCC_OUT_DIR_ENGINE} SYNC_TARGET_ID axslc-builtin)
 endfunction(ax_link_cxx_prebuilt)
 
 function(ax_link_lua_prebuilt APP_NAME AX_ROOT_DIR AX_PREBUILT_DIR)

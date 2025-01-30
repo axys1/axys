@@ -68,7 +68,7 @@ void TrianglesCommand::init(float globalOrder,
         blendDescriptor.sourceRGBBlendFactor = blendDescriptor.sourceAlphaBlendFactor = blendType.src;
         blendDescriptor.destinationRGBBlendFactor = blendDescriptor.destinationAlphaBlendFactor = blendType.dst;
 
-        if (_batchId == -1)
+        if (!_pipelineDescriptor.programState->isBatchable())
             setSkipBatching(true);
 
         if (!isSkipBatching())

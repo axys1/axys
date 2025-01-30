@@ -152,7 +152,7 @@ In order to see some of our community works, please check our Axmol Showcase: [M
 ## Reference links
 
 - [1kiss](https://github.com/simdsoft/1kiss): A cross-platform one step build powershell script, with auto setup general dependent tools.
-- [axmolengine/glslcc](https://github.com/axmolengine/glslcc): A fork of glslcc, for Axmol new shader workflow tool.
+- [axslcc](https://github.com/axmolengine/axslcc): A fork of `glslcc`, for Axmol new shader workflow tool.
 - [Official Cocos2d-x](https://github.com/cocos2d/cocos2d-x)
 
 ## Axmol Stats

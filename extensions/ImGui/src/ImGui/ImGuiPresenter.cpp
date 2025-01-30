@@ -31,6 +31,8 @@ THE SOFTWARE.
 #endif
 #include "imgui/imgui_internal.h"
 
+#include "xxhash.h"
+
 // TODO: mac metal
 #if defined(AX_USE_GL) && defined(AX_PLATFORM_PC)
 #    define AX_IMGUI_ENABLE_MULTI_VIEWPORT 1
@@ -39,7 +41,6 @@ THE SOFTWARE.
 #endif
 
 NS_AX_EXT_BEGIN
-
 
 namespace
 {
@@ -139,12 +140,12 @@ std::tuple<ImVec2, ImVec2, ImVec2, ImVec2> getFourPointTextureUV(SpriteFrame* fr
 
 ImVec2 operator+(const ImVec2& lhs, const ImVec2& rhs)
 {
-    return { lhs.x + rhs.x, lhs.y + rhs.y };
+    return {lhs.x + rhs.x, lhs.y + rhs.y};
 }
 
 ImVec2 ImRotate(const ImVec2& v, float cos_a, float sin_a)
 {
-    return { v.x * cos_a - v.y * sin_a, v.x * sin_a + v.y * cos_a };
+    return {v.x * cos_a - v.y * sin_a, v.x * sin_a + v.y * cos_a};
 }
 
 ImVec2& operator+=(ImVec2& lhs, const ImVec2& rhs)
@@ -153,8 +154,7 @@ ImVec2& operator+=(ImVec2& lhs, const ImVec2& rhs)
     lhs.y += rhs.y;
     return lhs;
 }
-}
-
+}  // namespace
 
 class ImGuiEventTracker
 {
@@ -592,8 +592,8 @@ void ImGuiPresenter::endFrame()
 void ImGuiPresenter::update()
 {
     // clear things from last frame
-    usedCCRefIdMap.clear();
-    usedCCRef.clear();
+    _objsRefIdMap.clear();
+    _usedObjs.clear();
     // drawing commands
 
     for (auto iter = _renderLoops.begin(); iter != _renderLoops.end();)
@@ -661,7 +661,7 @@ void ImGuiPresenter::image(Texture2D* tex,
         size_.x = tex->getPixelsWide();
     if (size_.y <= 0.f)
         size_.y = tex->getPixelsHigh();
-    ImGui::PushID(getCCRefId(tex));
+    ImGui::PushID(objectRef(tex));
     ImGui::Image((ImTextureID)tex, size_, uv0, uv1, tint_col, border_col);
     ImGui::PopID();
 }
@@ -705,7 +705,7 @@ void ImGuiPresenter::image(Sprite* sprite,
     const ImVec2 pos[4] = {ImVec2(bb.Min.x, bb.Min.y), ImVec2(bb.Max.x, bb.Min.y), ImVec2(bb.Max.x, bb.Max.y),
                            ImVec2(bb.Min.x, bb.Max.y)};
 
-    ImGui::PushID(getCCRefId(sprite));
+    ImGui::PushID(objectRef(sprite));
     if (border_col.w > 0.0f)
     {
         window->DrawList->AddRect(bb.Min, bb.Max, ImGui::GetColorU32(border_col), 0.0f);
@@ -759,7 +759,7 @@ void ImGuiPresenter::image(SpriteFrame* spriteFrame,
     const ImVec2 pos[4] = {ImVec2(bb.Min.x, bb.Min.y), ImVec2(bb.Max.x, bb.Min.y), ImVec2(bb.Max.x, bb.Max.y),
                            ImVec2(bb.Min.x, bb.Max.y)};
 
-    ImGui::PushID(getCCRefId(spriteFrame));
+    ImGui::PushID(objectRef(spriteFrame));
     if (border_col.w > 0.0f)
     {
         window->DrawList->AddRect(bb.Min, bb.Max, ImGui::GetColorU32(border_col), 0.0f);
@@ -780,7 +780,6 @@ bool ImGuiPresenter::imageButton(Texture2D* tex,
                                  const ImVec2& size,
                                  const ImVec2& uv0,
                                  const ImVec2& uv1,
-                                 int frame_padding,
                                  const ImVec4& bg_col,
                                  const ImVec4& tint_col)
 {
@@ -791,15 +790,14 @@ bool ImGuiPresenter::imageButton(Texture2D* tex,
         size_.x = tex->getPixelsWide();
     if (size_.y <= 0.f)
         size_.y = tex->getPixelsHigh();
-    ImGui::PushID(getCCRefId(tex));
-    const auto ret = ImGui::ImageButton((ImTextureID)tex, size_, uv0, uv1, frame_padding, bg_col, tint_col);
+    ImGui::PushID(objectRef(tex));
+    const auto ret = ImGui::ImageButton("###", (ImTextureID)tex, size_, uv0, uv1, bg_col, tint_col);
     ImGui::PopID();
     return ret;
 }
 
 bool ImGuiPresenter::imageButton(Sprite* sprite,
                                  const ImVec2& size,
-                                 int frame_padding,
                                  const ImVec4& bg_col,
                                  const ImVec4& tint_col)
 {
@@ -812,9 +810,8 @@ bool ImGuiPresenter::imageButton(Sprite* sprite,
     if (size_.y <= 0.f)
         size_.y = rect.size.height;
     auto [uv0, uv1] = getTwoPointTextureUV(sprite);
-    ImGui::PushID(getCCRefId(sprite));
-    const auto ret =
-        ImGui::ImageButton((ImTextureID)sprite->getTexture(), size_, uv0, uv1, frame_padding, bg_col, tint_col);
+    ImGui::PushID(objectRef(sprite));
+    const auto ret = ImGui::ImageButton("###", (ImTextureID)sprite->getTexture(), size_, uv0, uv1, bg_col, tint_col);
     ImGui::PopID();
     return ret;
 }
@@ -835,12 +832,12 @@ void ImGuiPresenter::node(Node* node, const ImVec4& tint_col, const ImVec4& bord
         tr.m[13] += 1;
     }
     node->setNodeToParentTransform(tr);
-    ImGui::PushID(getCCRefId(node));
+    ImGui::PushID(objectRef(node));
     ImGui::Image((ImTextureID)node, ImVec2(size.width, size.height), ImVec2(0, 0), ImVec2(1, 1), tint_col, border_col);
     ImGui::PopID();
 }
 
-bool ImGuiPresenter::nodeButton(Node* node, int frame_padding, const ImVec4& bg_col, const ImVec4& tint_col)
+bool ImGuiPresenter::nodeButton(Node* node, const ImVec4& bg_col, const ImVec4& tint_col)
 {
     if (!node)
         return false;
@@ -850,20 +847,13 @@ bool ImGuiPresenter::nodeButton(Node* node, int frame_padding, const ImVec4& bg_
     tr.m[5]  = -1;
     tr.m[12] = pos.x;
     tr.m[13] = pos.y + size.height;
-    if (frame_padding >= 0)
-    {
-        tr.m[12] += (float)frame_padding;
-        tr.m[13] += (float)frame_padding;
-    }
-    else
-    {
-        tr.m[12] += ImGui::GetStyle().FramePadding.x;
-        tr.m[13] += ImGui::GetStyle().FramePadding.y;
-    }
+    tr.m[12] += ImGui::GetStyle().FramePadding.x;
+    tr.m[13] += ImGui::GetStyle().FramePadding.y;
+
     node->setNodeToParentTransform(tr);
-    ImGui::PushID(getCCRefId(node));
-    const auto ret = ImGui::ImageButton((ImTextureID)node, ImVec2(size.width, size.height), ImVec2(0, 0), ImVec2(1, 1),
-                                        frame_padding, bg_col, tint_col);
+    ImGui::PushID(objectRef(node));
+    const auto ret = ImGui::ImageButton("###", (ImTextureID)node, ImVec2(size.width, size.height), ImVec2(0, 0),
+                                        ImVec2(1, 1), bg_col, tint_col);
     ImGui::PopID();
     return ret;
 }
@@ -871,29 +861,29 @@ bool ImGuiPresenter::nodeButton(Node* node, int frame_padding, const ImVec4& bg_
 std::tuple<ImTextureID, int> ImGuiPresenter::useTexture(Texture2D* texture)
 {
     if (!texture)
-        return std::tuple<ImTextureID, int>{nullptr, 0};
-    return std::tuple{(ImTextureID)texture, getCCRefId(texture)};
+        return std::tuple<ImTextureID, int>{0, 0};
+    return std::tuple{(ImTextureID)texture, objectRef(texture)};
 }
 
 std::tuple<ImTextureID, ImVec2, ImVec2, int> ImGuiPresenter::useSprite(Sprite* sprite)
 {
     if (!sprite || !sprite->getTexture())
-        return std::tuple<ImTextureID, ImVec2, ImVec2, int>{nullptr, {}, {}, 0};
+        return std::tuple<ImTextureID, ImVec2, ImVec2, int>{0, {}, {}, 0};
     auto [uv0, uv1] = getTwoPointTextureUV(sprite);
-    return std::tuple{(ImTextureID)sprite->getTexture(), uv0, uv1, getCCRefId(sprite)};
+    return std::tuple{(ImTextureID)sprite->getTexture(), uv0, uv1, objectRef(sprite)};
 }
 
 std::tuple<ImTextureID, ImVec2, ImVec2, int> ImGuiPresenter::useNode(Node* node, const ImVec2& pos)
 {
     if (!node)
-        return std::tuple<ImTextureID, ImVec2, ImVec2, int>{nullptr, {}, {}, 0};
+        return std::tuple<ImTextureID, ImVec2, ImVec2, int>{0, {}, {}, 0};
     const auto size = node->getContentSize();
     Mat4 tr;
     tr.m[5]  = -1;
     tr.m[12] = pos.x;
     tr.m[13] = pos.y + size.height;
     node->setNodeToParentTransform(tr);
-    return std::tuple{(ImTextureID)node, pos, ImVec2(pos.x + size.width, pos.y + size.height), getCCRefId(node)};
+    return std::tuple{(ImTextureID)node, pos, ImVec2(pos.x + size.width, pos.y + size.height), objectRef(node)};
 }
 
 void ImGuiPresenter::setNodeColor(Node* node, const ImVec4& col)
@@ -1050,25 +1040,19 @@ void ImGuiPresenter::mergeFontGlyphs(ImFont* dst, ImFont* src, ImWchar start, Im
     dst->BuildLookupTable();
 }
 
-int ImGuiPresenter::getCCRefId(Object* p)
+int ImGuiPresenter::objectRef(Object* p)
 {
     int id        = 0;
-    const auto it = usedCCRefIdMap.find(p);
-    if (it == usedCCRefIdMap.end())
+    const auto it = _objsRefIdMap.find(p);
+    if (it == _objsRefIdMap.end())
     {
-        usedCCRefIdMap[p] = 0;
-        usedCCRef.pushBack(p);
+        _objsRefIdMap[p] = 0;
+        _usedObjs.pushBack(p);
     }
     else
         id = ++it->second;
-    // BKDR hash
-    constexpr unsigned int seed = 131;
-    unsigned int hash           = 0;
-    for (auto i = 0u; i < sizeof(void*); ++i)
-        hash = hash * seed + ((const char*)&p)[i];
-    for (auto i = 0u; i < sizeof(int); ++i)
-        hash = hash * seed + ((const char*)&id)[i];
-    return (int)hash;
+
+    return XXH32(&p, sizeof(p), id);
 }
 
 std::string_view ImGuiPresenter::getGlyphRangesId(GLYPH_RANGES glyphRanges)

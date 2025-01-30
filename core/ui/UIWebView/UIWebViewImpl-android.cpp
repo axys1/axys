@@ -37,7 +37,7 @@
 #include "ui/UIHelper.h"
 #include "yasio/string_view.hpp"
 
-static const char* className = "org.axmol.lib.WebViewHelper";
+static const char* className = "dev.axmol.lib.WebViewHelper";
 
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, "", __VA_ARGS__)
 
@@ -82,11 +82,11 @@ static std::string getFixedBaseUrl(std::string_view baseUrl)
 
 extern "C" {
 /*
- * Class:     org_axmol_lib_WebViewHelper
+ * Class:     dev_axmol_lib_WebViewHelper
  * Method:    shouldStartLoading
  * Signature: (ILjava/lang/String;)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_axmol_lib_WebViewHelper_shouldStartLoading(JNIEnv* env,
+JNIEXPORT jboolean JNICALL Java_dev_axmol_lib_WebViewHelper_shouldStartLoading(JNIEnv* env,
                                                                                           jclass,
                                                                                           jint index,
                                                                                           jstring jurl)
@@ -98,11 +98,11 @@ JNIEXPORT jboolean JNICALL Java_org_axmol_lib_WebViewHelper_shouldStartLoading(J
 }
 
 /*
- * Class:     org_axmol_lib_WebViewHelper
+ * Class:     dev_axmol_lib_WebViewHelper
  * Method:    didFinishLoading
  * Signature: (ILjava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_axmol_lib_WebViewHelper_didFinishLoading(JNIEnv* env,
+JNIEXPORT void JNICALL Java_dev_axmol_lib_WebViewHelper_didFinishLoading(JNIEnv* env,
                                                                                     jclass,
                                                                                     jint index,
                                                                                     jstring jurl)
@@ -115,11 +115,11 @@ JNIEXPORT void JNICALL Java_org_axmol_lib_WebViewHelper_didFinishLoading(JNIEnv*
 }
 
 /*
- * Class:     org_axmol_lib_WebViewHelper
+ * Class:     dev_axmol_lib_WebViewHelper
  * Method:    didFailLoading
  * Signature: (ILjava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_axmol_lib_WebViewHelper_didFailLoading(JNIEnv* env,
+JNIEXPORT void JNICALL Java_dev_axmol_lib_WebViewHelper_didFailLoading(JNIEnv* env,
                                                                                   jclass,
                                                                                   jint index,
                                                                                   jstring jurl)
@@ -132,11 +132,11 @@ JNIEXPORT void JNICALL Java_org_axmol_lib_WebViewHelper_didFailLoading(JNIEnv* e
 }
 
 /*
- * Class:     org_axmol_lib_WebViewHelper
+ * Class:     dev_axmol_lib_WebViewHelper
  * Method:    onJsCallback
  * Signature: (ILjava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_axmol_lib_WebViewHelper_onJsCallback(JNIEnv* env,
+JNIEXPORT void JNICALL Java_dev_axmol_lib_WebViewHelper_onJsCallback(JNIEnv* env,
                                                                                 jclass,
                                                                                 jint index,
                                                                                 jstring jmessage)

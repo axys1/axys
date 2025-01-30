@@ -45,16 +45,26 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // create the application instance
 #ifdef USE_WIN32_CONSOLE
 #    include "platform/win32/EmbedConsole.h"
 #endif
 
-    // create the application instance
-    return axmol_main();
+    auto result = axmol_main();
+
+#if AX_OBJECT_LEAK_DETECTION
+    Object::printLeaks();
+#endif
+
+    return result;
 }
 #else
 int main(int, char**) {
-    return axmol_main();
+    auto result = axmol_main();
+
+#if AX_OBJECT_LEAK_DETECTION
+    Object::printLeaks();
+#endif
+
+    return result;
 }
 #endif

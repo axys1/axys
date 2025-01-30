@@ -112,7 +112,7 @@ void KeyboardEvent::execute()
             //Director::getInstance()()->getKeypadDispatcher()->dispatchKeypadMSG(kTypeBackClicked);
             break;
         case AxmolKeyEvent::Back:
-            IMEDispatcher::sharedDispatcher()->dispatchDeleteBackward();
+            IMEDispatcher::sharedDispatcher()->dispatchDeleteBackward(1);
             break;
         case AxmolKeyEvent::Enter:
             IMEDispatcher::sharedDispatcher()->dispatchInsertText("\n", 1);
