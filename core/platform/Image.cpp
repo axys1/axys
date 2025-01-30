@@ -748,6 +748,28 @@ bool Image::initWithRawData(const uint8_t* data,
     return ret;
 }
 
+void Image::flipRawData()
+{
+    uint8_t temp;
+    int idx1, idx2;
+
+    for(int w=0;w<_width;w++)
+    {
+        for(int h=0;h<_height/2;h++)
+        {
+            idx1 = (h*_width+w)*4;
+            idx2 = ((_height-h-1)*_width+w)*4;
+
+            for(int c=0;c<4;c++)
+            {
+                temp = _data[idx1+c];
+                _data[idx1+c] = _data[idx2+c];
+                _data[idx2+c] = temp;
+            }
+        }
+    }
+}
+
 bool Image::isPng(const uint8_t* data, ssize_t dataLen)
 {
     if (dataLen <= 8)
