@@ -23,8 +23,8 @@
  ****************************************************************************/
 
 #include "LabelTestNew.h"
-#include "../testResource.h"
-#include "renderer/Renderer.h"
+//#include "../testResource.h"
+//#include "renderer/Renderer.h"
 #include "2d/FontAtlasCache.h"
 
 using namespace ax;
@@ -3272,61 +3272,58 @@ std::string LabelUnderlineMultiline::subtitle() const
 
 LabelUnderlineStrikethroughMultiline::LabelUnderlineStrikethroughMultiline()
 {
-    static bool isEnabledU = true;
-    static bool isEnabledS = true;
-
     auto s = Director::getInstance()->getWinSize();
 
-
     // ttf
-    TTFConfig ttfConfig("fonts/arial.ttf", 24);
-    //ttfConfig.underline     = true;
-    //ttfConfig.strikethrough = true;
+    TTFConfig ttfConfig("fonts/arial.ttf", 14);
+    ttfConfig.underline     = true;
+    ttfConfig.strikethrough = true;
 
-    const int count = 4;
+    const int count = 5;
     Label* label[count];
 
-    label[0] = Label::createWithSystemFont("System Font\nsetTextColor(Color4B(0, 0, 255, 100)", "fonts/arial.ttf", 20);
-    label[0]->setTextColor(Color4B(0, 0, 255, 100));
-    label[1] = Label::createWithBMFont("fonts/bitmapFontTest5.fnt", "BMFont\nwith default setColor", TextHAlignment::CENTER, s.width);
-    label[2] = Label::createWithTTF(ttfConfig, "TTFFont with setColor(Color3B::RED)/with multiline 1/and a much more longer multiline 2", TextHAlignment::LEFT, s.width);
-    label[2]->setColor(Color3B::RED);
-    label[2] = Label::createWithTTF(ttfConfig, "TTFFont with setColor(Color3B::RED)/with multiline 1/and a much more longer multiline 2",
-        TextHAlignment::LEFT, s.width);
-    label[2]->setColor(Color3B::RED);
-
-    label[3] =  Label::createWithTTF("TTFFont with setColor(Color3B::RED)/with multiline 1/and a much more longer multiline 2",
-                             "fonts/arial.ttf", 34);
+    label[0] = Label::createWithSystemFont("createWithSystemFont TextVAlignment::TOP setTextColor(Color4B(0, 0, 255, 100)", "fonts/arial.ttf", 14,Vec2::ZERO,TextHAlignment::LEFT,TextVAlignment::TOP);
+    label[0]->setTextColor(Color4B(255, 0, 255, 100));
+    label[1] = Label::createWithSystemFont("createWithSystemFont TextVAlignment::CENTER setTextColor(Color4B(0, 0, 255, 100)", "fonts/arial.ttf", 14, Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
+    label[1]->setTextColor(Color4B(255, 0, 255, 100));
+    label[2] = Label::createWithSystemFont("createWithSystemFont TextVAlignment::BOTTOM setTextColor(Color4B(0, 0, 255, 100)", "fonts/arial.ttf", 14, Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::BOTTOM);
+    label[2]->setTextColor(Color4B(255, 0, 255, 100));
+    label[3] = Label::createWithBMFont("fonts/bitmapFontTest5.fnt", "createWithBMFont\nwith default setColor", TextHAlignment::CENTER, s.width);
+    label[3] = Label::createWithTTF("createWithTTF setColor(Color3B::RED)\nwith multiline 1\nand a much more longer multiline 2", "fonts/arial.ttf", 14);
+    label[4] = Label::createWithTTF( ttfConfig, "createWithTTF setColor(Color3B::RED)\nwith multiline 1\nand a much more longer multiline 2", TextHAlignment::LEFT, s.width);
+    label[4]->setColor(Color3B::RED);
+ 
 
     for (int i = 0; i < count; i++)
     {
-
-        label[i]->setPosition(Vec2(s.width / 4, s.height * 0.2f * (i+1)));
+        label[i]->setPosition(Vec2(label[i]->getBoundingBox().getMaxX() + 100, s.height * 0.1f * (i + 1)));
         label[i]->enableUnderline();
         label[i]->enableStrikethrough();
         addChild(label[i]);
     }
 
     auto menuItemU = MenuItemFont::create("disable/enable underline", [=](ax::Object* sender) {
+        static bool isEnabled = true;
         for (int i = 0; i < count; i++)
         {
-            if (isEnabledU)
+            if (isEnabled)
                 label[i]->disableEffect(LabelEffect::UNDERLINE);
             else
                 label[i]->enableUnderline();
         }
-        isEnabledU = (isEnabledU) ? false : true;
+        isEnabled = (isEnabled) ? false : true;
     });
     menuItemU->setFontSizeObj(12);
     auto menuItemS = MenuItemFont::create("disable/enable strikethrough", [=](ax::Object* sender) {
+        static bool isEnabled = true;
         for (int i = 0; i < count; i++)
         {
-            if (isEnabledS)
+            if (isEnabled)
                 label[i]->disableEffect(LabelEffect::STRIKETHROUGH);
             else
                 label[i]->enableStrikethrough();
         }
-        isEnabledS = (isEnabledS) ? false : true;
+        isEnabled = (isEnabled) ? false : true;
     });
     menuItemS->setFontSizeObj(12);
     auto menu = Menu::create(menuItemU, menuItemS, NULL);

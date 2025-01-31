@@ -1056,16 +1056,11 @@ void DrawNode::_drawSegment(const Vec2& from,
                             DrawNode::EndType etStart,
                             DrawNode::EndType etEnd)
 {
-    //if (thickness == 1.0f && !properties.drawOrder)
-    //{
-    //    _drawLine(from, to, color);
-    //    //auto line = expandBufferAndGetPointer(_lines, 2);
-    //    //_linesDirty = true;
-
-    //    //line[0] = {vertices[0], color, Vec2::ZERO};
-    //    //line[1] = {vertices[1], color, Vec2::ZERO};
-    //}
-    //else
+    if (thickness == 1.0f && !properties.drawOrder)
+    {
+        _drawLine(from, to, color); // fastest way to draw a line
+    }
+    else
     {
         Vec2 vertices[2] = {from, to};
         applyTransform(vertices, vertices, 2);
@@ -1592,8 +1587,9 @@ void DrawNode::applyTransform(const Vec2* from, Vec2* to, unsigned int count)
 void DrawNode::Properties::setDefaultValues()
 {
 
+
     auto fac = Director::getInstance()->getContentScaleFactor();
-    factor   = 2 * fac;
+    factor   = 2.0f * fac;
     
     scale     = Vec2(1.0f, 1.0f);
     center    = Vec2(0.0f, 0.0f);

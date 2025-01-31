@@ -43,38 +43,11 @@
 #include "base/EventListenerCustom.h"
 #include "base/EventDispatcher.h"
 #include "base/EventCustom.h"
+#include "base/Utils.h"
 #include "2d/FontFNT.h"
+#include "renderer/Shaders.h"
 #include "renderer/backend/ProgramState.h"
 #include "renderer/backend/ProgramStateRegistry.h"
-#include <array>
-#include <cassert>
-#include <cfloat>
-#include <cstdint>
-#include <cstdio>
-#include <cstdlib>
-#include <functional>
-#include <string>
-#include <unordered_map>
-#include <vector>
-#include <__msvc_string_view.hpp>
-#include "Node.h"
-#include <base/Config.h>
-#include <base/Enums.h>
-#include <base/Logging.h>
-#include <math/Color.h>
-#include <math/Mat4.h>
-#include <math/Rect.h>
-#include <math/Vec2.h>
-#include <math/Vec4.h>
-#include <PlatformConfig.h>
-#include <PlatformMacros.h>
-#include "../renderer/backend/Enums.h"
-#include "../renderer/backend/Program.h"
-#include "../renderer/backend/ShaderModule.h"
-#include "../renderer/backend/Types.h"
-#include "../renderer/CustomCommand.h"
-#include "../renderer/Texture2D.h"
-#include "../renderer/TextureAtlas.h"
 
 namespace ax
 {
@@ -1808,30 +1781,50 @@ void Label::updateContent()
 
             }
         }
-        else if (_textSprite)
+        else if (_textSprite) // ...and is the logic for System fonts
         {
-            // ...and is the logic for System fonts
-            float y               = 0;
             const auto spriteSize = _textSprite->getContentSize();
+
+            if (_currentLabelType == LabelType::STRING_TEXTURE)
+            {
+                AXLOGD(" LabelType::STRING_TEXTURE: spriteSize: {}", spriteSize.y);
+            }
+
+            if (_underlineEnabled)
+            {
+                float y = 0;
+                // FIXME: system fonts don't report the height of the font correctly. only the size of the texture,
+                // which is POT
+  //              y = 0;  // spriteSize.height / 2;
+                // FIXME: Might not work with different vertical alignments
+                _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(_displayedColor),
+                                        spriteSize.height / 6);
+            }
 
             if (_strikethroughEnabled)
             {
                 // FIXME: system fonts don't report the height of the font correctly. only the size of the texture,
                 // which is POT
-                y += spriteSize.height / 2;
                 // FIXME: Might not work with different vertical alignments
+                float y = spriteSize.height / 2;       
+                switch (_vAlignment)
+                {
+                case ax::TextVAlignment::TOP:
+                    AXLOGD("TextVAlignment::TOP");
+                    break;
+                case ax::TextVAlignment::CENTER:
+                    AXLOGD("TextVAlignment::CENTER");
+                    break;
+                case ax::TextVAlignment::BOTTOM:
+                    AXLOGD("TextVAlignment::BOTTOM");
+                    break;
+                default:
+                    break;
+                }
                 _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(_displayedColor),
                                          spriteSize.height / 6);
             }
-            if (_underlineEnabled)
-            {
-                // FIXME: system fonts don't report the height of the font correctly. only the size of the texture,
-                // which is POT
-                y -= spriteSize.height / 2;
-                // FIXME: Might not work with different vertical alignments
-                _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(_displayedColor),
-                                         spriteSize.height / 6);
-            }
+
         }
     }
 
