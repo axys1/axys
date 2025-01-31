@@ -3286,7 +3286,7 @@ LabelUnderlineStrikethroughMultiline::LabelUnderlineStrikethroughMultiline()
     label[0]->setTextColor(Color4B(255, 0, 255, 100));
     label[1] = Label::createWithSystemFont("createWithSystemFont TextVAlignment::CENTER setTextColor(Color4B(0, 0, 255, 100)", "fonts/arial.ttf", 14, Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
     label[1]->setTextColor(Color4B(255, 0, 255, 100));
-    label[2] = Label::createWithSystemFont("createWithSystemFont TextVAlignment::BOTTOM setTextColor(Color4B(0, 0, 255, 100)", "fonts/arial.ttf", 14, Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::BOTTOM);
+    label[2] = Label::createWithSystemFont("createWithSystemFont TextVAlignment::BOTTOM\nsetTextColor(Color4B(0, 0, 255, 100)", "fonts/arial.ttf", 14, Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::BOTTOM);
     label[2]->setTextColor(Color4B(255, 0, 255, 100));
     label[3] = Label::createWithBMFont("fonts/bitmapFontTest5.fnt", "createWithBMFont\nwith default setColor", TextHAlignment::CENTER, s.width);
     label[3] = Label::createWithTTF("createWithTTF setColor(Color3B::RED)\nwith multiline 1\nand a much more longer multiline 2", "fonts/arial.ttf", 14);
@@ -3296,7 +3296,7 @@ LabelUnderlineStrikethroughMultiline::LabelUnderlineStrikethroughMultiline()
 
     for (int i = 0; i < count; i++)
     {
-        label[i]->setPosition(Vec2(label[i]->getBoundingBox().getMaxX() + 100, s.height * 0.1f * (i + 1)));
+        label[i]->setPosition(Vec2(label[i]->getBoundingBox().getMaxX() + 100, s.height * 0.15f * (i + 1)));
         label[i]->enableUnderline();
         label[i]->enableStrikethrough();
         addChild(label[i]);
@@ -3340,7 +3340,8 @@ std::string LabelUnderlineStrikethroughMultiline::title() const
 
 std::string LabelUnderlineStrikethroughMultiline::subtitle() const
 {
-    return "Underline + Strikethrough + Color on TTF and BMfont with multiline";
+    return "";
+    //Underline + Strikethrough + Color on TTF and BMfont with multiline ";
 }
 
 ///

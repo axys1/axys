@@ -1740,6 +1740,11 @@ void Label::updateContent()
 
     if (_lineDrawNode)
     {
+        Color4B lineColor = Color4B(_displayedColor);
+        if (_textColor != Color4B::WHITE && _textColor != lineColor)
+        {
+            lineColor = _textColor;
+        }
         _lineDrawNode->clear();
 
         if (_numberOfLines)
@@ -1760,7 +1765,7 @@ void Label::updateContent()
                     // Github issue #15214. Uses _displayedColor instead of _textColor for the underline.
                     // This is to have the same behavior of SystemFonts.
                     _lineDrawNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
-                                             Color4F(_displayedColor), charheight / 6);
+                                            Color4F(lineColor), charheight / 6);
                 }
             }
 
@@ -1776,19 +1781,35 @@ void Label::updateContent()
                     // Github issue #15214. Uses _displayedColor instead of _textColor for the underline.
                     // This is to have the same behavior of SystemFonts.
                     _lineDrawNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
-                                             Color4F(_displayedColor), charheight / 6);
+                                            Color4F(lineColor), charheight / 6);
                 }
-
             }
         }
         else if (_textSprite) // ...and is the logic for System fonts
         {
+      //      computeStringNumLines();
             const auto spriteSize = _textSprite->getContentSize();
 
             if (_currentLabelType == LabelType::STRING_TEXTURE)
             {
                 AXLOGD(" LabelType::STRING_TEXTURE: spriteSize: {}", spriteSize.y);
             }
+
+
+            //for (int i = 0; i < _numberOfLines; ++i)
+            //{
+            //    float offsety = 0;
+            //    if (_underlineEnabled)
+            //    {
+            //        // FIXME: Might not work with different vertical alignments
+            //        float y = (_numberOfLines - i - 1) * spriteSize.y + offsety;
+
+            //        // Github issue #15214. Uses _displayedColor instead of _textColor for the underline.
+            //        // This is to have the same behavior of SystemFonts.
+            //        _lineDrawNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
+            //                                Color4F(lineColor), spriteSize.y / 6);
+            //    }
+            //}
 
             if (_underlineEnabled)
             {
@@ -1797,7 +1818,7 @@ void Label::updateContent()
                 // which is POT
   //              y = 0;  // spriteSize.height / 2;
                 // FIXME: Might not work with different vertical alignments
-                _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(_displayedColor),
+                _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(lineColor),
                                         spriteSize.height / 6);
             }
 
@@ -1821,7 +1842,7 @@ void Label::updateContent()
                 default:
                     break;
                 }
-                _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(_displayedColor),
+                _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(lineColor),
                                          spriteSize.height / 6);
             }
 
