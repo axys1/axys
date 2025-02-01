@@ -69,8 +69,6 @@ function(add_module_library name)
     target_compile_options(${name} PUBLIC -fmodules-ts)
   endif ()
 
-  target_compile_definitions(${name} PRIVATE FMT_MODULE)
-
   if (FMT_USE_CMAKE_MODULES)
     target_sources(${name} PUBLIC FILE_SET fmt TYPE CXX_MODULES
                    FILES ${sources})
@@ -295,6 +293,7 @@ function(add_headers VAR)
 endfunction()
 
 # Define the fmt library, its includes and the needed defines.
+set(FMT_HEADERS)
 add_headers(FMT_HEADERS args.h base.h chrono.h color.h compile.h core.h format.h
                         format-inl.h os.h ostream.h printf.h ranges.h std.h
                         xchar.h)
