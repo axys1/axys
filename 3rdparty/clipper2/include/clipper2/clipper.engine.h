@@ -1,25 +1,19 @@
 /*******************************************************************************
 * Author    :  Angus Johnson                                                   *
 * Date      :  17 September 2024                                               *
-* Website   :  http://www.angusj.com                                           *
+* Website   :  https://www.angusj.com                                          *
 * Copyright :  Angus Johnson 2010-2024                                         *
 * Purpose   :  This is the main polygon clipping module                        *
-* License   :  http://www.boost.org/LICENSE_1_0.txt                            *
+* License   :  https://www.boost.org/LICENSE_1_0.txt                           *
 *******************************************************************************/
 
 #ifndef CLIPPER_ENGINE_H
 #define CLIPPER_ENGINE_H
 
-#include <cstdlib>
-#include <stdint.h> //#541
-#include <iostream>
-#include <queue>
-#include <vector>
-#include <functional>
-#include <numeric>
-#include <memory>
-
 #include "clipper2/clipper.core.h"
+#include <queue>
+#include <functional>
+#include <memory>
 
 namespace Clipper2Lib {
 
