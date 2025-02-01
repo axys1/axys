@@ -1742,9 +1742,8 @@ void Label::updateContent()
     {
         Color4B lineColor = Color4B(_displayedColor);
         if (_textColor != Color4B::WHITE && _textColor != lineColor)
-        {
             lineColor = _textColor;
-        }
+
         _lineDrawNode->clear();
 
         if (_numberOfLines)
@@ -1787,39 +1786,31 @@ void Label::updateContent()
         }
         else if (_textSprite) // ...and is the logic for System fonts
         {
-      //      computeStringNumLines();
+            computeStringNumLines();
             const auto spriteSize = _textSprite->getContentSize();
+            float offsety         = spriteSize.height / _numberOfLines;
+            float thickness       = spriteSize.height / 6 / _numberOfLines;
 
-            if (_currentLabelType == LabelType::STRING_TEXTURE)
-            {
-                AXLOGD(" LabelType::STRING_TEXTURE: spriteSize: {}", spriteSize.y);
-            }
+            // FIXME: Might not work with different vertical alignments
 
 
-            //for (int i = 0; i < _numberOfLines; ++i)
-            //{
-            //    float offsety = 0;
-            //    if (_underlineEnabled)
-            //    {
-            //        // FIXME: Might not work with different vertical alignments
-            //        float y = (_numberOfLines - i - 1) * spriteSize.y + offsety;
+            // Github issue #15214. Uses _displayedColor instead of _textColor for the underline.
+            // This is to have the same behavior of SystemFonts.
 
-            //        // Github issue #15214. Uses _displayedColor instead of _textColor for the underline.
-            //        // This is to have the same behavior of SystemFonts.
-            //        _lineDrawNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
-            //                                Color4F(lineColor), spriteSize.y / 6);
-            //    }
-            //}
 
             if (_underlineEnabled)
             {
                 float y = 0;
-                // FIXME: system fonts don't report the height of the font correctly. only the size of the texture,
-                // which is POT
-  //              y = 0;  // spriteSize.height / 2;
+                
+                for (int i = 0; i < _numberOfLines; ++i)
+                {
+                    y = offsety * i;
+                    _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(lineColor), thickness);
+                }
+
+                // FIXME: system fonts don't report the height of the font correctly. only the size of the texture, which is POT
+
                 // FIXME: Might not work with different vertical alignments
-                _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(lineColor),
-                                        spriteSize.height / 6);
             }
 
             if (_strikethroughEnabled)
@@ -1827,7 +1818,7 @@ void Label::updateContent()
                 // FIXME: system fonts don't report the height of the font correctly. only the size of the texture,
                 // which is POT
                 // FIXME: Might not work with different vertical alignments
-                float y = spriteSize.height / 2;       
+                float y = 0;       
                 switch (_vAlignment)
                 {
                 case ax::TextVAlignment::TOP:
@@ -1842,10 +1833,13 @@ void Label::updateContent()
                 default:
                     break;
                 }
-                _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(lineColor),
-                                         spriteSize.height / 6);
+                float _of = spriteSize.height / _numberOfLines / 2;
+                for (int i = 0; i < _numberOfLines; ++i)
+                {
+                    y =  _of + offsety * i;
+                    _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(lineColor), thickness);
+                }
             }
-
         }
     }
 

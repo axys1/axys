@@ -3274,29 +3274,37 @@ LabelUnderlineStrikethroughMultiline::LabelUnderlineStrikethroughMultiline()
 {
     auto s = Director::getInstance()->getWinSize();
 
+    std::string font = "fonts/arial.ttf";
+
     // ttf
-    TTFConfig ttfConfig("fonts/arial.ttf", 14);
+    TTFConfig ttfConfig(font, 14);
     ttfConfig.underline     = true;
     ttfConfig.strikethrough = true;
 
-    const int count = 5;
+    const int count = 7;
     Label* label[count];
 
-    label[0] = Label::createWithSystemFont("createWithSystemFont TextVAlignment::TOP setTextColor(Color4B(0, 0, 255, 100)", "fonts/arial.ttf", 14,Vec2::ZERO,TextHAlignment::LEFT,TextVAlignment::TOP);
+    label[0] = Label::createWithSystemFont("SystemFont TextVAlignment::TOP\nsetTextColor(Color4B(0, 0, 255, 100)", font,
+                                           14, Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::TOP);
     label[0]->setTextColor(Color4B(255, 0, 255, 100));
-    label[1] = Label::createWithSystemFont("createWithSystemFont TextVAlignment::CENTER setTextColor(Color4B(0, 0, 255, 100)", "fonts/arial.ttf", 14, Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
-    label[1]->setTextColor(Color4B(255, 0, 255, 100));
-    label[2] = Label::createWithSystemFont("createWithSystemFont TextVAlignment::BOTTOM\nsetTextColor(Color4B(0, 0, 255, 100)", "fonts/arial.ttf", 14, Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::BOTTOM);
-    label[2]->setTextColor(Color4B(255, 0, 255, 100));
-    label[3] = Label::createWithBMFont("fonts/bitmapFontTest5.fnt", "createWithBMFont\nwith default setColor", TextHAlignment::CENTER, s.width);
-    label[3] = Label::createWithTTF("createWithTTF setColor(Color3B::RED)\nwith multiline 1\nand a much more longer multiline 2", "fonts/arial.ttf", 14);
-    label[4] = Label::createWithTTF( ttfConfig, "createWithTTF setColor(Color3B::RED)\nwith multiline 1\nand a much more longer multiline 2", TextHAlignment::LEFT, s.width);
-    label[4]->setColor(Color3B::RED);
+    label[1] = Label::createWithSystemFont("SystemFont TextVAlignment::CENTER\nsetColor(Color3B::RED)", font, 14,
+                                           Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
+    label[1]->setColor(Color3B::RED);
+    label[2] = Label::createWithSystemFont("SystemFont TextVAlignment::BOTTOM\nsetTextColor(Color4B(255, 0, 0, 100)",
+                                           font, 14, Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::BOTTOM);
+    label[2]->setTextColor(Color4B(0,255, 0, 100));
+    label[3] = Label::createWithBMFont("fonts/bitmapFontTest5.fnt", "BMFont\nwit default setColor", TextHAlignment::CENTER, s.width);
+    label[4] = Label::createWithBMFont("fonts/bitmapFontTest5.fnt", "BMFont\nwit setTextColor(Color4B(0, 255, 0, 100)", TextHAlignment::CENTER, s.width);
+    label[4]->setTextColor(Color4B(0, 255, 0, 100));
+    label[5] = Label::createWithTTF("TTF setColor(Color3B::RED)\nwith multiline 1\nand a much more longer multiline 2",
+                                    font, 14);
+    label[6] = Label::createWithTTF( ttfConfig, "TTF setColor(Color3B::RED)\nwith multiline 1\nand a much more longer multiline 2", TextHAlignment::LEFT, s.width);
+    label[6]->setColor(Color3B::RED);
  
 
     for (int i = 0; i < count; i++)
     {
-        label[i]->setPosition(Vec2(label[i]->getBoundingBox().getMaxX() + 100, s.height * 0.15f * (i + 1)));
+        label[i]->setPosition(Vec2(label[i]->getBoundingBox().getMaxX() + 100, s.height * 0.14f * (i + 1)));
         label[i]->enableUnderline();
         label[i]->enableStrikethrough();
         addChild(label[i]);
