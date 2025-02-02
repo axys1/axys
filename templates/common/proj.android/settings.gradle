@@ -1,8 +1,8 @@
 import java.nio.file.Paths
 
-def embeddedAxmol = false
-if (embeddedAxmol) {
-    System.setProperty("AX_ROOT", "${settingsDir}/../axmol")
+def folder = new File("${settingsDir}/../axmol")
+if (folder.exists()) {
+    System.setProperty("AX_ROOT", folder.path)
 } else {
     System.setProperty("AX_ROOT", "${System.env.AX_ROOT}")
 }
