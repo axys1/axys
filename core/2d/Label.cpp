@@ -1746,7 +1746,7 @@ void Label::updateContent()
 
         _lineDrawNode->clear();
 
-        if (_numberOfLines)
+        if (_numberOfLines && _currentLabelType != LabelType::STRING_TEXTURE)
         {
             // This is the logic for TTF fonts
             const float charheight = (_textDesiredHeight / _numberOfLines);

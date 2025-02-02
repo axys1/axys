@@ -3290,16 +3290,22 @@ LabelUnderlineStrikethroughMultiline::LabelUnderlineStrikethroughMultiline()
     label[1] = Label::createWithSystemFont("SystemFont TextVAlignment::CENTER\nsetColor(Color3B::RED)", font, 14,
                                            Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
     label[1]->setColor(Color3B::RED);
-    label[2] = Label::createWithSystemFont("SystemFont TextVAlignment::BOTTOM\nsetTextColor(Color4B(255, 0, 0, 100)",
+    label[1]->setTextColor(Color4B::YELLOW);
+ 
+    label[2] = Label::createWithSystemFont("SystemFont TextVAlignment::BOTTOM\nsetTextColor(Color4B::YELLOW)",
                                            font, 14, Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::BOTTOM);
-    label[2]->setTextColor(Color4B(0,255, 0, 100));
+
+    label[2]->setColor(Color3B::MAGENTA);
+    label[2]->setTextColor(Color4B::YELLOW);
     label[3] = Label::createWithBMFont("fonts/bitmapFontTest5.fnt", "BMFont\nwit default setColor", TextHAlignment::CENTER, s.width);
     label[4] = Label::createWithBMFont("fonts/bitmapFontTest5.fnt", "BMFont\nwit setTextColor(Color4B(0, 255, 0, 100)", TextHAlignment::CENTER, s.width);
     label[4]->setTextColor(Color4B(0, 255, 0, 100));
     label[5] = Label::createWithTTF("TTF setColor(Color3B::RED)\nwith multiline 1\nand a much more longer multiline 2",
                                     font, 14);
+    label[5]->setColor(Color3B::RED);
     label[6] = Label::createWithTTF( ttfConfig, "TTF setColor(Color3B::RED)\nwith multiline 1\nand a much more longer multiline 2", TextHAlignment::LEFT, s.width);
     label[6]->setColor(Color3B::RED);
+    label[6]->setTextColor(Color4B::YELLOW);
  
 
     for (int i = 0; i < count; i++)
