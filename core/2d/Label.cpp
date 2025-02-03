@@ -26,6 +26,8 @@
  ****************************************************************************/
 
 #include "2d/Label.h"
+#include <algorithm>
+#include <stddef.h>  // offsetof
 #include "base/Types.h"
 #include "2d/Font.h"
 #include "2d/FontAtlasCache.h"

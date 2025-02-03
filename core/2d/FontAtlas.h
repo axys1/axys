@@ -30,16 +30,16 @@
 
 /// @cond DO_NOT_SHOW
 
-//#include <string>
-//#include <unordered_map>
+#include <string>
+#include <unordered_map>
 
-//#include "platform/PlatformMacros.h"
-//#include "base/Object.h"
-//#include "platform/StdC.h"  // ssize_t on windows
-//#include "renderer/Texture2D.h"
+#include "platform/PlatformMacros.h"
+#include "base/Object.h"
+#include "platform/StdC.h"  // ssize_t on windows
+#include "renderer/Texture2D.h"
 
-//#include "base/Map.h"
-//#include "2d/FontFreeType.h"
+#include "base/Map.h"
+#include "2d/FontFreeType.h"
 
 namespace ax
 {
