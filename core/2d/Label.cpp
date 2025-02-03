@@ -1784,22 +1784,20 @@ void Label::updateContent()
             float thickness       = spriteSize.height / 6 / _numberOfLines;
     
             if (_underlineEnabled)
-            {
-                float y = 0;          
+            {       
                 for (int i = 0; i < _numberOfLines; ++i)
                 {
-                    y = offsety * i;
+                    float y = offsety * i;
                     _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(lineColor), thickness);
                 }
             }
 
             if (_strikethroughEnabled)
-            {
-                float y = 0;       
+            {  
                 float _of = spriteSize.height / _numberOfLines / 2;
                 for (int i = 0; i < _numberOfLines; ++i)
                 {
-                    y =  _of + offsety * i;
+                    float y = _of + offsety * i;
                     _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(lineColor), thickness);
                 }
             }
