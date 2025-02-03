@@ -23,8 +23,8 @@
  ****************************************************************************/
 
 #include "LabelTestNew.h"
-//#include "../testResource.h"
-//#include "renderer/Renderer.h"
+#include "../testResource.h"
+#include "renderer/Renderer.h"
 #include "2d/FontAtlasCache.h"
 
 using namespace ax;
@@ -83,7 +83,6 @@ public:
 
 NewLabelTests::NewLabelTests()
 {
-    ADD_TEST_CASE(LabelUnderlineStrikethroughMultiline);
     ADD_TEST_CASE(LabelOutlineAndGlowTest);
     ADD_TEST_CASE(LabelTTFDistanceField);
     ADD_TEST_CASE(LabelIssue1336);
@@ -160,6 +159,7 @@ NewLabelTests::NewLabelTests()
     ADD_TEST_CASE(LabelUnderlineMultiline);
     ADD_TEST_CASE(LabelItalics);
     ADD_TEST_CASE(LabelBold);
+    ADD_TEST_CASE(LabelUnderlineStrikethroughMultiline);
 
     ADD_TEST_CASE(LabelLocalizationTest);
 
