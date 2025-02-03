@@ -3284,36 +3284,46 @@ LabelUnderlineStrikethroughMultiline::LabelUnderlineStrikethroughMultiline()
     const int count = 7;
     Label* label[count];
 
-    label[0] = Label::createWithSystemFont("SystemFont TextVAlignment::TOP\nsetTextColor(Color4B(0, 0, 255, 100))", font,
-                                           14, Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::TOP);
+    label[0] = Label::createWithSystemFont("SystemFont TextVAlignment::TOP\nusing setTextColor(255, 0, 255, 100)", font, 14, Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::TOP);
     label[0]->setTextColor(Color4B(255, 0, 255, 100));
-    label[1] = Label::createWithSystemFont("SystemFont TextVAlignment::CENTER\nsetColor(Color3B::RED)", font, 14,
-                                           Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
-    label[1]->setColor(Color3B::RED);
-    label[1]->setTextColor(Color4B::YELLOW);
- 
-    label[2] = Label::createWithSystemFont("SystemFont TextVAlignment::BOTTOM\nsetTextColor(Color4B::YELLOW)",
-                                           font, 14, Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::BOTTOM);
 
-    label[2]->setColor(Color3B::MAGENTA);
-    label[2]->setTextColor(Color4B::YELLOW);
-    label[3] = Label::createWithBMFont("fonts/bitmapFontTest5.fnt", "BMFont\nwit default setColor", TextHAlignment::CENTER, s.width);
-    label[4] = Label::createWithBMFont("fonts/bitmapFontTest5.fnt", "BMFont\nwit setTextColor(Color4B(0, 255, 0, 100)", TextHAlignment::CENTER, s.width);
-    label[4]->setTextColor(Color4B(0, 255, 0, 100));
-    label[5] = Label::createWithTTF("TTF setColor(Color3B::RED)\nwith multiline 1\nand a much more longer multiline 2",
-                                    font, 14);
-    label[5]->setColor(Color3B::RED);
-    label[6] = Label::createWithTTF( ttfConfig, "TTF setColor(Color3B::RED)\nwith multiline 1\nand a much more longer multiline 2", TextHAlignment::LEFT, s.width);
-    label[6]->setColor(Color3B::RED);
-    label[6]->setTextColor(Color4B::YELLOW);
+    label[1] = Label::createWithSystemFont("SystemFont TextVAlignment::CENTER\nusing setColor(*RED*)", font, 14, Vec2::ZERO, TextHAlignment::RIGHT, TextVAlignment::CENTER);
+    label[1]->setColor(Color3B::RED);
  
+    label[2] = Label::createWithSystemFont("SystemFont TextVAlignment::BOTTOM\nusingsetTextColor(*YELLOW)", font, 14, Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::BOTTOM);
+    label[2]->setTextColor(Color4B::YELLOW);
+
+    label[3] = Label::createWithBMFont("fonts/bitmapFontTest5.fnt", "BMFont\nwith default color", TextHAlignment::CENTER, s.width);
+
+    label[4] = Label::createWithBMFont("fonts/bitmapFontTest5.fnt", "BMFont\nusing setTextColor(0, 255, 0, 100)", TextHAlignment::RIGHT, s.width);
+    label[4]->setTextColor(Color4B(0, 255, 0, 100));
+
+    label[5] = Label::createWithTTF(ttfConfig,  "TTF setColor(*BLUE*)\nwith multiline 1\nand a much more longer multiline 2",
+                                    TextHAlignment::RIGHT, s.width);
+    label[5]->setColor(Color3B::BLUE);
+
+    label[6] = Label::createWithTTF("TTF setTextColor(*RED*)\nwith multiline 1\nand a much more longer multiline 2",
+                                    font, 14);
+    label[6]->setTextColor(Color4B::RED);
 
     for (int i = 0; i < count; i++)
     {
-        label[i]->setPosition(Vec2(label[i]->getBoundingBox().getMaxX() + 100, s.height * 0.14f * (i + 1)));
+        label[i]->setPosition(Vec2(label[i]->getBoundingBox().getMaxX() +10, s.height * 0.13f * (i + 1)));
         label[i]->enableUnderline();
         label[i]->enableStrikethrough();
         addChild(label[i]);
+    }
+
+    Label* labelSize[10];
+    float y = 0;
+    for (int i = 0; i < 10; i++)
+    {
+        float fs     = (i + 1) * 3;
+        labelSize[i] = Label::createWithTTF("UNTERLINE", "fonts/arial.ttf", fs);
+        labelSize[i]->setPosition(s.width / 1.3, s.height -50 - y);
+        y += (i + 2) * 3;
+        labelSize[i]->enableUnderline();
+        addChild(labelSize[i]);
     }
 
     auto menuItemU = MenuItemFont::create("disable/enable underline", [=](ax::Object* sender) {
@@ -3324,6 +3334,13 @@ LabelUnderlineStrikethroughMultiline::LabelUnderlineStrikethroughMultiline()
                 label[i]->disableEffect(LabelEffect::UNDERLINE);
             else
                 label[i]->enableUnderline();
+        }
+        for (int i = 0; i < 10; i++)
+        {
+            if (isEnabled)
+                labelSize[i]->disableEffect(LabelEffect::UNDERLINE);
+            else
+                labelSize[i]->enableUnderline();
         }
         isEnabled = (isEnabled) ? false : true;
     });
@@ -3343,7 +3360,7 @@ LabelUnderlineStrikethroughMultiline::LabelUnderlineStrikethroughMultiline()
     auto menu = Menu::create(menuItemU, menuItemS, NULL);
     addChild(menu);
 
-    menu->setPosition(s.width * 0.8, s.height * 0.25f);
+    menu->setPosition(s.width * 0.8, s.height * 0.20f);
     menu->alignItemsVertically();
 }
 

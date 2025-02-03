@@ -1751,37 +1751,23 @@ void Label::updateContent()
         {
             // This is the logic for TTF fonts
             const float charheight = (_textDesiredHeight / _numberOfLines);
+            float thickness        = charheight / 6;
 
             // atlas font
             for (int i = 0; i < _numberOfLines; ++i)
             {
-                float offsety = 0;
                 if (_strikethroughEnabled)
                 {
-                    offsety += charheight / 2;
-                    // FIXME: Might not work with different vertical alignments
-                    float y = (_numberOfLines - i - 1) * charheight + offsety;
-
-                    // Github issue #15214. Uses _displayedColor instead of _textColor for the underline.
-                    // This is to have the same behavior of SystemFonts.
+                    float y = (_numberOfLines - i - 1) * charheight + charheight / 2;
                     _lineDrawNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
-                                            Color4F(lineColor), charheight / 6);
+                                            Color4F(lineColor), thickness);
                 }
-            }
 
-            // atlas font
-            for (int i = 0; i < _numberOfLines; ++i)
-            {
-                float offsety = 0;
                 if (_underlineEnabled)
                 {
-                    // FIXME: Might not work with different vertical alignments
-                    float y = (_numberOfLines - i - 1) * charheight + offsety;
-
-                    // Github issue #15214. Uses _displayedColor instead of _textColor for the underline.
-                    // This is to have the same behavior of SystemFonts.
+                    float y = (_numberOfLines - i - 1) * charheight;
                     _lineDrawNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
-                                            Color4F(lineColor), charheight / 6);
+                                            Color4F(lineColor), thickness);
                 }
             }
         }
@@ -1789,16 +1775,12 @@ void Label::updateContent()
         {
             computeStringNumLines();
             const auto spriteSize = _textSprite->getContentSize();
+
+            // FIXME: system fonts don't report the height of the font correctly. only the size of the texture, which is POT
+            // FIXME: Might not work with different vertical alignments
             float offsety         = spriteSize.height / _numberOfLines;
             float thickness       = spriteSize.height / 6 / _numberOfLines;
-
-            // FIXME: Might not work with different vertical alignments
-
-
-            // Github issue #15214. Uses _displayedColor instead of _textColor for the underline.
-            // This is to have the same behavior of SystemFonts.
-
-
+    
             if (_underlineEnabled)
             {
                 float y = 0;
@@ -1808,32 +1790,11 @@ void Label::updateContent()
                     y = offsety * i;
                     _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(lineColor), thickness);
                 }
-
-                // FIXME: system fonts don't report the height of the font correctly. only the size of the texture, which is POT
-
-                // FIXME: Might not work with different vertical alignments
             }
 
             if (_strikethroughEnabled)
             {
-                // FIXME: system fonts don't report the height of the font correctly. only the size of the texture,
-                // which is POT
-                // FIXME: Might not work with different vertical alignments
                 float y = 0;       
-                switch (_vAlignment)
-                {
-                case ax::TextVAlignment::TOP:
-                    AXLOGD("TextVAlignment::TOP");
-                    break;
-                case ax::TextVAlignment::CENTER:
-                    AXLOGD("TextVAlignment::CENTER");
-                    break;
-                case ax::TextVAlignment::BOTTOM:
-                    AXLOGD("TextVAlignment::BOTTOM");
-                    break;
-                default:
-                    break;
-                }
                 float _of = spriteSize.height / _numberOfLines / 2;
                 for (int i = 0; i < _numberOfLines; ++i)
                 {
