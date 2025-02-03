@@ -1502,6 +1502,7 @@ void Label::enableUnderline()
     {
         _lineDrawNode = DrawNode::create();
         _lineDrawNode->setGlobalZOrder(getGlobalZOrder());
+        _lineDrawNode->properties.setFactor(_lineDrawNode->properties.getFactor() * 2.0f);
         addChild(_lineDrawNode, 100000);
     }
 }

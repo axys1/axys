@@ -1807,7 +1807,7 @@ void DrawNodeMorphTest_Polygon::update(float dt)
 
    //         static Color4B color3[] = {Color4B::GREEN, Color4B::BLUE, Color4B::RED};
         drawNodeArray[n]->properties.setScale(Vec2(0.5f, 0.5f));
-        drawNodeArray[n]->drawPoly(verticesObjMorph[n], segments, sliderValue[sliderType::Thickness], color[n]);
+        drawNodeArray[n]->drawPolygon(verticesObjMorph[n], segments, sliderValue[sliderType::Thickness], color[n]);
     }
 }
 

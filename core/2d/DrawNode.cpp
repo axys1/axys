@@ -912,8 +912,6 @@ void DrawNode::_drawPolygon(const Vec2* verts,
         float width = thickness / properties.factor;
         if (thickness != 1.0f || properties.drawOrder)
         {
-            thickness *= properties.factor;
-
             for (unsigned int i = 1; i < (count); i++)
             {
                 Vec2 a  = _vertices[i - 1];
@@ -1586,10 +1584,8 @@ void DrawNode::applyTransform(const Vec2* from, Vec2* to, unsigned int count)
 
 void DrawNode::Properties::setDefaultValues()
 {
-
-
     auto fac = Director::getInstance()->getContentScaleFactor();
-    factor   = 2.0f * fac;
+    factor   = fac;
     
     scale     = Vec2(1.0f, 1.0f);
     center    = Vec2(0.0f, 0.0f);

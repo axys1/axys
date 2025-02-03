@@ -3277,14 +3277,14 @@ LabelUnderlineStrikethroughMultiline::LabelUnderlineStrikethroughMultiline()
     std::string font = "fonts/arial.ttf";
 
     // ttf
-    TTFConfig ttfConfig(font, 14);
+    TTFConfig ttfConfig(font, 8);
     ttfConfig.underline     = true;
     ttfConfig.strikethrough = true;
 
     const int count = 7;
     Label* label[count];
 
-    label[0] = Label::createWithSystemFont("SystemFont TextVAlignment::TOP\nsetTextColor(Color4B(0, 0, 255, 100)", font,
+    label[0] = Label::createWithSystemFont("SystemFont TextVAlignment::TOP\nsetTextColor(Color4B(0, 0, 255, 100))", font,
                                            14, Vec2::ZERO, TextHAlignment::LEFT, TextVAlignment::TOP);
     label[0]->setTextColor(Color4B(255, 0, 255, 100));
     label[1] = Label::createWithSystemFont("SystemFont TextVAlignment::CENTER\nsetColor(Color3B::RED)", font, 14,
