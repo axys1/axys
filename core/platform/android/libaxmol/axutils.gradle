@@ -178,11 +178,19 @@ class AxmolUtils {
         return buildProfiles
     }
 
+    private static getEngineRoot() {
+        def axRoot = System.getProperty("AX_ROOT");
+        if (axRoot == null) {
+            axRoot = System.getenv("AX_ROOT");
+        }
+        return axRoot;
+    }
+
     private static Properties loadProfiles(project, isAxmolAppProj) {
         // build.profiles in axmol engine
         def profiles = new Properties()
         try {
-            profiles.load(new File(Paths.get("${System.env.AX_ROOT}/1k/build.profiles").toUri()).newDataInputStream())
+            profiles.load(new File(Paths.get("${getEngineRoot()}/1k/build.profiles").toUri()).newDataInputStream())
         }
         catch(ignored) {
         }
@@ -311,7 +319,7 @@ class AxmolUtils {
             cmakeBinDirs.add(cmakeBinDir)
         }
 
-        cmakeBinDir = joinPath(Paths.get("${System.env.AX_ROOT}").toAbsolutePath().toString(), 'tools', 'external', 'cmake', 'bin')
+        cmakeBinDir = joinPath(Paths.get("${getEngineRoot()}").toAbsolutePath().toString(), 'tools', 'external', 'cmake', 'bin')
         cmakeBinDirs.add(cmakeBinDir)
 
         // find in cmakeBinDirs
@@ -327,7 +335,7 @@ class AxmolUtils {
 
         if (index == (cmakeBinDirs.size() - 1)) {
             // using  cmakeBinDir=axmol/tools/external/cmake/bin
-            buildProfiles['cmakeDir'] = joinPath(Paths.get("${System.env.AX_ROOT}").toAbsolutePath().toString(), 'tools', 'external', 'cmake')
+            buildProfiles['cmakeDir'] = joinPath(Paths.get("${getEngineRoot()}").toAbsolutePath().toString(), 'tools', 'external', 'cmake')
         }
 
         if(foundCMakeVer == null) {

@@ -1,10 +1,10 @@
 /*******************************************************************************
 * Author    :  Angus Johnson                                                   *
 * Date      :  24 January 2025                                                 *
-* Website   :  http://www.angusj.com                                           *
+* Website   :  https://www.angusj.com                                          *
 * Copyright :  Angus Johnson 2010-2025                                         *
 * Purpose   :  This module exports the Clipper2 Library (ie DLL/so)            *
-* License   :  http://www.boost.org/LICENSE_1_0.txt                            *
+* License   :  https://www.boost.org/LICENSE_1_0.txt                           *
 *******************************************************************************/
 
 
@@ -53,7 +53,7 @@ _______________________________________________________________
 CPaths64 and CPathsD:
 These are also arrays of either int64_t or double values that
 contain any number of consecutive CPath structures. However, 
-preceeding the first path is a pair of values. The first value
+preceding the first path is a pair of values. The first value
 contains the length of the entire array structure (A), and the 
 second contains the number (ie count) of contained paths (C).
   Memory allocation for CPaths64 = A * sizeof(int64_t)
@@ -112,12 +112,11 @@ the four vertices that define the two segments that are intersecting.
 #ifndef CLIPPER2_EXPORT_H
 #define CLIPPER2_EXPORT_H
 
-#include <cstdlib>
-#include <vector>
 #include "clipper2/clipper.core.h"
 #include "clipper2/clipper.engine.h"
 #include "clipper2/clipper.offset.h"
 #include "clipper2/clipper.rectclip.h"
+#include <cstdlib>
 
 namespace Clipper2Lib {
 
@@ -392,9 +391,9 @@ static Path<T> ConvertCPathToPathT(T* path)
       T x = *v++, y = *v++;
 #ifdef USINGZ
       z_type z = Reinterpret<z_type>(*v++);
-      result.push_back(Point<T>(x, y, z));
+      result.emplace_back(x, y, z);
 #else  
-      result.push_back(Point<T>(x, y));
+      result.emplace_back(x, y);
 #endif
   }
   return result;
@@ -419,12 +418,12 @@ static Paths<T> ConvertCPathsToPathsT(T* paths)
       T x = *v++, y = *v++;
 #ifdef USINGZ
       z_type z = Reinterpret<z_type>(*v++);
-      path.push_back(Point<T>(x, y, z));
+      path.emplace_back(x, y, z);
 #else
-      path.push_back(Point<T>(x, y));
+      path.emplace_back(x, y);
 #endif
     }
-    result.push_back(path);
+    result.emplace_back(std::move(path));
   }
   return result;
 }
@@ -443,9 +442,9 @@ static Path64 ConvertCPathDToPath64WithScale(const CPathD path, double scale)
         double y = *v++ * scale;
 #ifdef USINGZ
         z_type z = Reinterpret<z_type>(*v++);
-        result.push_back(Point64(x, y, z));
+        result.emplace_back(x, y, z);
 #else  
-        result.push_back(Point64(x, y));
+        result.emplace_back(x, y);
 #endif
     }
     return result;
@@ -471,12 +470,12 @@ static Paths64 ConvertCPathsDToPaths64(const CPathsD paths, double scale)
       double y = *v++ * scale;
 #ifdef USINGZ
       z_type z = Reinterpret<z_type>(*v++);
-      path.push_back(Point64(x, y, z));
+      path.emplace_back(x, y, z);
 #else
-      path.push_back(Point64(x, y));
+      path.emplace_back(x, y);
 #endif
     }
-    result.push_back(path);
+    result.emplace_back(std::move(path));
   }
   return result;
 }
