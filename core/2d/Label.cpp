@@ -1499,7 +1499,6 @@ void Label::enableUnderline()
     }
     _underlineEnabled = true;
     _contentDirty     = true;
-    // remove it, just in case to prevent adding two or more
     if (!_lineDrawNode)
     {
         _lineDrawNode = DrawNode::create();
@@ -1521,6 +1520,7 @@ void Label::enableStrikethrough()
     {
         _lineDrawNode = DrawNode::create();
         _lineDrawNode->setGlobalZOrder(getGlobalZOrder());
+        _lineDrawNode->properties.setFactor(_lineDrawNode->properties.getFactor() * 2.0f);
         addChild(_lineDrawNode, 100000);
     }
 }
