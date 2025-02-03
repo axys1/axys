@@ -3277,7 +3277,7 @@ LabelUnderlineStrikethroughMultiline::LabelUnderlineStrikethroughMultiline()
     std::string font = "fonts/arial.ttf";
 
     // ttf
-    TTFConfig ttfConfig(font, 8);
+    TTFConfig ttfConfig(font, 14);
     ttfConfig.underline     = true;
     ttfConfig.strikethrough = true;
 
