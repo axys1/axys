@@ -1785,8 +1785,7 @@ void Label::updateContent()
     
             if (_underlineEnabled)
             {
-                float y = 0;
-                
+                float y = 0;          
                 for (int i = 0; i < _numberOfLines; ++i)
                 {
                     y = offsety * i;
