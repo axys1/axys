@@ -689,7 +689,7 @@ private:
     AX_DISALLOW_COPY_AND_ASSIGN(DrawNode);
 
 public:
-    class Properties
+    class AX_DLL Properties
     {
     public:
         float factor;  /// thickness scale factor 
