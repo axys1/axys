@@ -689,7 +689,7 @@ private:
     AX_DISALLOW_COPY_AND_ASSIGN(DrawNode);
 
 public:
-    class AX_DLL Properties
+    class Properties
     {
     public:
         float factor;  /// thickness scale factor 
@@ -781,7 +781,17 @@ public:
 
         * @js NA
         */
-        void setDefaultValues();
+        void setDefaultValues()
+        {
+            auto fac = Director::getInstance()->getContentScaleFactor();
+            factor   = fac;
+
+            scale     = Vec2(1.0f, 1.0f);
+            center    = Vec2(0.0f, 0.0f);
+            rotation  = 0.0f;
+            position  = Vec2(0.0f, 0.0f);
+            drawOrder = false;
+        };
         float getFactor() { return factor; };
         void setFactor(float fac) { factor = fac; };
 
