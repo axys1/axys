@@ -167,6 +167,7 @@ public:
                          int bitsPerComponent,
                          bool preMulti = false);
 
+    // only RGBA8888 supported
     void flipRawData();
     
     // Getters

@@ -750,6 +750,8 @@ bool Image::initWithRawData(const uint8_t* data,
 
 void Image::flipRawData()
 {
+    // only RGBA8888 supported
+    
     uint8_t temp;
     int idx1, idx2;
 
