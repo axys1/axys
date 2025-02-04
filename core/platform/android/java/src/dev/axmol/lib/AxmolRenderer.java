@@ -132,7 +132,6 @@ public class AxmolRenderer implements GLSurfaceView.Renderer {
     private static native void nativeOnSurfaceChanged(final int width, final int height);
     private static native void nativeOnPause();
     private static native void nativeOnResume();
-    private static native void nativeOnColdStart();
 
     public void handleActionDown(final int id, final float x, final float y) {
         AxmolRenderer.nativeTouchesBegin(id, x, y);
