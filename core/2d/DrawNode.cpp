@@ -1063,7 +1063,7 @@ void DrawNode::_drawSegment(const Vec2& from,
         Vec2 vertices[2] = {from, to};
         applyTransform(vertices, vertices, 2);
 
-        float width = thickness / properties.factor;
+        float width = thickness / (2 * properties.factor);
 
         Vec2 a  = vertices[0];
         Vec2 b  = vertices[1];
