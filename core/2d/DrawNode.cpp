@@ -1582,6 +1582,18 @@ void DrawNode::applyTransform(const Vec2* from, Vec2* to, unsigned int count)
     }
 }
 
+void DrawNode::Properties::setDefaultValues()
+{
+    auto fac = Director::getInstance()->getContentScaleFactor();
+    factor   = fac;
+    
+    scale     = Vec2(1.0f, 1.0f);
+    center    = Vec2(0.0f, 0.0f);
+    rotation  = 0.0f;
+    position  = Vec2(0.0f, 0.0f);
+    drawOrder = false;
+};
+
 #if defined(_WIN32)
 #    pragma pop_macro("TRANSPARENT")
 #endif
