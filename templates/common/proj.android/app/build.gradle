@@ -72,6 +72,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFile file(project(':libaxmol').projectDir.toString() + '/proguard-rules.pro')
             if (project.hasProperty("KEY_STORE_FILE")) {
                 signingConfig signingConfigs.release
             }

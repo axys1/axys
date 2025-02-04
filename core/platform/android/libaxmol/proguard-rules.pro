@@ -16,7 +16,6 @@
 #   public *;
 #}
 
--dontobfuscate
-
 -keep public class dev.axmol.lib.**
 -keepclassmembers public class dev.axmol.lib.** { *; }
+-dontwarn dev.axmol.**

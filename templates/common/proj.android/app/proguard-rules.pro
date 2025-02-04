@@ -16,14 +16,6 @@
 #   public *;
 #}
 
-# Proguard Axmol for release
--keep public class dev.axmol.** { *; }
--dontwarn dev.axmol.**
-
-# Proguard Apache HTTP for release
--keep class org.apache.http.** { *; }
--dontwarn org.apache.http.**
-
 # Proguard Android Webivew for release. uncomment if you are using a webview in axmol
 #-keep public class android.net.http.SslError
 #-keep public class android.webkit.WebViewClient
