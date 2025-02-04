@@ -1,9 +1,10 @@
 apply plugin: 'com.android.library'
-apply from: 'axutils.gradle'
+apply from: 'axmol.gradle'
+
+def buildProfiles = AxmolUtils.resolveBasicBuildProfiles(project)
 
 android {
     namespace "dev.axmol.lib"
-    def buildProfiles = AxmolUtils.resolveBasicBuildProfiles(project)
     def targetSdk = buildProfiles['targetSdk']
     def minSdk = buildProfiles['minSdk']
     compileSdk targetSdk.toInteger()
@@ -35,11 +36,14 @@ android {
 dependencies {
     implementation fileTree(dir: '../java/libs', include: ['*.jar'])
 
-    def media3_version = "1.2.1"
+    def media3_ver = buildProfiles['media3']
+    def annotation_ver = buildProfiles['annotation']
+    def appcompat_ver = buildProfiles['appcompat']
+    def guava_ver = buildProfiles['guava']
 
     // refer to: https://developer.android.com/jetpack/androidx/releases/media3?hl=zh-cn#declaring_dependencies
     // For media playback using ExoPlayer
-    api "androidx.media3:media3-exoplayer:$media3_version"
+    api "androidx.media3:media3-exoplayer:$media3_ver"
 
     // For DASH playback support with ExoPlayer
     //api "androidx.media3:media3-exoplayer-dash:$media3_version"
@@ -50,9 +54,9 @@ dependencies {
     // For ad insertion using the Interactive Media Ads SDK with ExoPlayer
     //api "androidx.media3:media3-exoplayer-ima:$media3_version"
 
-    implementation 'androidx.annotation:annotation:1.7.1'
+    implementation "androidx.annotation:annotation:$annotation_ver"
 
-    api ('com.google.guava:guava:31.0.1-android') {
+    api ("com.google.guava:guava:$guava_ver-android") {
         // Exclude dependencies that are only used by Guava at compile time
         // (but declared as runtime deps) [internal b/168188131].
         exclude group: 'com.google.code.findbugs', module: 'jsr305'

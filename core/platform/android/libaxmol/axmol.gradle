@@ -1,0 +1,473 @@
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.util.regex.Pattern
+import java.util.stream.Stream
+
+class VersionComparator implements Comparator<String> {
+
+    static private final List<String> SNAPSHOT_SUFFIXES = ["-SNAPSHOT", ".BUILD-SNAPSHOT"].asImmutable()
+
+    int compare(String o1, String o2) {
+        int result = 0
+        if (o1 == '*') {
+            result = 1
+        }
+        else if (o2 == '*') {
+            result = -1
+        }
+        else {
+            def nums1
+            try {
+                def tokens = deSnapshot(o1).split(/\./)
+                tokens = tokens.findAll { String it -> it.trim() ==~ /\d+/ }
+                nums1 = tokens*.toInteger()
+            }
+            catch (NumberFormatException e) {
+                throw new Exception("Cannot compare versions, left side [$o1] is invalid: ${e.message}")
+            }
+            def nums2
+            try {
+                def tokens = deSnapshot(o2).split(/\./)
+                tokens = tokens.findAll { String it -> it.trim() ==~ /\d+/ }
+                nums2 = tokens*.toInteger()
+            }
+            catch (NumberFormatException e) {
+                throw new Exception("Cannot compare versions, right side [$o2] is invalid: ${e.message}")
+            }
+            boolean bigRight = nums2.size() > nums1.size()
+            boolean bigLeft = nums1.size() > nums2.size()
+            for (int i in 0..<nums1.size()) {
+                if (nums2.size() > i) {
+                    result = nums1[i].compareTo(nums2[i])
+                    if (result != 0) {
+                        break
+                    }
+                    if (i == (nums1.size()-1) && bigRight) {
+                        if (nums2[i+1] != 0)
+                            result = -1; break
+                    }
+                }
+                else if (bigLeft) {
+                    if (nums1[i] != 0)
+                        result = 1; break
+                }
+            }
+        }
+
+        if (result == 0) {
+            // Versions are equal, but one may be a snapshot.
+            // A snapshot version is considered less than a non snapshot version
+            def o1IsSnapshot = isSnapshot(o1)
+            def o2IsSnapshot = isSnapshot(o2)
+
+            if (o1IsSnapshot && !o2IsSnapshot) {
+                result = -1
+            } else if (!o1IsSnapshot && o2IsSnapshot) {
+                result = 1
+            }
+        }
+
+        result
+    }
+
+    boolean equals(obj) { false }
+
+    /**
+     * Removes any suffixes that indicate that the version is a kind of snapshot
+     */
+    protected String deSnapshot(String version) {
+        String suffix = SNAPSHOT_SUFFIXES.find { String it -> version?.endsWith(it) }
+        if (suffix) {
+            return version[0..-(suffix.size() + 1)]
+        } else {
+            return version
+        }
+    }
+
+    protected boolean isSnapshot(String version) {
+        SNAPSHOT_SUFFIXES.any { String it -> version?.endsWith(it) }
+    }
+}
+
+class AxmolUtils {
+
+//    @SuppressWarnings('unused')
+//    static String getCoreLibsDir(project) {
+//        return new File(project.projectDir.toString() + "/../java/libs").getCanonicalPath();
+//    }
+
+    @SuppressWarnings('unused')
+    static Map<String, String> resolveBuildProfiles(project) {
+        def profiles = loadProfiles(project, true)
+        def buildProfiles = resolveBasicBuildProfiles(project, profiles)
+
+        def cmakeVer = translateVer(profiles['cmake'])
+        def ndkVer = translateNdkVer(profiles['ndk'])
+
+        // cmakeVer should overwrite by command line
+        if (project.properties.__1K_CMAKE_VERSION != null)
+            cmakeVer = project.properties.__1K_CMAKE_VERSION
+
+        // Detecting sdkRoot
+        def sdkRoot = null
+        Properties localProps = new Properties()
+        try {
+            localProps.load(project.rootProject.file("local.properties").newDataInputStream())
+            sdkRoot = localProps.getProperty("sdk.dir")
+            println("Using sdk.dir=$sdkRoot from local.properties")
+        }
+        catch(ignored) {
+        }
+
+        if (sdkRoot == null || !new File(sdkRoot).isDirectory()) {
+            sdkRoot = Paths.get("${System.env.ANDROID_HOME}").toAbsolutePath().toString()
+            if (!new File(sdkRoot).isDirectory())
+                sdkRoot = null
+        }
+
+        if (sdkRoot == null) {
+            sdkRoot = Paths.get("${System.env.HOME}").toAbsolutePath().toString() + "/Library/android/sdk"
+            if (!new File(sdkRoot).isDirectory())
+                sdkRoot = null
+        }
+
+        if (sdkRoot == null) {
+            throw new Exception('Couldn\'t find android sdk. Specify path in local.properties or system env ANDROID_HOME')
+        }
+
+        // ndkVer,ndkPath,cmakeVer,cmakeOptions(AX_USE_XXX, AX_ENABLE_XXX, AX_ENABLE_EXT_XXX),cmakeDir<nullable>
+        // def rets = new ArrayList(5) //
+        findNDK(sdkRoot, ndkVer, buildProfiles)
+        findCMake(sdkRoot, cmakeVer, buildProfiles)
+        parseCMakeOptions(project, buildProfiles)
+        def cmakeDir = buildProfiles['cmakeDir']
+        if (cmakeDir != null) {
+            def symlinkDir = joinPath(sdkRoot, 'cmake', buildProfiles['cmakeVer'])
+            def symlinkDirFile = new File(symlinkDir)
+            if (!symlinkDirFile.exists()) {
+                println "Creating symlinkd ${symlinkDir} ==> ${cmakeDir} ..."
+                Files.createSymbolicLink(symlinkDirFile.toPath(), new File(cmakeDir).toPath())
+            } else {
+                println "The symlinkd ${symlinkDir} ==> ${cmakeDir} exist"
+            }
+        }
+
+        // dump build profiles
+        println("---------- :${project.rootProject.name} build profiles ----------")
+
+        buildProfiles.each { key, value ->
+            println("${key}=${value}")
+        }
+
+        println("========== :${project.rootProject.name} build profiles ==========")
+
+        return buildProfiles
+    }
+
+    static Map<String, String> resolveBasicBuildProfiles(project, profiles = null) {
+        def buildProfiles = [:]
+
+        if (profiles == null) {
+            profiles = loadProfiles(project, false)
+        }
+
+        buildProfiles['minSdk'] = profiles['min_sdk']
+        buildProfiles['targetSdk'] = profiles['target_sdk']
+        buildProfiles['packageName'] = profiles['package_name']
+        buildProfiles['appcompat'] = '1.7.0'
+        buildProfiles['media3'] = '1.2.1'
+        buildProfiles['annotation'] = '1.9.1'
+        buildProfiles['guava'] = '33.3.1'
+
+        return buildProfiles
+    }
+
+    private static getEngineRoot() {
+        def axRoot = System.getProperty("AX_ROOT");
+        if (axRoot == null) {
+            axRoot = System.getenv("AX_ROOT");
+        }
+        return axRoot;
+    }
+
+    private static Properties loadProfiles(project, isAxmolAppProj) {
+        // build.profiles in axmol engine
+        def profiles = new Properties()
+        try {
+            profiles.load(new File(Paths.get("${getEngineRoot()}/1k/build.profiles").toUri()).newDataInputStream())
+        }
+        catch(ignored) {
+        }
+
+        if(isAxmolAppProj) {
+            // .axproj
+            Properties axprojProfiles = new Properties()
+            def axprojFile = joinPath(project.projectDir.absolutePath, "../../.axproj")
+            try {
+                axprojProfiles.load(new File(axprojFile).newDataInputStream())
+                axprojProfiles.each { key, value ->
+                    profiles[key] = value
+                }
+            }
+            catch (Exception ex) {
+                ex.printStackTrace()
+                throw new Exception("Missing axmol project file: $axprojFile")
+            }
+        }
+
+        return profiles
+    }
+
+    private static String translateNdkVer(ndkVer) {
+        def ndkMajor = ndkVer.replaceAll('[^0-9]', '')
+        def ndkMinorOff = ndkMajor.length() + 1
+
+        def ndkMinorBase = 'a'.'charAt'(0)
+        def ndkMinor = ndkMinorOff < ndkVer.length() ?
+            (ndkVer[ndkMinorOff].toCharacter().toString().'charAt'(0) - ndkMinorBase) :
+            '0'
+
+        return "${ndkMajor}.${ndkMinor}"
+    }
+
+    private static String translateVer(ver) {
+        def ver_arr = ver.split('~')
+        if (ver_arr.length == 1) {
+            return ver_arr[0]
+        }
+        return ver_arr[1].endsWith('+') ? "${ver_arr[0]}+" : ver_arr[0]
+    }
+
+    /**
+     * Find suitable ndk for current project
+     * @param project The current android project
+     * @param ndkVer The required ndk version for current project
+     * @param buildProfiles
+     */
+    private static void findNDK(sdkRoot, ndkVer, buildProfiles) {
+        if (ndkVer.endsWith('+')) {
+            ndkVer = ndkVer.substring(0, ndkVer.length() - 1)
+        }
+
+        def verList = []
+        File dir = new File("${sdkRoot}${File.separator}ndk")
+        if (dir.isDirectory()) {
+            for (ndkDir in dir.listFiles()) {
+                verList.add(ndkDir.getName())
+            }
+        }
+
+        verList.sort {a,b ->
+            return compareVersion(b, a)
+        }
+
+        def ndkDirs = []
+
+        // Collect ndkDirs for search
+        for(ver in verList){
+            if (ver.startsWith('.')) continue
+            ndkDirs.add("${sdkRoot}${File.separator}ndk${File.separator}${ver}")
+        }
+
+        /* Find suitable ndk in dirs */
+        for (ndkDir in ndkDirs) {
+            if (findNDKInDir(ndkVer, ndkDir, buildProfiles)) {
+                return
+            }
+        }
+
+        throw new Exception("No installed ndk found, required $ndkVer.*")
+    }
+
+    /**
+     * Find suitable cmake for current project
+     * @param project The current android project
+     * @param cmakeVer The required cmake version of project
+     * @param buildProfiles
+     */
+    private static void findCMake(sdkRoot, String cmakeVer, buildProfiles) {
+        def allowNewerCMake = false
+        if(cmakeVer.endsWith('+')) {
+            allowNewerCMake = true
+            cmakeVer = cmakeVer.substring(0, cmakeVer.length() - 1)
+        }
+
+
+        def cmakeBinDirs = []
+        def verList = []
+
+        // Scan installed cmake in $sdk_root/cmake
+        File sdkCMakeDir = new File("${sdkRoot}${File.separator}cmake")
+        if (sdkCMakeDir.isDirectory()) {
+            for (cmakeDir in sdkCMakeDir.listFiles()) {
+                verList.add(cmakeDir.getName())
+            }
+        }
+
+        // Sort cmake verList
+        verList.sort {a,b ->
+            return compareVersion(b, a)
+        }
+
+        // Collect cmakeBinDirs for search
+        for(ver in verList){
+            if (ver.startsWith('.')) continue
+            def cmakeBinDir = joinPath(sdkRoot, "cmake", ver, "bin")
+            if(new File(cmakeBinDir).isDirectory()) {
+                cmakeBinDirs.add(cmakeBinDir)
+            }
+        }
+
+        def cmakeBinDir = getCMakeBinFromPath()
+        if(cmakeBinDir != null) {
+            cmakeBinDirs.add(cmakeBinDir)
+        }
+
+        cmakeBinDir = joinPath(Paths.get("${getEngineRoot()}").toAbsolutePath().toString(), 'tools', 'external', 'cmake', 'bin')
+        cmakeBinDirs.add(cmakeBinDir)
+
+        // find in cmakeBinDirs
+        def foundCMakeVer = null
+        def index = 0
+        for(item in cmakeBinDirs) {
+            foundCMakeVer = findCMakeFromBinDir(cmakeVer, item, allowNewerCMake)
+            if(foundCMakeVer != null) {
+                break
+            }
+            ++index
+        }
+
+        if (index == (cmakeBinDirs.size() - 1)) {
+            // using  cmakeBinDir=axmol/tools/external/cmake/bin
+            buildProfiles['cmakeDir'] = joinPath(Paths.get("${getEngineRoot()}").toAbsolutePath().toString(), 'tools', 'external', 'cmake')
+        }
+
+        if(foundCMakeVer == null) {
+            println("No suitable cmake found, required $cmakeVer, the gradle will install it")
+            foundCMakeVer = cmakeVer
+        }
+
+        buildProfiles['cmakeVer'] = foundCMakeVer
+    }
+
+    private static String joinPath(String first, String... more) {
+        return Paths.get(first, more).toString()
+    }
+
+    private static void parseCMakeOptions(project, buildProfiles) {
+        def options = []
+        for(item in project.properties) {
+            if (item.key.startsWith('_1K_')) {
+                options.add("\"-D${item.key.substring(4)}=${item.value}\"")
+            }
+        }
+        def androidProjDir = project.projectDir.toString().replaceAll("\\\\", "/");
+        options.add('"-DCMAKE_FIND_ROOT_PATH="')
+        options.add('"-DANDROID_STL=c++_shared"')
+        options.add('"-DANDROID_TOOLCHAIN=clang"')
+        options.add('"-DANDROID_ARM_NEON=TRUE"')
+        options.add('"-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"')
+        options.add("\"-D_AX_ANDROID_PROJECT_DIR=${androidProjDir}\"")
+        buildProfiles['cmakeOptions'] = options.toString()
+    }
+
+    private static int compareVersion(String ver1, String ver2) {
+        return new VersionComparator().compare(ver1, ver2)
+    }
+
+    private static boolean findNDKInDir(ndkVer, ndkDir, buildProfiles) {
+        def sourceProps = new Properties()
+        File propertiesFile = new File("$ndkDir${File.separator}source.properties")
+        try {
+            propertiesFile.withInputStream {sourceProps.load(it) }
+            def foundNdkVer = sourceProps['Pkg.Revision']
+            if (foundNdkVer.startsWith(ndkVer)) {
+                println("Using found ndk (revision=$foundNdkVer,path=$ndkDir), require=$ndkVer")
+                buildProfiles['ndkVer'] = foundNdkVer
+                buildProfiles['ndkPath'] = ndkDir
+                return true
+            }
+        } catch (ignored) {
+        }
+        return false
+    }
+
+    private static String findCMakeFromBinDir(String cmakeVer, String cmakeBin, boolean allowNewerCMake) {
+        def foundCMakeVer = null
+
+        String ninjaPath = cmakeBin + File.separator + getNinjaProgramName()
+        if(!new File(ninjaPath).isFile()) {
+            println("The required ninja program is not present in cmake bin dir: '$cmakeBin', skipped")
+            return null
+        }
+
+        try {
+            def programPath = cmakeBin + File.separator + getCMakeProgramName()
+            Process proc = isWindows() ? Runtime.getRuntime().exec("\"$programPath\" --version") : Runtime.getRuntime().exec("$programPath --version")
+            proc.waitFor()
+            int exitVal = proc.exitValue()
+            if (exitVal == 0) {
+                InputStream stdIn = proc.getInputStream();
+                InputStreamReader isr = new InputStreamReader(stdIn)
+                BufferedReader br = new BufferedReader(isr)
+                String verLine = br.readLine()
+                def verInfo = verLine.split("\\s")
+                if (verInfo.length >= 3) {
+                    def foundVer = verInfo[2]
+                    def minusIdx = foundVer.indexOf('-')
+                    def canonVer = minusIdx == -1 ? foundVer : foundVer.substring(0, minusIdx)
+                    def ret = compareVersion(canonVer, cmakeVer)
+                    if (ret == 0) {
+                        println("Using found cmake ($canonVer,path=$programPath)")
+                        foundCMakeVer = canonVer
+                    }
+                    else if(ret > 0) {
+                        if(allowNewerCMake) {
+                            println("Using found newer cmake (version=$canonVer,path=$programPath), (minimum required is: ${cmakeVer})")
+                            foundCMakeVer = canonVer
+                        }
+                        else {
+                            println("The cmake ${cmakeVer} is required, but $canonVer found!")
+                        }
+                    }
+                }
+            }
+        }
+        catch(Exception ex) {
+            println("Execute cmake failed: " + ex.message)
+        }
+
+        return foundCMakeVer
+    }
+
+    private static String getCMakeBinFromPath() {
+        String cmakeExecName = getCMakeProgramName()
+        def foundBinPath = null
+        Stream.of(System.getenv("PATH").split(Pattern.quote(File.pathSeparator)))
+                .map(Paths::get)
+                .anyMatch(path -> {
+                    def programPath = path.resolve(cmakeExecName)
+                    boolean fileExist = Files.exists(path.resolve(cmakeExecName))
+                    if(fileExist) {
+                        foundBinPath = path.toAbsolutePath().toString()
+                    }
+                    return fileExist
+                })
+
+        return foundBinPath
+    }
+
+    private static String getCMakeProgramName() {
+        return isWindows() ? "cmake.exe" : "cmake"
+    }
+
+    private static String getNinjaProgramName() {
+        return isWindows() ? "ninja.exe" : "ninja"
+    }
+
+    private static boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase().contains("windows")
+    }
+}
+
+ext.AxmolUtils = AxmolUtils
