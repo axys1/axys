@@ -837,41 +837,6 @@ bool ZipFile::getFileData(std::string_view fileName, ResizableBuffer* buffer)
     return res;
 }
 
-unsigned char *ZipFile::getFileData(std::string_view fileName, ssize_t *size)
-{
-    unsigned char * buffer = nullptr;
-    if (size)
-        *size = 0;
-    do
-    {
-        AX_BREAK_IF(!_data->zipFile);
-        AX_BREAK_IF(fileName.empty());
-        
-        ZipFilePrivate::FileListContainer::const_iterator it = _data->fileList.find(fileName);
-        AX_BREAK_IF(it ==  _data->fileList.end());
-        
-        ZipEntryInfo fileInfo = it->second;
-        
-        int nRet = unzGoToFilePos(_data->zipFile, &fileInfo.pos);
-        AX_BREAK_IF(UNZ_OK != nRet);
-        
-        nRet = unzOpenCurrentFile(_data->zipFile);
-        AX_BREAK_IF(UNZ_OK != nRet);
-        
-        buffer = (unsigned char*)malloc(fileInfo.uncompressed_size);
-        int AX_UNUSED nSize = unzReadCurrentFile(_data->zipFile, buffer, static_cast<unsigned int>(fileInfo.uncompressed_size));
-        AXASSERT(nSize == 0 || nSize == (int)fileInfo.uncompressed_size, "the file size is wrong");
-        
-        if (size)
-        {
-            *size = fileInfo.uncompressed_size;
-        }
-        unzCloseCurrentFile(_data->zipFile);
-    } while (0);
-    
-    return buffer;
-}
-
 std::string ZipFile::getFirstFilename()
 {
     if (unzGoToFirstFile(_data->zipFile) != UNZ_OK)
