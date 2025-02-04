@@ -121,7 +121,7 @@ Using a PowerShell console window (command `pwsh`), go to `axmol\tests\<testdir 
 ### Windows (Visual Studio 2022)
 
   1. Install [CMake 3.27.4+](https://cmake.org/download/).
-  2. Install Visual Studio 2022 (VS 2019 should be supported, but VS 2022 is recommended).
+  2. Install Visual Studio 2022.
   3. Create a new project as shown [here](#creating-a-new-project).
   4. In a console window, navigate into the root directory of the project you created in the previous step.
   5. Generate the relevant Visual Studio project using the cmake command:
