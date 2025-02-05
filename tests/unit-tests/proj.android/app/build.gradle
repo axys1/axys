@@ -1,9 +1,10 @@
 apply plugin: 'com.android.application'
-apply from: project(':libaxmol').projectDir.toString() + "/axutils.gradle"
+apply from: project(':libaxmol').projectDir.toString() + "/axmol.gradle"
 
-android {
-    // Resolve build profiles
-    def buildProfiles = AxmolUtils.resolveBuildProfiles(project)
+// Resolve build profiles
+def buildProfiles = AxmolUtils.resolveBuildProfiles(project)
+
+android {    
     def packageName = buildProfiles['packageName']
     def cmakeVer = buildProfiles['cmakeVer']
     def cmakeOptions = Eval.me(buildProfiles['cmakeOptions'])
@@ -114,6 +115,9 @@ android.applicationVariants.configureEach { variant ->
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':libaxmol')
+
+    def appcompat_ver = buildProfiles['appcompat']
+    implementation "androidx.appcompat:appcompat:$appcompat_ver"
 }
 
 project.afterEvaluate {
