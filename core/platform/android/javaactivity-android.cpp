@@ -107,7 +107,7 @@ JNIEXPORT void JNICALL Java_dev_axmol_lib_AxmolRenderer_nativeInit(JNIEnv*, jcla
     }
 }
 
-JNIEXPORT void JNICALL Java_dev_axmol_lib_AxmolRenderer_nativeOnContextLost(JNIEnv*, jclass, jboolean isColdStart)
+JNIEXPORT void JNICALL Java_dev_axmol_lib_AxmolRenderer_nativeOnContextLost(JNIEnv*, jclass, jboolean isWarmStart)
 {
 #if AX_ENABLE_RESTART_APPLICATION_ON_CONTEXT_LOST
     auto director = ax::Director::getInstance();
@@ -123,11 +123,11 @@ JNIEXPORT void JNICALL Java_dev_axmol_lib_AxmolRenderer_nativeOnContextLost(JNIE
     JniHelper::callStaticVoidMethod("dev/axmol/lib/AxmolEngine", "restartProcess");
 #endif
 
-    if(isColdStart)
+    if(isWarmStart)
     {
         auto director = ax::Director::getInstance();
-        ax::EventCustom coldStartEvent(EVENT_APP_COLD_START);
-        director->getEventDispatcher()->dispatchEvent(&coldStartEvent, true);
+        ax::EventCustom warmStartEvent(EVENT_APP_WARM_START);
+        director->getEventDispatcher()->dispatchEvent(&warmStartEvent, true);
     }
 }
 

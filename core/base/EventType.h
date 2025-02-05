@@ -52,10 +52,10 @@
 // This message is posted in core/platform/android/javaactivity.cpp
 #define EVENT_APP_RESTARTING "event_app_restarting"
 
-// The application has restarted after cold start.
-// This message is used for notifying application code of a cold restart.
+// The application has made a warm start, creating a new Activity, Surface View and Renderer
+// This message is used for notifying application code of a warm start.
 // This message is posted in core/platform/android/javaactivity.cpp
-#define EVENT_APP_COLD_START "event_app_cold_start"
+#define EVENT_APP_WARM_START "event_app_warm_start"
 
 
 /// @endcond

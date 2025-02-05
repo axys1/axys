@@ -77,12 +77,12 @@ public class AxmolRenderer implements GLSurfaceView.Renderer {
         AxmolRenderer.nativeInit(this.mScreenWidth, this.mScreenHeight);
         this.mLastTickInNanoSeconds = System.nanoTime();
 
-        boolean isColdStart = mNativeInitCompleted;
+        boolean isWarmStart = !mNativeInitCompleted;
         mNativeInitCompleted = true;
 
         if (gNativeInitialized) {
             // This must be from an OpenGL context loss
-            nativeOnContextLost(isColdStart);
+            nativeOnContextLost(isWarmStart);
         } else {
             gNativeInitialized = true;
         }
@@ -128,7 +128,7 @@ public class AxmolRenderer implements GLSurfaceView.Renderer {
     private static native boolean nativeKeyEvent(final int keyCode,boolean isPressed);
     private static native void nativeRender();
     private static native void nativeInit(final int width, final int height);
-    private static native void nativeOnContextLost(final boolean isColdStart);
+    private static native void nativeOnContextLost(final boolean isWarmStart);
     private static native void nativeOnSurfaceChanged(final int width, final int height);
     private static native void nativeOnPause();
     private static native void nativeOnResume();
