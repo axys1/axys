@@ -31,7 +31,6 @@
 #    include <assert.h>
 #    include "yasio/string_view.hpp"
 #    include "yasio/endian_portable.hpp"
-#    include "yasio/sz.hpp"
 
 #if TARGET_OS_IPHONE
 #    import <UIKit/UIKit.h>
@@ -361,8 +360,20 @@ void AvfMediaEngine::onStatusNotification(void* context)
         }
     }
 
-    if (_bAutoPlay)
-        this->play();
+    if (_bAutoPlay) {
+        // fix issue: #2371
+        // tvOS: we need delay on frame to invoke play even through invoking from KOV playerItem.status==AVPlayerItemStatusReadyToPlay
+        // otherwise, the player.timeControlStatus will be AVPlayerTimeControlStatusPaused until invoke [player play] at next frame
+        __weak AVPlayer* player = _player;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (player != nil)
+                [player play];
+        });
+        
+        _playbackEnded = false;
+        _state = MEMediaState::Playing;
+        fireMediaEvent(MEMediaEventType::Playing);
+    }
 }
 
 bool AvfMediaEngine::transferVideoFrame()

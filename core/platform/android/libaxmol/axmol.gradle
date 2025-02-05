@@ -174,10 +174,10 @@ class AxmolUtils {
         buildProfiles['minSdk'] = profiles['min_sdk']
         buildProfiles['targetSdk'] = profiles['target_sdk']
         buildProfiles['packageName'] = profiles['package_name']
-        buildProfiles['appcompat'] = '1.7.0'
-        buildProfiles['media3'] = '1.2.1'
-        buildProfiles['annotation'] = '1.9.1'
-        buildProfiles['guava'] = '33.3.1'
+        buildProfiles['appcompat'] = profiles['appcompat']
+        buildProfiles['media3'] = profiles['media3']
+        buildProfiles['annotation'] = profiles['annotation']
+        buildProfiles['guava'] = profiles['guava']
 
         return buildProfiles
     }

@@ -265,6 +265,10 @@ list(APPEND _AX_SRC ${_AX_HEADER})
 
 add_library(${_AX_CORE_LIB} ${_AX_SRC})
 
+if(APPLE)
+    set_xcode_property(${_AX_CORE_LIB} CLANG_ENABLE_OBJC_WEAK "YES")
+endif()
+
 if(WASM)
   if(${EMSCRIPTEN_VERSION} VERSION_GREATER_EQUAL "3.1.51")
       target_link_options(${_AX_CORE_LIB} PUBLIC -sGL_ENABLE_GET_PROC_ADDRESS)
