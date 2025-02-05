@@ -15,7 +15,7 @@ elseif major >= 5 and minor >= 2 then
         bit = require('bit32')
     else
         -- note: Lua 5.4+ bit op is 64bit integer
-        bit = require('bitop')
+        bit = require('axmol.core.bitop')
     end
     package.loaded['bit'] = bit
 else -- fallback to pure lua implementation, slowest
