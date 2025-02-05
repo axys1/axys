@@ -751,6 +751,11 @@ bool Image::initWithRawData(const uint8_t* data,
 void Image::flipRawData()
 {
     AXASSERT(_pixelFormat == backend::PixelFormat::RGBA8, "only RGBA8888 can be flipped");
+    if (_pixelFormat != backend::PixelFormat::RGBA8)
+    {
+        AXLOGE("Cannot flip image. Unsupported pixel format.");
+        return;
+    }
 
     uint8_t temp;
     int idx1, idx2;
