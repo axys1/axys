@@ -750,12 +750,8 @@ bool Image::initWithRawData(const uint8_t* data,
 
 void Image::flipRawData()
 {
-    // only RGBA8888 supported
-    if (_pixelFormat != backend::PixelFormat::RGBA8)
-    {
-        return;
-    }
-    
+    AXASSERT(_pixelFormat == backend::PixelFormat::RGBA8, "only RGBA8888 can be flipped");
+
     uint8_t temp;
     int idx1, idx2;
 
