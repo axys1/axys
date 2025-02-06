@@ -49,7 +49,7 @@ public class AxmolRenderer implements GLSurfaceView.Renderer {
     private int mScreenHeight;
     private static boolean gNativeInitialized = false;
     private static boolean gNativeIsPaused = false;
-    private boolean mNativeInitCompleted = false;
+    private boolean mSurfaceCreated = false;
 
     // ===========================================================
     // Constructors
@@ -77,8 +77,8 @@ public class AxmolRenderer implements GLSurfaceView.Renderer {
         AxmolRenderer.nativeInit(this.mScreenWidth, this.mScreenHeight);
         this.mLastTickInNanoSeconds = System.nanoTime();
 
-        boolean isWarmStart = !mNativeInitCompleted;
-        mNativeInitCompleted = true;
+        boolean isWarmStart = !mSurfaceCreated;
+        mSurfaceCreated = true;
 
         if (gNativeInitialized) {
             // This must be from an OpenGL context loss
