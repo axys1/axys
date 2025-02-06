@@ -117,7 +117,7 @@ void EditBoxImplWin::createEditCtrl(bool singleLine)
         _hwndEdit = ::CreateWindowExW(WS_EX_CLIENTEDGE, L"EDIT",  // predefined class
                                       NULL,                       // no window title
                                       WS_CHILD | ES_LEFT | WS_BORDER | WS_EX_TRANSPARENT | WS_TABSTOP | ES_AUTOHSCROLL |
-                                          (singleLine ? 0 : ES_MULTILINE),
+                                          (singleLine ? 0 : ES_AUTOVSCROLL | ES_MULTILINE),
                                       0, 0, 0,
                                       0,                        // set size in WM_SIZE message
                                       s_hwndCocos,              // parent window
