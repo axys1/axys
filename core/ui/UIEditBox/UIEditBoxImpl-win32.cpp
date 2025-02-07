@@ -355,7 +355,7 @@ void EditBoxImplWin::_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             ::PostMessageW(hwnd, WM_ACTIVATE, (WPARAM)s_previousFocusWnd, 0);
             ::PostMessageW(hwnd, WM_SETCURSOR, (WPARAM)s_previousFocusWnd, 0);
 
-            if (_initialfocus && _editBoxInputMode != ax::ui::EditBox::InputMode::ANY)
+            if (_initialFocus && _editBoxInputMode != ax::ui::EditBox::InputMode::ANY)
             {
                 // The following is a work-around to force the edit box to display
                 // as much text as possible when it receives focus for the first time
@@ -371,7 +371,7 @@ void EditBoxImplWin::_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                     ::SendMessage(hwnd, EM_SETSEL, -1, -1);
                 }
 
-                _initialfocus = false;
+                _initialFocus = false;
             }
 
             s_previousFocusWnd         = _hwndEdit;
