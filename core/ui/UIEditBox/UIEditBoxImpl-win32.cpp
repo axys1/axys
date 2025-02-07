@@ -359,15 +359,17 @@ void EditBoxImplWin::_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             {
                 // The following is a work-around to force the edit box to display
                 // as much text as possible when it receives focus for the first time
-                std::u16string wstrResult;
                 int inputLength = ::GetWindowTextLengthW(hwnd);
-                wstrResult.resize(inputLength);
-
-                ::GetWindowTextW(hwnd, (LPWSTR)wstrResult.data(), inputLength + 1);
-                this->_changedTextManually = true;  // We don't want to trigger the editBoxEditingChanged callback
-                ::SetWindowTextW(hwnd, (LPWSTR)wstrResult.data());
-                ::SendMessage(hwnd, EM_SETSEL, inputLength, -1);
-                ::SendMessage(hwnd, EM_SETSEL, -1, -1);
+                if (inputLength > 0)
+                {
+                    std::u16string wstrResult;
+                    wstrResult.resize(inputLength);
+                    ::GetWindowTextW(hwnd, (LPWSTR)wstrResult.data(), inputLength + 1);
+                    this->_changedTextManually = true;  // We don't want to trigger the editBoxEditingChanged callback
+                    ::SetWindowTextW(hwnd, (LPWSTR)wstrResult.data());
+                    ::SendMessage(hwnd, EM_SETSEL, inputLength, -1);
+                    ::SendMessage(hwnd, EM_SETSEL, -1, -1);
+                }
 
                 _initialfocus = false;
             }
