@@ -139,7 +139,22 @@ Axmol 引擎在 Cocos2d-x v4.0 的基础上进行迭代和改进。现在速度�
 * 请不要忘记将主题 axmol 和 axmolengine 添加到您创建的任何相关存储库中
 * 在 GitHub 上添加星也将有助于 Axmol 的成长。谢谢你!
 
-如果您发现 Axmol 引擎有帮助，请考虑在 [Open Collective](https://opencollective.com/axmol) 或 [GitHub Sponsors](https://github.com/sponsors/axmolengine) 赞助，非常感谢！
+如果您发现 Axmol 引擎有帮助，请考虑在 [https://axmol.dev/donate.html](https://axmol.dev/donate.html) 赞助，非常感谢！
+
+## Sponsors
+
+#### Titanium Sponsors
+<p align="left">
+  <a href="https://scorewarrior.com/?ad=axmol" target=_blank><img
+    src="https://cdn.prod.website-files.com/633da33305ac754156026dd8/63566f1edf5f0712f94f7f1b_sw-triangle-821890.svg" height="120"
+  /></a>
+</p>
+
+<p>&nbsp;</p>
+
+#### More Sponsors
+
+Please visit: [https://axmol.dev/donate.html](https://axmol.dev/donate.html)
 
 ## 社区
 

@@ -117,7 +117,7 @@ void EditBoxImplWin::createEditCtrl(bool singleLine)
         _hwndEdit = ::CreateWindowExW(WS_EX_CLIENTEDGE, L"EDIT",  // predefined class
                                       NULL,                       // no window title
                                       WS_CHILD | ES_LEFT | WS_BORDER | WS_EX_TRANSPARENT | WS_TABSTOP | ES_AUTOHSCROLL |
-                                          (singleLine ? 0 : ES_MULTILINE),
+                                          (singleLine ? 0 : ES_AUTOVSCROLL | ES_MULTILINE),
                                       0, 0, 0,
                                       0,                        // set size in WM_SIZE message
                                       s_hwndCocos,              // parent window
@@ -354,6 +354,26 @@ void EditBoxImplWin::_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
         {
             ::PostMessageW(hwnd, WM_ACTIVATE, (WPARAM)s_previousFocusWnd, 0);
             ::PostMessageW(hwnd, WM_SETCURSOR, (WPARAM)s_previousFocusWnd, 0);
+
+            if (_initialFocus && _editBoxInputMode != ax::ui::EditBox::InputMode::ANY)
+            {
+                // The following is a work-around to force the edit box to display
+                // as much text as possible when it receives focus for the first time
+                int inputLength = ::GetWindowTextLengthW(hwnd);
+                if (inputLength > 0)
+                {
+                    std::u16string wstrResult;
+                    wstrResult.resize(inputLength);
+                    ::GetWindowTextW(hwnd, (LPWSTR)wstrResult.data(), inputLength + 1);
+                    this->_changedTextManually = true;  // We don't want to trigger the editBoxEditingChanged callback
+                    ::SetWindowTextW(hwnd, (LPWSTR)wstrResult.data());
+                    ::SendMessage(hwnd, EM_SETSEL, inputLength, -1);
+                    ::SendMessage(hwnd, EM_SETSEL, -1, -1);
+                }
+
+                _initialFocus = false;
+            }
+
             s_previousFocusWnd         = _hwndEdit;
             _hasFocus                  = true;
             this->_changedTextManually = false;
@@ -386,7 +406,7 @@ std::string EditBoxImplWin::getText() const
     {
         AXLOGW("warning, editbox input text conversion error.");
     }
-    return std::move(utf8Result);
+    return utf8Result;
 }
 
 LRESULT EditBoxImplWin::hookGLFWWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

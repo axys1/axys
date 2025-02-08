@@ -21,7 +21,8 @@ $manifest['llvm'] = $build_profiles['llvm']
 
 # android sdk tools
 $android_sdk_tools['build-tools'] = $build_profiles['build-tools']
-$android_sdk_tools['platforms'] = "android-$($build_profiles['target_sdk'])"
+$android_sdk_tools['platforms'] = $build_profiles['target_sdk']
+$android_sdk_tools['cmdline-tools'] = $build_profiles['cmdline-tools']
 
 $Global:build_profiles = $build_profiles
 

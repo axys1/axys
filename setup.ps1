@@ -182,7 +182,7 @@ if ($IsWin) {
 else {
     # update pwsh profile
     if (Test-Path $PROFILE -PathType Leaf) {
-        $profileContent = Get-Content $PROFILE -raw
+        $profileContent = "$(Get-Content $PROFILE -raw)"
     }
     else {
         $profileContent = ''
@@ -225,8 +225,11 @@ else {
 
     # update ~/.bashrc, ~/.zshrc
     function updateUnixProfile($profileFile) {
+        if (!(Test-Path $profileFile -PathType Leaf)) {
+            touch $profileFile
+        }
         $profileMods = 0
-        $profileContent = Get-Content $profileFile -raw
+        $profileContent = "$(Get-Content $profileFile -raw)"
         $matchRet = [Regex]::Match($profileContent, "export AX_ROOT\=.*")
         if (!$matchRet.Success) {
             $profileContent += "# Add environment variable AX_ROOT for axmol`n"
@@ -251,21 +254,24 @@ else {
         }
     }
 
-    if (Test-Path ~/.bashrc -PathType Leaf) {
-        updateUnixProfile ~/.bashrc
-    }
-    
-    if (Test-Path ~/.zshrc -PathType Leaf) {
+    if ($env:SHELL -like '*/zsh') {
         updateUnixProfile ~/.zshrc
     }
+    elseif($env:SHELL -like '*/bash') {
+        if (!$IsMacOS) {
+            updateUnixProfile ~/.bashrc
+        } else {
+            updateUnixProfile ~/.bash_profile
+        }
+    } else {
+        Write-Error "Warning: current shell: $env:SHELL isn't officially supported by axmol community"
+    }
 
-    # update macos launchctl
     if ($IsMacOS) {
         # for GUI app, android studio can find AX_ROOT
         launchctl setenv AX_ROOT $env:AX_ROOT
     }
 }
-
 
 if ($IsLinux) {
     if ($(Get-Command 'dpkg' -ErrorAction SilentlyContinue)) {
@@ -400,7 +406,7 @@ if ($updateAdt) {
     }
 
     $testList = @('cpp-tests', 'fairygui-tests', 'live2d-tests', 'lua-tests', 'unit-tests')
-    foreach($testName in $testList) {
+    foreach ($testName in $testList) {
         update_gradle_for_test($testName)
     }
 
@@ -419,7 +425,7 @@ if ($updateAdt) {
     }
 
     update_agp('templates/common')
-    foreach($testName in $testList) {
+    foreach ($testName in $testList) {
         update_gradle_for_test($testName)
         update_agp_for_test($testName) 
     }

@@ -10,7 +10,7 @@ axslcc=1.9.6+
 
 # The cmake, @gradle @axmol-cmdline
 # as latest as possible
-cmake=3.30.0~3.31.2+
+cmake=3.30.0~3.31.5+
 
 # The ninja
 ninja=1.10.0~1.12.1+
@@ -35,6 +35,9 @@ llvm=17.0.6~19.1.6+
 
 # The microsoft openjdk, @axmol-cmdline
 jdk=17.0.10~17.0.13+
+
+# The android cmdline-tools aka sdkmanager, as stable as possible
+cmdline-tools=12.0
 
 # The android ndk version
 # as stable as possible @setup.ps1 @gradle @axmol-cmdline
@@ -68,6 +71,12 @@ build-tools=34.0.0
 # The android-studio, @hint
 # as latest as possible, but match with agp, build-tools
 android-studio=2024.2.1+
+
+# The android dependencies managed by @gradle 
+appcompat=1.7.0
+media3=1.2.1
+annotation=1.9.1
+guava=33.3.1
 
 # --- endregion
 

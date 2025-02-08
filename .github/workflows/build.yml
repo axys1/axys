@@ -156,5 +156,5 @@ jobs:
       uses: peter-evans/repository-dispatch@v3
       with:
         token: ${{ secrets.AX_TRIGGER_SITE_TOKEN }}
-        repository: axmolengine/axmolengine.github.io
+        repository: axmolengine/axmol.dev
         event-type: forward-push

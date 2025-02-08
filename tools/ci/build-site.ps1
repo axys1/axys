@@ -164,9 +164,12 @@ configure_file './doc_index.html.in' "$site_dist/manual/index.html" @{'@VERSION@
 mkdirs "$site_dist/assets/css"
 Copy-Item './style.css'  "$site_dist/assets/css/style.css"
 Copy-Item './index.html' "$site_dist/index.html"
+Copy-Item './donate.html' "$site_dist/donate.html"
 
-# copy logo used by site home page
+# copy images used in axmol home page
 Copy-Item './logo.png' "$site_dist/logo.png"
+Copy-Item './alipay.jpg' "$site_dist/alipay.jpg"
+Copy-Item './wxpay.png' "$site_dist/wxpay.png"
 
 $branches = $(git branch -a)
 $canon_branches = @{}

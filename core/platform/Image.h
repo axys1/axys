@@ -167,6 +167,9 @@ public:
                          int bitsPerComponent,
                          bool preMulti = false);
 
+    // only RGBA8888 supported
+    void flipRawData();
+    
     // Getters
     uint8_t* getData() { return _data + _offset; }
     ssize_t getDataLen() { return _dataLen - _offset; }
