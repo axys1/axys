@@ -36,6 +36,9 @@ llvm=17.0.6~19.1.6+
 # The microsoft openjdk, @axmol-cmdline
 jdk=17.0.10~17.0.13+
 
+# The android cmdline-tools aka sdkmanager, as stable as possible
+cmdline-tools=12.0
+
 # The android ndk version
 # as stable as possible @setup.ps1 @gradle @axmol-cmdline
 # for android 15 16KB page size support, rquire ndk r23d/r25(available on ci.android.com) or r27+, refer:

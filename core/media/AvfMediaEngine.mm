@@ -361,9 +361,10 @@ void AvfMediaEngine::onStatusNotification(void* context)
     }
 
     if (_bAutoPlay) {
-        // fix issue: #2371
-        // tvOS: we need delay on frame to invoke play even through invoking from KOV playerItem.status==AVPlayerItemStatusReadyToPlay
-        // otherwise, the player.timeControlStatus will be AVPlayerTimeControlStatusPaused until invoke [player play] at next frame
+        /* Fix issue: #2371 for tvOS
+        delay one frame to invoke [player play] to fix player.timeControlStatus
+        maybe AVPlayerTimeControlStatusPaused at first app startup
+        */
         __weak AVPlayer* player = _player;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             if (player != nil)

@@ -231,7 +231,7 @@ $manifest = @{
     python       = '3.8.0+';
     jdk          = '17.0.10+'; # jdk17+ works for android cmdlinetools 7.0+
     emsdk        = '3.1.53+';
-    cmdlinetools = '7.0+'; # android cmdlinetools
+    'cmdline-tools' = '12.0'; # android cmdlinetools
 }
 
 # the default generator requires explicit specified: osx, ios, android, wasm
@@ -254,8 +254,9 @@ $ndk_r23d_rev = '12186248'
 # $ndk_r25d_rev = '12161346'
 
 $android_sdk_tools = @{
+    'cmdline-tools' = '12.0'
     'build-tools' = '34.0.0'
-    'platforms'   = 'android-34'
+    'platforms'   = '35'
 }
 
 # eva: evaluated_args
@@ -481,7 +482,8 @@ if (!$1k.isdir($install_prefix)) {
 }
 if ($Global:download_path) {
     $1k.mkdirs($Global:download_path)
-} else {
+}
+else {
     $Global:download_path = $install_prefix
 }
 
@@ -735,8 +737,8 @@ function download_and_expand($url, $out, $dest) {
     download_file $url $out
     try {
         $1k.mkdirs($dest)
-        if($out.EndsWith('.zip')) {
-            if($IsWin) {
+        if ($out.EndsWith('.zip')) {
+            if ($IsWin) {
                 Expand-Archive -Path $out -DestinationPath $dest
             }
             else {
@@ -763,8 +765,9 @@ function download_and_expand($url, $out, $dest) {
 function resolve_path ($path, $prefix = $null) { 
     if ($1k.isabspath($path)) { 
         return $path 
-    } else {
-        if(!$prefix) { $prefix = $install_prefix }
+    }
+    else {
+        if (!$prefix) { $prefix = $install_prefix }
         return Join-Path $prefix $path
     }
 }
@@ -775,12 +778,14 @@ function fetch_pkg($url, $out = $null, $exrep = $null, $prefix = $null) {
 
     $pfn_rename = $null
 
-    if($exrep) {
+    if ($exrep) {
         $exrep = $exrep.Split('=')
-        if ($exrep.Count -eq 1) { # single file
+        if ($exrep.Count -eq 1) {
+            # single file
             if (!$prefix) {
                 $prefix = resolve_path $exrep[0]
-            } else {
+            }
+            else {
                 $prefix = resolve_path $prefix
             }
         }
@@ -799,7 +804,8 @@ function fetch_pkg($url, $out = $null, $exrep = $null, $prefix = $null) {
             }
             if ($1k.isdir($inst_dst)) { $1k.rmdirs($inst_dst) }
         }
-    } else {
+    }
+    else {
         $prefix = $install_prefix
     }
     
@@ -851,7 +857,7 @@ function find_vs() {
 
 function install_msvc($ver, $arch) {
 
-$__install_code = @'
+    $__install_code = @'
 # install specified msvc for vs2022
 param(
     $ver = '14.39',
@@ -893,7 +899,8 @@ else {
 
     if ($install_ret -eq 0) {
         $1k.println("Install msvc-$ver' succeed")
-    } else {
+    }
+    else {
         throw "Install msvc-$ver' fail!"
     }
 }
@@ -1291,34 +1298,28 @@ function setup_android_sdk() {
         }
     }
 
+    if(!$sdk_root) {
+        $sdk_root = Join-Path $install_prefix 'adt/sdk'
+        $1k.mkdirs($sdk_root)
+    }
+
     $sdk_comps = @()
 
     ### cmdline-tools ###
+    $cmdlinetools_ver = $($android_sdk_tools['cmdline-tools'])
     $sdkmanager_prog, $sdkmanager_ver = $null, $null
-    if ($1k.isdir($sdk_root)) {
-        $cmdlinetools_bin = Join-Path $sdk_root 'cmdline-tools/latest/bin'
-        $sdkmanager_prog, $sdkmanager_ver = (find_prog -name 'cmdlinetools' -cmd 'sdkmanager' -path $cmdlinetools_bin -params "--version", "--sdk_root=$sdk_root")
-    }
-    else {
-        $sdk_root = Join-Path $install_prefix 'adt/sdk'
-        if (!$1k.isdir($sdk_root)) {
-            $1k.mkdirs($sdk_root)
-        }
-    }
-
+    $cmdlinetools_prefix = Join-Path $sdk_root "cmdline-tools"
+    $cmdlinetools_bin = Join-Path $cmdlinetools_prefix "$cmdlinetools_ver/bin"
+    $sdkmanager_prog, $sdkmanager_ver = (find_prog -name 'cmdline-tools' -cmd 'sdkmanager' -path $cmdlinetools_bin -params "--version", "--sdk_root=$sdk_root")
     if (!$sdkmanager_prog) {
-        $cmdlinetools_bin = Join-Path $install_prefix 'cmdline-tools/bin'
-        $sdkmanager_prog, $sdkmanager_ver = (find_prog -name 'cmdlinetools' -cmd 'sdkmanager' -path $cmdlinetools_bin -params "--version", "--sdk_root=$sdk_root")
         $suffix = $('win', 'linux', 'mac').Get($HOST_OS)
         if (!$sdkmanager_prog) {
             $1k.println("Installing cmdlinetools version: $sdkmanager_ver ...")
 
             $cmdlinetools_pkg_name = "commandlinetools-$suffix-$($cmdlinetools_rev)_latest.zip"
-            $cmdlinetools_pkg_path = Join-Path $install_prefix $cmdlinetools_pkg_name
             $cmdlinetools_url = "https://dl.google.com/android/repository/$cmdlinetools_pkg_name"
-            download_file $cmdlinetools_url $cmdlinetools_pkg_path
-            Expand-Archive -Path $cmdlinetools_pkg_path -DestinationPath "$install_prefix/"
-            $sdkmanager_prog, $_ = (find_prog -name 'cmdlinetools' -cmd 'sdkmanager' -path $cmdlinetools_bin -params "--version", "--sdk_root=$sdk_root" -silent $True)
+            fetch_pkg $cmdlinetools_url -o $cmdlinetools_pkg_name -exrep "cmdline-tools=$cmdlinetools_ver" -prefix $cmdlinetools_prefix
+            $sdkmanager_prog, $_ = (find_prog -name 'cmdline-tools' -cmd 'sdkmanager' -path $cmdlinetools_bin -params "--version", "--sdk_root=$sdk_root" -silent $True)
             if (!$sdkmanager_prog) {
                 throw "Install cmdlinetools version: $sdkmanager_ver fail"
             }
@@ -1338,7 +1339,7 @@ function setup_android_sdk() {
             # - https://ci.android.com/builds/submitted/12186248/linux/latest/android-ndk-12186248-linux-x86_64.zip
             # - https://ci.android.com/builds/submitted/12186248/darwin_mac/latest/android-ndk-12186248-darwin-x86_64.zip
 	    
-	    $1k.println("Not found suitable android ndk, installing from ci.android.com ...")
+            $1k.println("Not found suitable android ndk, installing from ci.android.com ...")
 	    
             $_artifact = @("android-ndk-${ndk_r23d_rev}-windows-x86_64.zip",
                 "android-ndk-${ndk_r23d_rev}-linux-x86_64.zip",
@@ -1347,12 +1348,12 @@ function setup_android_sdk() {
             . (Join-Path $myRoot 'resolv-url.ps1') -artifact $_artifact -target $_target_os -build_id $ndk_r23d_rev -manifest gcloud -out_var 'artifact_info'
             $artifact_url = $artifact_info[0].messageData
             $full_ver = "23.3.${ndk_r23d_rev}"
-	    $ndk_root = Join-Path $ndk_prefix $full_ver
+            $ndk_root = Join-Path $ndk_prefix $full_ver
             fetch_pkg $artifact_url -o $_artifact -exrep "android-ndk-r23d-canary=$full_ver" -prefix $ndk_prefix
             if (!$1k.isdir($ndk_root)) { throw "Install android-ndk-r23d fail, please try again" }
         }
         else {
-	    $1k.println("Not found suitable android ndk, installing by sdkmanager ...")
+            $1k.println("Not found suitable android ndk, installing by sdkmanager ...")
 	    
             $matchInfos = (exec_prog -prog $sdkmanager_prog -params "--sdk_root=$sdk_root", '--list' | Select-String 'ndk;')
             if ($null -ne $matchInfos -and $matchInfos.Count -gt 0) {
@@ -1380,8 +1381,13 @@ function setup_android_sdk() {
         }
     }
 
-    if (!$ndkOnly -and $updateAdt) {
-        $sdk_comps += 'platform-tools', 'cmdline-tools;latest', "platforms;$($android_sdk_tools['platforms'])", "build-tools;$($android_sdk_tools['build-tools'])"
+    if (!$ndkOnly) {
+        $sdk_comps_list = 'platform-tools', "platforms/android-$($android_sdk_tools['platforms'])", "build-tools/$($android_sdk_tools['build-tools'])"
+        foreach ($comp in $sdk_comps_list) {
+            if (!$1k.isfile("$sdk_root/$comp/source.properties") -or $updateAdt) {
+                $sdk_comps += $comp.Replace('/', ';')
+            }
+        }
     }
     
     if ($sdk_comps) {
@@ -1557,7 +1563,7 @@ function preprocess_win() {
         $Script:cmake_generator = 'Ninja Multi-Config'
     }
     # refer: https://devblogs.microsoft.com/powershell/array-literals-in-powershell
-    return ,$outputOptions
+    return , $outputOptions
 }
 
 function preprocess_linux() {
@@ -1565,7 +1571,7 @@ function preprocess_linux() {
     if ($Global:is_clang) {
         $outputOptions += '-DCMAKE_C_COMPILER=clang', '-DCMAKE_CXX_COMPILER=clang++'
     }
-    return ,$outputOptions
+    return , $outputOptions
 }
 
 $ninja_prog = $null
@@ -1611,7 +1617,7 @@ function preprocess_andorid() {
         $outputOptions += '-DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER'
     }
 
-    return ,$outputOptions
+    return , $outputOptions
 }
 
 function preprocess_osx() {
@@ -1625,7 +1631,7 @@ function preprocess_osx() {
     if ($Global:target_minsdk) {
         $outputOptions += "-DCMAKE_OSX_DEPLOYMENT_TARGET=$Global:target_minsdk"
     }
-    return ,$outputOptions
+    return , $outputOptions
 }
 
 # build ios famliy (ios,tvos,watchos)
@@ -1648,11 +1654,11 @@ function preprocess_ios() {
             $outputOptions += '-DSIMULATOR=TRUE'
         }
     }
-    return ,$outputOptions
+    return , $outputOptions
 }
 
 function preprocess_wasm() {
-    return ,@()
+    return , @()
 }
 
 function validHostAndToolchain() {
@@ -2050,18 +2056,20 @@ if (!$setupOnly) {
 
                     $cm_targets = $options.t
 
-                    if($cm_targets) {
-                        if($cm_targets -isnot [array]) {
+                    if ($cm_targets) {
+                        if ($cm_targets -isnot [array]) {
                             $cm_targets = "$cm_targets".Split(',')
                         }
-                    } else {
+                    }
+                    else {
                         $cm_targets = @()
                     }
-                    if($cmake_target) {
+                    if ($cmake_target) {
                         if ($cm_targets.Contains($cmake_target)) {
                             $cm_targets += $cmake_target
                         }
-                    } else {
+                    }
+                    else {
                         $cmake_target = $cm_targets[-1]
                     }
 

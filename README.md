@@ -138,7 +138,23 @@ How to contribute:
 * Please do not forget to add the topic `axmol` and `axmolengine` to any related repository you create!
 * Adding a star on GitHub will help Axmol grow as well. Thank you!
 
-If you find **Axmol Engine** helpful, please consider donating in [Open Collective](https://opencollective.com/axmol) or in [GitHub Sponsors](https://github.com/sponsors/axmolengine). Thank you very much!
+If you find **Axmol Engine** helpful, please consider donating in [https://axmol.dev/donate.html](https://axmol.dev/donate.html). Thank you very much!
+
+## Sponsors
+
+#### Titanium Sponsors
+
+<p align="left">
+  <a href="https://scorewarrior.com/?ad=axmol" target=_blank><img
+    src="https://cdn.prod.website-files.com/633da33305ac754156026dd8/63566f1edf5f0712f94f7f1b_sw-triangle-821890.svg" height="120"
+  /></a>
+</p>
+
+<p>&nbsp;</p>
+
+#### More Sponsors
+
+Please visit: [https://axmol.dev/donate.html](https://axmol.dev/donate.html)
 
 ## Community
 

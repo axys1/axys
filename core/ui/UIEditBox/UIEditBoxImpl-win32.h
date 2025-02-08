@@ -77,6 +77,7 @@ private:
     static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
     static LRESULT CALLBACK hookGLFWWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+    bool _initialFocus = true;
     HWND _hwndEdit;
     bool _changedTextManually;
     bool _hasFocus;

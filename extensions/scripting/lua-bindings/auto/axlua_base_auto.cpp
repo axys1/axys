@@ -20212,6 +20212,53 @@ int lua_ax_base_Image_initWithImageFile(lua_State* tolua_S)
 
     return 0;
 }
+int lua_ax_base_Image_flipRawData(lua_State* tolua_S)
+{
+    int argc = 0;
+    ax::Image* cobj = nullptr;
+    bool ok  = true;
+
+#if _AX_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if _AX_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"ax.Image",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (ax::Image*)tolua_tousertype(tolua_S,1,0);
+
+#if _AX_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_ax_base_Image_flipRawData'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 0) 
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_base_Image_flipRawData'", nullptr);
+            return 0;
+        }
+        cobj->flipRawData();
+        lua_settop(tolua_S, 1);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "ax.Image:flipRawData",argc, 0);
+    return 0;
+
+#if _AX_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_ax_base_Image_flipRawData'.",&tolua_err);
+#endif
+
+    return 0;
+}
 int lua_ax_base_Image_getFileType(lua_State* tolua_S)
 {
     int argc = 0;
@@ -21004,6 +21051,7 @@ int lua_register_ax_base_Image(lua_State* tolua_S)
     tolua_beginmodule(tolua_S,"Image");
         tolua_function(tolua_S,"new",lua_ax_base_Image_constructor);
         tolua_function(tolua_S,"initWithImageFile",lua_ax_base_Image_initWithImageFile);
+        tolua_function(tolua_S,"flipRawData",lua_ax_base_Image_flipRawData);
         tolua_function(tolua_S,"getFileType",lua_ax_base_Image_getFileType);
         tolua_function(tolua_S,"getPixelFormat",lua_ax_base_Image_getPixelFormat);
         tolua_function(tolua_S,"getWidth",lua_ax_base_Image_getWidth);
