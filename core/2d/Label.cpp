@@ -2443,7 +2443,7 @@ void Label::setTextColor(const Color4B& color)
         _contentDirty = true;
     }
 
-        if (_currentLabelType == LabelType::TTF && _textColor != color)
+    if (_currentLabelType == LabelType::TTF && _textColor != color)
     {
         _contentDirty = true;
     }
