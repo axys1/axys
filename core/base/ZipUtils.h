@@ -310,9 +310,12 @@ public:
     void vclose(ZipEntryInfo*);
     int64_t vsize(ZipEntryInfo*);
 
+    static ZipFile *createWithBuffer(const void* buffer, unsigned long size);
+
 private:
     ZipFile();
 
+    bool initWithBuffer(const void *buffer, unsigned long size);
     int getCurrentFileInfo(std::string* filename, unz_file_info_s* info);
 
     /** Internal data like zip file pointer / file list array and so on */

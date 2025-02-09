@@ -2104,6 +2104,7 @@ const Color3B& Node::getDisplayedColor() const
 void Node::setColor(const Color3B& color)
 {
     _displayedColor = _realColor = color;
+
     updateCascadeColor();
 }
 

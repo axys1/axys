@@ -33,6 +33,7 @@
 #    include "unzip.h"
 #endif
 #include <ioapi.h>
+#include <ioapi_mem.h>
 
 #include <memory>
 
@@ -666,6 +667,8 @@ struct ZipFilePrivate
     unzFile zipFile;
     std::mutex zipFileMtx;
 
+    std::unique_ptr<ourmemory_s> memfs;
+
     // std::unordered_map is faster if available on the platform
     typedef hlookup::string_map<struct ZipEntryInfo> FileListContainer;
     FileListContainer fileList;
@@ -680,6 +683,17 @@ ZipFile* ZipFile::createFromFile(std::string_view zipFile, std::string_view filt
         return zip;
     delete zip;
     return nullptr;
+}
+
+ZipFile *ZipFile::createWithBuffer(const void* buffer, uLong size)
+{
+    ZipFile *zip = new ZipFile();
+    if (zip->initWithBuffer(buffer, size)) {
+        return zip;
+    } else {
+        delete zip;
+        return nullptr;
+    }
 }
 
 ZipFile::ZipFile() : _data(new ZipFilePrivate())
@@ -856,6 +870,22 @@ int ZipFile::getCurrentFileInfo(std::string* filename, unz_file_info_s* info)
         filename->assign(path);
     }
     return ret;
+}
+
+bool ZipFile::initWithBuffer(const void *buffer, uLong size)
+{
+    if (!buffer || size == 0) return false;
+    zlib_filefunc_def memory_file = { 0 };
+    
+    std::unique_ptr<ourmemory_t> memfs(new ourmemory_t{ (char*)const_cast<void*>(buffer), static_cast<uint32_t>(size), 0, 0, 0 });
+    if (!memfs) return false;
+    fill_memory_filefunc(&memory_file, memfs.get());
+    
+    _data->zipFile = unzOpen2(nullptr, &memory_file);
+    if (!_data->zipFile) return false;
+    _data->memfs = std::move(memfs);
+    setFilter(emptyFilename);
+    return true;
 }
 
 ZipEntryInfo* ZipFile::vopen(std::string_view fileName)

@@ -1,9 +1,10 @@
 apply plugin: 'com.android.application'
-apply from: project(':libaxmol').projectDir.toString() + "/axutils.gradle"
+apply from: project(':libaxmol').projectDir.toString() + "/axmol.gradle"
+
+// Resolve build profiles
+def buildProfiles = AxmolUtils.resolveBuildProfiles(project)
 
 android {
-    // Resolve build profiles
-    def buildProfiles = AxmolUtils.resolveBuildProfiles(project)
     def packageName = buildProfiles['packageName']
     def cmakeVer = buildProfiles['cmakeVer']
     def cmakeOptions = Eval.me(buildProfiles['cmakeOptions'])
@@ -71,6 +72,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFile file(project(':libaxmol').projectDir.toString() + '/proguard-rules.pro')
             if (project.hasProperty("KEY_STORE_FILE")) {
                 signingConfig signingConfigs.release
             }
