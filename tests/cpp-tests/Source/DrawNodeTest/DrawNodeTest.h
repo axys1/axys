@@ -224,6 +224,24 @@ public:
     void onEnter();
 
 private:
+    ax::Label* _thicknessLabel;
+    float thickness = 1.0f;
+};
+
+class DrawNodeLineDrawTest : public DrawNodeBaseTest
+{
+public:
+    CREATE_FUNC(DrawNodeLineDrawTest);
+
+    DrawNodeLineDrawTest();
+
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+
+    void update(float dt);
+    void onEnter();
+
+private:
     // ax::Label* _lineWidthLabel;
     // float lineWidth = 0;
     ax::Label* _thicknessLabel;

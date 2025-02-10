@@ -844,6 +844,7 @@ protected:
 
     bool _boldEnabled;
     bool _strikethroughEnabled;
+    bool _underlineEnabled;
     bool _lineBreakWithoutSpaces;
     uint8_t _shadowOpacity;
 
@@ -896,7 +897,7 @@ protected:
     FontAtlas* _fontAtlas;
     //! used for optimization
     Sprite* _reusedLetter;
-    DrawNode* _underlineNode;
+    DrawNode* _lineDrawNode;
 
     Rect _bmRect;
     Rect _reusedRect;

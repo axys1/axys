@@ -1,13 +1,58 @@
+## axmol-2.3.3 ?? 2025
+
+### Bug fixes
+
+- Fix build wasm fail with `-O0` by @halx99
+- Fix #2370 module 'bitop' not found by @halx99
+- Fix #2371 Video freezes on the first frame when played on Apple TV by @halx99
+- Fix tile animation logic to use correct time per frame by @rh101 in https://github.com/axmolengine/axmol/pull/2345
+- Fix: when these extensions set to OFF, compiles by @blairwang in https://github.com/axmolengine/axmol/pull/2347
+
+### Improvements
+
+- Disable Spine references if Spine is not enabled by @rh101 in https://github.com/axmolengine/axmol/pull/2346
+- Increase MAX_AUDIOINSTANCES value to 128 in AudioEngine by @MartinLutherSu in https://github.com/axmolengine/axmol/pull/2348
+- Clipper2 ver. 1.5.0 by @aismann in https://github.com/axmolengine/axmol/pull/2350
+- Remove folder DrawNodeExTest by @aismann in https://github.com/axmolengine/axmol/pull/2352
+- Clipper2 1.5.2 by @aismann in https://github.com/axmolengine/axmol/pull/2360
+- [Android] Allow project to specify Axmol engine root path by @rh101 in https://github.com/axmolengine/axmol/pull/2361
+- Improve gradle by @halx99 in https://github.com/axmolengine/axmol/pull/2363
+- Add zip in memory support by @AlexandreK38 in https://github.com/axmolengine/axmol/pull/2368
+- Use axmol proguard file in template and clean  by @AlexandreK38 in https://github.com/axmolengine/axmol/pull/2366
+- [Windows] Ensure vertical scrolling is enabled when EditBox is in multiline mode by @rh101 in https://github.com/axmolengine/axmol/pull/2374
+- Add Android event for Warm Start by @AlexandreK38 in https://github.com/axmolengine/axmol/pull/2367
+- [Windows] Ensure EditBox shows text correctly when it receives focus for the first time by @rh101 in https://github.com/axmolengine/axmol/pull/2376
+- Add Image flip Raw data vertically by @AlexandreK38 in https://github.com/axmolengine/axmol/pull/2369
+- Committing luabindings for commit 0656f87 by @axmol-bot in https://github.com/axmolengine/axmol/pull/2377
+- Improve site and add donate page with donate channels and sponsors list by @halx99
+- Improve build system by @halx99
+  - Install android cmdline-tools into android sdk root
+  - Improve setup.ps1 on macOS
+  - Update live2d SDK download url
+  - Improve gradle scripts
+- Remove unused 3rd lib: yaml-cpp by @halx99
+- Fix wasm compile warnings
+
+### SDKs updates
+
+- emsdk: 3.1.73 ==> 4.0.3
+
+### 3rdparty updates
+
+- clipper2: 1.4.0 ==> 1.5.2
+- libpng: 1.6.45 ==> 1.6.46
+- fmt: 11.1.2 ==> 11.1.3
+
 ## axmol-2.3.2 Jan.21 2025
 
-## Bug fixes
+### Bug fixes
 
 - Fix bit op error on lua < 5.4 by @halx99
 - Fix luajit luaL_openlibs crash on android by @halx99
 - Fix setup.ps1 Error in parsing PowerShell and OS versions by @halx99
 - Fix cpp template scene listeners leaked by @halx99
 
-## Improvements
+### Improvements
 
 - Fix clang19 compile warnings
 - Improve 7z cmdline compatibility
@@ -82,7 +127,7 @@
 - Remove TTF Font charCode 65535 limit by @halx99
 - Allow publish from specified commitish for ci
 
-### sdks updates
+### SDKs updates
 
 - emsdk: 3.1.67 ==> 3.1.73
 - AGP: 8.4.0 ==> 8.7.3
@@ -172,7 +217,7 @@
 - Update controller.cpp Add small hint that the DrawNode tests be "not finished": "Node: Draw (WIP)" by @aismann in https://github.com/axmolengine/axmol/pull/2189
 - DrawNode calls: replacing Color4F with Color4B (without the 'test' folder!) by @aismann in https://github.com/axmolengine/axmol/pull/2192
 
-### sdks updates
+### SDKs updates
 
 - emsdk: 3.1.63 ==> 3.1.67
 
@@ -236,7 +281,7 @@
 - Add OpenType font (.otf) to the noCompress list by @danialias in https://github.com/axmolengine/axmol/pull/2077
 - Update DrawNodeEx aka DrawNodeV2 to 0.95.1 by @aismann in https://github.com/axmolengine/axmol/pull/2079
 
-### sdks updates
+### SDKs updates
 
 - cppwinrt: 2.0.240111.5 ==> 2.0.240405.15
 
@@ -516,7 +561,7 @@
 - Don't use fmt header only by @halx99 in https://github.com/axmolengine/axmol/pull/1707
 - Don't use yasio header only by @halx99
 
-### sdks updates
+### SDKs updates
 
 - cppwinrt: 2.0.230706.1 ==> 2.0.240111.5
 

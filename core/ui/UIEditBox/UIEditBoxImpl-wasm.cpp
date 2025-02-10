@@ -40,7 +40,7 @@ namespace ui
 EditBoxImplWasm* _activeEditBox = nullptr;
 extern "C" {
 EMSCRIPTEN_KEEPALIVE
-void getInputOver(unsigned char* dataPtr, int dataLength)
+void getInputOver(char* dataPtr, int dataLength)
 {
     AXLOGD("text {} ", dataPtr);
     if (_activeEditBox)
@@ -55,7 +55,7 @@ void getInputOver(unsigned char* dataPtr, int dataLength)
 
 EMSCRIPTEN_KEEPALIVE
 
-void getInputChange(unsigned char* dataPtr, int dataLength)
+void getInputChange(char* dataPtr, int dataLength)
 {
     AXLOGD("text {} ", dataPtr);
     if (_activeEditBox && _activeEditBox->isEditingMode())

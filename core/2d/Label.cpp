@@ -503,8 +503,9 @@ Label::Label(TextHAlignment hAlignment /* = TextHAlignment::LEFT */,
     , _reusedLetter(nullptr)
     , _horizontalKernings(nullptr)
     , _boldEnabled(false)
-    , _underlineNode(nullptr)
+    , _lineDrawNode(nullptr)
     , _strikethroughEnabled(false)
+    , _underlineEnabled(false)
 {
     setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     reset();
@@ -656,12 +657,13 @@ void Label::reset()
     _overflow           = Overflow::NONE;
     _originalFontSize   = 0.0f;
     _boldEnabled        = false;
-    if (_underlineNode)
+    if (_lineDrawNode)
     {
-        removeChild(_underlineNode);
-        _underlineNode = nullptr;
+        removeChild(_lineDrawNode);
+        _lineDrawNode = nullptr;
     }
     _strikethroughEnabled = false;
+    _underlineEnabled = false;
     setRotationSkewX(0);  // reverse italics
 }
 
@@ -1491,22 +1493,36 @@ void Label::enableBold()
 
 void Label::enableUnderline()
 {
-    // remove it, just in case to prevent adding two or more
-    if (!_underlineNode)
+    if (_underlineEnabled)
     {
-        _underlineNode = DrawNode::create();
-        _underlineNode->setGlobalZOrder(getGlobalZOrder());
-        addChild(_underlineNode, 100000);
-        _contentDirty = true;
+        return;
+    }
+    _underlineEnabled = true;
+    _contentDirty     = true;
+    if (!_lineDrawNode)
+    {
+        _lineDrawNode = DrawNode::create();
+        _lineDrawNode->setGlobalZOrder(getGlobalZOrder());
+        _lineDrawNode->properties.setFactor(_lineDrawNode->properties.getFactor() * 2.0f);  // 2.0f: Makes the line smaller 
+        addChild(_lineDrawNode, 100000);
     }
 }
 
 void Label::enableStrikethrough()
 {
-    if (!_strikethroughEnabled)
+    if (_strikethroughEnabled)
     {
-        enableUnderline();
-        _strikethroughEnabled = true;
+        return;
+    }
+    _strikethroughEnabled = true;
+    _contentDirty         = true;
+    if (!_lineDrawNode)
+    {
+        _lineDrawNode = DrawNode::create();
+        _lineDrawNode->setGlobalZOrder(getGlobalZOrder());
+        _lineDrawNode->properties.setFactor(_lineDrawNode->properties.getFactor() * 2.0f); // 2.0f: Makes the line smaller 
+        addChild(_lineDrawNode, 100000); 
+        addChild(_lineDrawNode, 100000);
     }
 }
 
@@ -1560,16 +1576,33 @@ void Label::disableEffect(LabelEffect effect)
         }
         break;
     case ax::LabelEffect::UNDERLINE:
-        if (_underlineNode)
+        _underlineEnabled = false;
+        if (_currentLabelType == LabelType::TTF)
         {
-            removeChild(_underlineNode);
-            _underlineNode = nullptr;
+            _fontConfig.underline = _underlineEnabled;
+            setTTFConfig(_fontConfig);
         }
+        _currLabelEffect = LabelEffect::NORMAL;
+        if (_lineDrawNode && !_strikethroughEnabled)
+        {
+            removeChild(_lineDrawNode);
+            _lineDrawNode = nullptr;
+        }
+        _contentDirty = true;
         break;
     case ax::LabelEffect::STRIKETHROUGH:
         _strikethroughEnabled = false;
-        // since it is based on underline, disable it as well
-        disableEffect(LabelEffect::UNDERLINE);
+        if (_currentLabelType == LabelType::TTF)
+        {
+            _fontConfig.strikethrough = _strikethroughEnabled;
+            setTTFConfig(_fontConfig);
+        }
+        if (_lineDrawNode && !_underlineEnabled)
+        {
+            removeChild(_lineDrawNode);
+            _lineDrawNode = nullptr;
+        }
+        _contentDirty = true;
         break;
     case LabelEffect::ALL:
     {
@@ -1709,43 +1742,66 @@ void Label::updateContent()
         }
     }
 
-    if (_underlineNode)
+    if (_lineDrawNode)
     {
-        _underlineNode->clear();
+        Color4B lineColor = Color4B(_displayedColor);
+        if (_textColor != Color4B::WHITE && _textColor != lineColor)
+            lineColor = _textColor;
 
-        if (_numberOfLines)
+        _lineDrawNode->clear();
+
+        if (_numberOfLines && _currentLabelType != LabelType::STRING_TEXTURE)
         {
             // This is the logic for TTF fonts
             const float charheight = (_textDesiredHeight / _numberOfLines);
+            float thickness        = charheight / 6;
 
             // atlas font
             for (int i = 0; i < _numberOfLines; ++i)
             {
-                float offsety = 0;
                 if (_strikethroughEnabled)
-                    offsety += charheight / 2;
-                // FIXME: Might not work with different vertical alignments
-                float y = (_numberOfLines - i - 1) * charheight + offsety;
+                {
+                    float y = (_numberOfLines - i - 1) * charheight + charheight / 2;
+                    _lineDrawNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
+                                            Color4F(lineColor), thickness);
+                }
 
-                // Github issue #15214. Uses _displayedColor instead of _textColor for the underline.
-                // This is to have the same behavior of SystemFonts.
-                _underlineNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
-                                         Color4F(_displayedColor), charheight / 6);
+                if (_underlineEnabled)
+                {
+                    float y = (_numberOfLines - i - 1) * charheight;
+                    _lineDrawNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
+                                            Color4F(lineColor), thickness);
+                }
             }
         }
-        else if (_textSprite)
+        else if (_textSprite) // ...and is the logic for System fonts
         {
-            // ...and is the logic for System fonts
-            float y               = 0;
+            computeStringNumLines();
             const auto spriteSize = _textSprite->getContentSize();
 
-            if (_strikethroughEnabled)
-                // FIXME: system fonts don't report the height of the font correctly. only the size of the texture,
-                // which is POT
-                y += spriteSize.height / 2;
+            // FIXME: system fonts don't report the height of the font correctly. only the size of the texture, which is POT
             // FIXME: Might not work with different vertical alignments
-            _underlineNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y),
-                                     Color4F(_textSprite->getDisplayedColor()), spriteSize.height / 6);
+            float offsety         = spriteSize.height / _numberOfLines;
+            float thickness       = spriteSize.height / 6 / _numberOfLines;
+    
+            if (_underlineEnabled)
+            {       
+                for (int i = 0; i < _numberOfLines; ++i)
+                {
+                    float y = offsety * i;
+                    _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(lineColor), thickness);
+                }
+            }
+
+            if (_strikethroughEnabled)
+            {  
+                float _of = spriteSize.height / _numberOfLines / 2;
+                for (int i = 0; i < _numberOfLines; ++i)
+                {
+                    float y = _of + offsety * i;
+                    _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(lineColor), thickness);
+                }
+            }
         }
     }
 
@@ -2336,7 +2392,7 @@ void Label::updateDisplayedColor(const Color3B& parentColor)
         _shadowNode->updateDisplayedColor(_displayedColor);
     }
 
-    if (_underlineNode)
+    if (_lineDrawNode)
     {
         // FIXME: _underlineNode is not a sprite/label. It is a DrawNode
         // and updating its color doesn't work. it must be re-drawn,
@@ -2376,19 +2432,23 @@ void Label::updateDisplayedOpacity(uint8_t parentOpacity)
 // that's fine but it should be documented
 void Label::setTextColor(const Color4B& color)
 {
-    AXASSERT(_currentLabelType == LabelType::TTF || _currentLabelType == LabelType::STRING_TEXTURE,
-             "Only supported system font and ttf!");
-
-    if (_currentLabelType == LabelType::STRING_TEXTURE && _textColor != color)
+    if (_textColor != color)
     {
-        _contentDirty = true;
+        switch (_currentLabelType)
+        {
+        case LabelType::STRING_TEXTURE:
+        case LabelType::BMFONT:
+        case LabelType::TTF:
+            _contentDirty = true;
+            break;
+        }
     }
-
     _textColor    = color;
     _textColorF.r = _textColor.r / 255.0f;
     _textColorF.g = _textColor.g / 255.0f;
     _textColorF.b = _textColor.b / 255.0f;
     _textColorF.a = _textColor.a / 255.0f;
+    setColor(Color3B(color));
 }
 
 void Label::updateColor()
@@ -2545,9 +2605,9 @@ void Label::setGlobalZOrder(float globalZOrder)
         }
     }
 
-    if (_underlineNode)
+    if (_lineDrawNode)
     {
-        _underlineNode->setGlobalZOrder(globalZOrder);
+        _lineDrawNode->setGlobalZOrder(globalZOrder);
     }
 
 #if AX_LABEL_DEBUG_DRAW

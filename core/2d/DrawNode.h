@@ -638,6 +638,9 @@ private:
                       float thickness    = 1.0f,
                       bool isconvex      = true);
 
+    // Internal function _drawLine
+    void _drawLine(const Vec2& from, const Vec2& to, const Color4B& color);
+
     // Internal function _drawSegment
     void _drawSegment(const Vec2& origin,
                       const Vec2& destination,
@@ -686,10 +689,10 @@ private:
     AX_DISALLOW_COPY_AND_ASSIGN(DrawNode);
 
 public:
-    class Properties
+    class AX_DLL Properties
     {
     public:
-        float factor = 0.5f;  /// thickness factor
+        float factor;  /// thickness scale factor 
 
         // transforming stuff
         Vec2 scale;
@@ -778,14 +781,10 @@ public:
 
         * @js NA
         */
-        void setDefaultValues()
-        {
-            scale     = Vec2(1.0f, 1.0f);
-            center    = Vec2(0.0f, 0.0f);
-            rotation  = 0.0f;
-            position  = Vec2(0.0f, 0.0f);
-            drawOrder = false;
-        };
+        void setDefaultValues();
+        float getFactor() { return factor; };
+        void setFactor(float fac) { factor = fac; };
+
     } properties;
 };
 
