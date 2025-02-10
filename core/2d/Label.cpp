@@ -1522,7 +1522,6 @@ void Label::enableStrikethrough()
         _lineDrawNode->setGlobalZOrder(getGlobalZOrder());
         _lineDrawNode->properties.setFactor(_lineDrawNode->properties.getFactor() * 2.0f); // 2.0f: Makes the line smaller 
         addChild(_lineDrawNode, 100000); 
-        addChild(_lineDrawNode, 100000);
     }
 }
 
