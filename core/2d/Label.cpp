@@ -2447,7 +2447,10 @@ void Label::setTextColor(const Color4B& color)
     _textColorF.g = _textColor.g / 255.0f;
     _textColorF.b = _textColor.b / 255.0f;
     _textColorF.a = _textColor.a / 255.0f;
-    setColor(Color3B(color));
+
+    //  System font and TTF using setColor for Outline/Glow!");
+    if (_currentLabelType != LabelType::TTF && _currentLabelType != LabelType::STRING_TEXTURE) 
+        setColor(Color3B(color)); 
 }
 
 void Label::updateColor()
