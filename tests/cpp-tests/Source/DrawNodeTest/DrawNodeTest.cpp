@@ -1966,11 +1966,6 @@ DrawNodeThicknessTest::DrawNodeThicknessTest()
     scheduleUpdate();
 }
 
-
-
-
-
-
 void DrawNodeThicknessTest::update(float dt)
 {
     DrawNodeBaseTest::update(dt);

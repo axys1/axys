@@ -1503,7 +1503,7 @@ void Label::enableUnderline()
     {
         _lineDrawNode = DrawNode::create();
         _lineDrawNode->setGlobalZOrder(getGlobalZOrder());
-        _lineDrawNode->properties.setFactor(_lineDrawNode->properties.getFactor() * 2.0f);
+        _lineDrawNode->properties.setFactor(_lineDrawNode->properties.getFactor() * 2.0f);  // 2.0f: Makes the line smaller 
         addChild(_lineDrawNode, 100000);
     }
 }
@@ -1520,7 +1520,8 @@ void Label::enableStrikethrough()
     {
         _lineDrawNode = DrawNode::create();
         _lineDrawNode->setGlobalZOrder(getGlobalZOrder());
-        _lineDrawNode->properties.setFactor(_lineDrawNode->properties.getFactor() * 2.0f);
+        _lineDrawNode->properties.setFactor(_lineDrawNode->properties.getFactor() * 2.0f); // 2.0f: Makes the line smaller 
+        addChild(_lineDrawNode, 100000); 
         addChild(_lineDrawNode, 100000);
     }
 }
@@ -2431,23 +2432,17 @@ void Label::updateDisplayedOpacity(uint8_t parentOpacity)
 // that's fine but it should be documented
 void Label::setTextColor(const Color4B& color)
 {
-    //AXASSERT(_currentLabelType == LabelType::TTF || _currentLabelType == LabelType::STRING_TEXTURE,
-    //         "Only supported system font and ttf!");
-
-    if (_currentLabelType == LabelType::STRING_TEXTURE && _textColor != color)
+    if (_textColor != color)
     {
-        _contentDirty = true;
+        switch (_currentLabelType)
+        {
+        case LabelType::STRING_TEXTURE:
+        case LabelType::BMFONT:
+        case LabelType::TTF:
+            _contentDirty = true;
+            break;
+        }
     }
-    if (_currentLabelType == LabelType::BMFONT && _textColor != color)
-    {
-        _contentDirty = true;
-    }
-
-    if (_currentLabelType == LabelType::TTF && _textColor != color)
-    {
-        _contentDirty = true;
-    }
-
     _textColor    = color;
     _textColorF.r = _textColor.r / 255.0f;
     _textColorF.g = _textColor.g / 255.0f;
