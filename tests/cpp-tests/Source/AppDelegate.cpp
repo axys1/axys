@@ -38,6 +38,8 @@ AppDelegate::AppDelegate() : _testController(nullptr) {}
 
 AppDelegate::~AppDelegate()
 {
+
+    AXLOGI("AppDelegate::~AppDelegate");
     // SimpleAudioEngine::end();
     // TODO: minggo
     //  cocostudio::ArmatureDataManager::destroyInstance();

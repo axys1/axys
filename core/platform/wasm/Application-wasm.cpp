@@ -36,7 +36,10 @@ THE SOFTWARE.
 #    include "base/Director.h"
 #    include "base/Utils.h"
 #    include "platform/FileUtils.h"
+#    include "yasio/utils.hpp"
 #    include <emscripten/emscripten.h>
+
+extern void axmol_wasm_app_exit();
 
 extern "C" {
 //
@@ -47,13 +50,13 @@ void axmol_hdoc_visibilitychange(bool hidden)
 }
 
 // webglcontextlost
-void axmol_wgl_context_lost()
+void axmol_webglcontextlost()
 {
     AXLOGI("receive event: webglcontextlost");
 }
 
 // webglcontextrestored
-void axmol_wgl_context_restored()
+void axmol_webglcontextrestored()
 {
     AXLOGI("receive event: webglcontextrestored");
 
@@ -90,7 +93,76 @@ namespace ax
 // sharedApplication pointer
 Application* Application::sm_pSharedApplication = nullptr;
 
-Application::Application() : _animationSpeed(60)
+static int64_t NANOSECONDSPERSECOND = 1000000000LL;
+static int64_t NANOSECONDSPERMICROSECOND = 1000000LL;
+static int64_t FPS_CONTROL_THRESHOLD = static_cast<int64_t>(1.0f / 1200.0f * NANOSECONDSPERSECOND);
+
+static int64_t s_animationInterval = static_cast<int64_t>(1/60.0 * NANOSECONDSPERSECOND);
+
+static Director* __director;
+static int64_t mLastTickInNanoSeconds = 0;
+
+static void renderFrame() {
+    auto director = __director;
+    auto glview   = director->getGLView();
+
+    director->mainLoop();
+    glview->pollEvents();
+
+    if (glview->windowShouldClose())
+    {
+        AXLOGI("shuting down axmol wasm app ...");
+        emscripten_cancel_main_loop();  // Cancel current loop and set the cleanup one.
+
+        if (glview->isOpenGLReady())
+        {
+            director->end();
+            director->mainLoop();
+        }
+        glview->release();
+
+        axmol_wasm_app_exit();
+    }
+}
+
+static void updateFrame(void)
+{
+    renderFrame();
+
+    /*
+    * No need to use algorithm in default(60,90,120... FPS) situation,
+    * since onDrawFrame() was called by system 60 times per second by default.
+    */
+    if (s_animationInterval > FPS_CONTROL_THRESHOLD) {
+        auto interval = yasio::xhighp_clock() - mLastTickInNanoSeconds;
+
+        if (interval < s_animationInterval) {
+            std::this_thread::sleep_for(std::chrono::nanoseconds(s_animationInterval - interval));
+        }
+
+        mLastTickInNanoSeconds = yasio::xhighp_clock();
+    }
+}
+
+static void getCurrentLangISO2(char buf[16]) {
+    // clang-format off
+    EM_ASM_ARGS(
+        {
+            var lang = localStorage.getItem('localization_language');
+            if (lang == null)
+            {
+                stringToUTF8(window.navigator.language.replace(/-.*/, ""), $0, 16);
+            }
+            else
+            {
+                stringToUTF8(lang, $0, 16);
+            }
+        },
+        buf);
+    // clang-format on
+}
+
+Application::Application()
 {
     AX_ASSERT(!sm_pSharedApplication);
     sm_pSharedApplication = this;
@@ -102,15 +174,6 @@ Application::~Application()
     sm_pSharedApplication = nullptr;
 }
 
-extern "C" void mainLoopIter(void)
-{
-    auto director = Director::getInstance();
-    auto glview   = director->getGLView();
-
-    director->mainLoop();
-    glview->pollEvents();
-}
-
 int Application::run()
 {
     initGLContextAttrs();
@@ -120,33 +183,27 @@ int Application::run()
         return 1;
     }
 
-    auto director = Director::getInstance();
-    auto glview   = director->getGLView();
+    __director = Director::getInstance();
 
     // Retain glview to avoid glview being released in the while loop
-    glview->retain();
+    __director->getGLView()->retain();
 
-    // emscripten_set_main_loop(&mainLoopIter, 0, 1);
-    emscripten_set_main_loop(&mainLoopIter, _animationSpeed, 1);
-    // TODO: ? does these cleanup really run?
-    /* Only work on Desktop
-     *  Director::mainLoop is really one frame logic
-     *  when we want to close the window, we should call Director::end();
-     *  then call Director::mainLoop to do release of internal resources
-     */
-    if (glview->isOpenGLReady())
-    {
-        director->end();
-        director->mainLoop();
-        director = nullptr;
-    }
-    glview->release();
+    /*
+    The JavaScript environment will call that function at a specified number
+    of frames per second. If called on the main browser thread, setting 0 or
+    a negative value as the fps will use the browser’s requestAnimationFrame mechanism
+    o call the main loop function. This is HIGHLY recommended if you are doing rendering,
+    as the browser’s requestAnimationFrame will make sure you render at a proper smooth rate
+    that lines up properly with the browser and monitor.
+    */
+    emscripten_set_main_loop(updateFrame, -1, false);
+
     return 0;
 }
 
 void Application::setAnimationInterval(float interval)
 {
-    _animationSpeed = 1.0f / interval;
+    s_animationInterval = static_cast<int64_t>(interval * NANOSECONDSPERSECOND);
 }
 
 void Application::setResourceRootPath(const std::string& rootResDir)
@@ -203,20 +260,7 @@ const char* Application::getCurrentLanguageCode()
 {
     static char code[3] = {0};
     char pLanguageName[16];
-
-    EM_ASM_ARGS(
-        {
-            var lang = localStorage.getItem('localization_language');
-            if (lang == null)
-            {
-                stringToUTF8(window.navigator.language.replace(/ - .*/, ""), $0, 16);
-            }
-            else
-            {
-                stringToUTF8(lang, $0, 16);
-            }
-        },
-        pLanguageName);
+    getCurrentLangISO2(pLanguageName);
     strncpy(code, pLanguageName, 2);
     code[2] = '\0';
     return code;
@@ -225,21 +269,7 @@ const char* Application::getCurrentLanguageCode()
 LanguageType Application::getCurrentLanguage()
 {
     char pLanguageName[16];
-
-    EM_ASM_ARGS(
-        {
-            var lang = localStorage.getItem('localization_language');
-            if (lang == null)
-            {
-                stringToUTF8(window.navigator.language.replace(/ - .*/, ""), $0, 16);
-            }
-            else
-            {
-                stringToUTF8(lang, $0, 16);
-            }
-        },
-        pLanguageName);
-
+    getCurrentLangISO2(pLanguageName);
     return utils::getLanguageTypeByISO2(pLanguageName);
 }
 

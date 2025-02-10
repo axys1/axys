@@ -35,6 +35,10 @@
 #include <functional>
 #include <stdexcept>
 
+#if defined(__EMSCRIPTEN__)
+#    include <emscripten/emscripten.h>
+#endif
+
 namespace ax
 {
 
@@ -135,15 +139,20 @@ static int clampThreads(int nThreads)
 {
     if (nThreads <= 0)
     {
-#if !defined(__EMSCRIPTEN__) || defined(__EMSCRIPTEN_PTHREADS__)
+#if !defined(__EMSCRIPTEN__)
 #    if defined(AX_PLATFORM_PC)
         nThreads = (std::max)(static_cast<int>(std::thread::hardware_concurrency() * 3 / 2), 2);
 #    else
         nThreads = (std::clamp)(static_cast<int>(std::thread::hardware_concurrency()) - 2, 2, 8);
 #    endif
 #else
-        AXLOGW("The emscripten pthread not enabled, JobSystem not working");
+#    if defined(__EMSCRIPTEN_PTHREADS__)
+        nThreads = EM_ASM_INT(return PThread.unusedWorkers.length);
+        AXLOGI("The emscripten pthread enabled, unused workers count:{}", nThreads);
+#    else
         nThreads = 0;
+        AXLOGW("The emscripten pthread not enabled, JobSystem not working");
+#    endif
 #endif
     }
 
@@ -235,4 +244,4 @@ void JobSystem::enqueue(std::function<void()> task, std::function<void()> done)
 
 #pragma endregion
 
-}
+}  // namespace ax

@@ -33,20 +33,23 @@
 
 using namespace ax;
 
-int axmol_main()
+namespace
 {
-    // create the application instance
-    AppDelegate app;
-    return Application::getInstance()->run();
+std::unique_ptr<AppDelegate> appDelegate;
 }
 
-int main(int argc, char** argv)
+void axmol_wasm_app_exit() 
 {
-    auto result = axmol_main();
+    appDelegate = nullptr;
 
 #if AX_OBJECT_LEAK_DETECTION
     Object::printLeaks();
 #endif
+}
 
-    return result;
+int main(int argc, char** argv)
+{
+    // create the application instance
+    appDelegate.reset(new AppDelegate());
+    return Application::getInstance()->run();
 }

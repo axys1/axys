@@ -112,7 +112,6 @@ public:
      */
     virtual Platform getTargetPlatform() override;
 protected:
-    long _animationSpeed;  // micro second
     std::string _resourceRootPath;
 
     static Application * sm_pSharedApplication;
