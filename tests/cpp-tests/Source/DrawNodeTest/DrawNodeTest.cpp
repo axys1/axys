@@ -1332,9 +1332,7 @@ float verticesFB[] = {
 DrawNodeTests::DrawNodeTests()
 {
     ADD_TEST_CASE(DrawNodeMethodsTest);
-
     ADD_TEST_CASE(DrawNodeSpLinesTest);
-
     ADD_TEST_CASE(DrawNodeAxmolTest2);
 
 #if defined(AX_PLATFORM_PC)
@@ -1346,12 +1344,11 @@ DrawNodeTests::DrawNodeTests()
     ADD_TEST_CASE(DrawNodeMorphTest_SolidPolygon);
 
     ADD_TEST_CASE(DrawNodePieTest);
-
     ADD_TEST_CASE(DrawNodeDrawInWrongOrder_Issue1888);
 
     ADD_TEST_CASE(DrawNodeThicknessTest);
     ADD_TEST_CASE(DrawNodeThicknessStressTest);
-
+    ADD_TEST_CASE(DrawNodeLineDrawTest);
     ADD_TEST_CASE(DrawNodeIssueTester);
 }
 
@@ -1805,9 +1802,8 @@ void DrawNodeMorphTest_Polygon::update(float dt)
             state[n] = !state[n];
         }
 
-   //         static Color4B color3[] = {Color4B::GREEN, Color4B::BLUE, Color4B::RED};
         drawNodeArray[n]->properties.setScale(Vec2(0.5f, 0.5f));
-        drawNodeArray[n]->drawPoly(verticesObjMorph[n], segments, sliderValue[sliderType::Thickness], color[n]);
+        drawNodeArray[n]->drawPoly(verticesObjMorph[n], segments, true, color[n], sliderValue[sliderType::Thickness] );
     }
 }
 
@@ -1879,7 +1875,6 @@ void DrawNodePictureTest::update(float dt)
     do
     {
         Color4F color = Color4F(sph_xx[sph_la + 1], sph_yy[sph_la + 1], sph_xx[sph_la + 2], sph_yy[sph_la + 2] * 255);
-        // color = Color4F(AXRANDOM_0_1(), AXRANDOM_0_1(), AXRANDOM_0_1(), 1);
         Vec2* vertices = new Vec2[(int)(sph_cmb - 3)];
         for (int n = 3; n < sph_cmb; n++)
         {
@@ -1907,6 +1902,60 @@ string DrawNodePictureTest::title() const
 string DrawNodePictureTest::subtitle() const
 {
     return "Actions Test";
+}
+
+DrawNodeLineDrawTest::DrawNodeLineDrawTest()
+{
+    initSliders();
+    slider[sliderType::Thickness]->setEnabled(true);
+
+    scheduleUpdate();
+}
+
+void DrawNodeLineDrawTest::update(float dt)
+{
+    DrawNodeBaseTest::update(dt);
+
+    drawNode->clear();
+
+    float segments = 36.0f;
+    int radius = 100;
+    float angle = 360/segments;
+    const float coef = (float)M_PI / 360;
+    for (int i = 0; i < 360;)
+    {
+        float rads     = i * coef;
+        i += segments;
+        float x = radius * cosf(rads) + center.x;
+        float y = radius * sinf(rads) + center.y;
+
+        drawNode->drawLine(center - Vec2(20, 40), Vec2(x, y)- Vec2(20, 40), Color4F::RED, sliderValue[sliderType::Thickness]);
+        drawNode->drawLine(center + Vec2(120, 20), Vec2(x, y) + Vec2(120,20), Color4F::BLUE, sliderValue[sliderType::Thickness]);
+        drawNode->drawLine(center - Vec2(130, 110),Vec2(x,y) - Vec2(130,110), Color4F::GREEN, sliderValue[sliderType::Thickness]);
+    }
+}
+
+void DrawNodeLineDrawTest::onEnter()
+{
+    for (int i = 0; i < sliderType::sliderTypeLast; i++)
+    {
+        sliderValue[i] = 1;
+        slider[i]->setPercent(sliderValue[i]);
+    }
+    sliderValue[sliderType::Thickness] = 10;
+    slider[sliderType::Thickness]->setPercent(sliderValue[sliderType::Thickness]);
+
+    DrawNodeBaseTest::onEnter();
+}
+
+string DrawNodeLineDrawTest::title() const
+{
+    return "lineDraw Test";
+}
+
+string DrawNodeLineDrawTest::subtitle() const
+{
+    return "";
 }
 
 DrawNodeThicknessTest::DrawNodeThicknessTest()
@@ -2534,10 +2583,6 @@ void DrawNodeMethodsTest::drawAll()
             drawNode->drawLine(Vec2(-size.x / 2, -size.y / 2 + i * 4), Vec2(size.x - 50, -size.y / 2 + i * 4),
                                Color4F(AXRANDOM_0_1(), AXRANDOM_0_1(), AXRANDOM_0_1(), 1.0f),
                                sliderValue[sliderType::Thickness]);
-            drawNode->drawLine(Vec2(-size.x + 50, -size.y + AXRANDOM_0_1() * 2 * size.y),
-                               Vec2(size.x - 50, -size.y + AXRANDOM_0_1() * 2 * size.y),
-                               Color4F(AXRANDOM_0_1(), AXRANDOM_0_1(), AXRANDOM_0_1(), 1.0f),
-                               sliderValue[sliderType::Thickness]);
         }
 
         break;
@@ -2551,10 +2596,6 @@ void DrawNodeMethodsTest::drawAll()
             drawNode->drawRect(center / 2 - rec, center / 2 + rec,
                                Color4F(AXRANDOM_0_1(), AXRANDOM_0_1(), AXRANDOM_0_1(), 1.0f),
                                sliderValue[sliderType::Thickness]);
-            drawNode->drawRect(Vec2(AXRANDOM_MINUS1_1() * 300, AXRANDOM_MINUS1_1() * 300),
-                               Vec2(AXRANDOM_MINUS1_1() * 400, AXRANDOM_MINUS1_1() * 400),
-                               Color4F(AXRANDOM_0_1(), AXRANDOM_0_1(), AXRANDOM_0_1(), 1.0f),
-                               sliderValue[sliderType::Thickness]);
         }
 
         break;
@@ -2564,13 +2605,6 @@ void DrawNodeMethodsTest::drawAll()
         for (int i = 0; i < 100; i++)
         {
             drawNode->drawCircle(VisibleRect::center(), 3 * i, AX_DEGREES_TO_RADIANS(90), i, false, 1.0f, 1.0f,
-                                 Color4F(AXRANDOM_0_1(), AXRANDOM_0_1(), AXRANDOM_0_1(), 1.0f),
-                                 sliderValue[sliderType::Thickness]);
-
-            Vec2 pos = Vec2(-100, -100) + Vec2(AXRANDOM_MINUS1_1() * VisibleRect::rightTop().x,
-                                               AXRANDOM_MINUS1_1() * VisibleRect::rightTop().y);
-            drawNode->drawCircle(VisibleRect::center() + pos, AXRANDOM_0_1() * 200,
-                                 AX_DEGREES_TO_RADIANS(AXRANDOM_MINUS1_1() * 90), 30, true,
                                  Color4F(AXRANDOM_0_1(), AXRANDOM_0_1(), AXRANDOM_0_1(), 1.0f),
                                  sliderValue[sliderType::Thickness]);
         }
@@ -3404,7 +3438,7 @@ DrawNodeIssueTester::DrawNodeIssueTester()
 
     drawNode->drawCircle(Vec2(0, 100), 40, AX_DEGREES_TO_RADIANS(-90), 30, false, 1.0f, 1.0f, Color4F::RED, 6);
 
-    //  scheduleUpdate();
+   // scheduleUpdate();
 }
 
 void DrawNodeIssueTester::onEnter()
@@ -3414,12 +3448,12 @@ void DrawNodeIssueTester::onEnter()
 
 void DrawNodeIssueTester::update(float dt)
 {
-    // DrawNodeBaseTest::update(dt);
+    DrawNodeBaseTest::update(dt);
 }
 
 string DrawNodeIssueTester::title() const
 {
-    return "For issue tests (future)";
+    return "";
 }
 
 string DrawNodeIssueTester::subtitle() const

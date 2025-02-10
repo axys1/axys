@@ -909,18 +909,17 @@ void DrawNode::_drawPolygon(const Vec2* verts,
     }
     if (outline)
     {
+        float width = thickness / properties.factor;
         if (thickness != 1.0f || properties.drawOrder)
         {
-            thickness *= properties.factor;
-
             for (unsigned int i = 1; i < (count); i++)
             {
                 Vec2 a  = _vertices[i - 1];
                 Vec2 b  = _vertices[i];
                 Vec2 n  = ((b - a).getPerp()).getNormalized();
                 Vec2 t  = n.getPerp();
-                Vec2 nw = n * thickness;
-                Vec2 tw = t * thickness;
+                Vec2 nw = n * width;
+                Vec2 tw = t * width;
                 Vec2 v0 = b - (nw + tw);
                 Vec2 v1 = b + (nw - tw);
                 Vec2 v2 = b - nw;
@@ -1001,10 +1000,10 @@ void DrawNode::_drawPolygon(const Vec2* verts,
                 Vec2 offset0 = extrude[i].offset;
                 Vec2 offset1 = extrude[j].offset;
 
-                Vec2 inner0 = v0 - offset0 * thickness;
-                Vec2 inner1 = v1 - offset1 * thickness;
-                Vec2 outer0 = v0 + offset0 * thickness;
-                Vec2 outer1 = v1 + offset1 * thickness;
+                Vec2 inner0 = v0 - offset0 * width;
+                Vec2 inner1 = v1 - offset1 * width;
+                Vec2 outer0 = v0 + offset0 * width;
+                Vec2 outer1 = v1 + offset1 * width;
 
                 triangles[ii++] = {{inner0, borderColor, -n0}, {inner1, borderColor, -n0}, {outer1, borderColor, n0}};
 
@@ -1055,25 +1054,26 @@ void DrawNode::_drawSegment(const Vec2& from,
                             DrawNode::EndType etStart,
                             DrawNode::EndType etEnd)
 {
-    Vec2 vertices[2] = {from, to};
-    applyTransform(vertices, vertices, 2);
+    if (thickness < 1.0f)
+        thickness = 1.0f;
 
     if (thickness == 1.0f && !properties.drawOrder)
     {
-        auto line = expandBufferAndGetPointer(_lines, 2);
-        _linesDirty = true;
-
-        line[0] = {vertices[0], color, Vec2::ZERO};
-        line[1] = {vertices[1], color, Vec2::ZERO};
+        _drawLine(from, to, color); // fastest way to draw a line
     }
     else
     {
+        Vec2 vertices[2] = {from, to};
+        applyTransform(vertices, vertices, 2);
+
+        float width = thickness / (2 * properties.factor);
+
         Vec2 a  = vertices[0];
         Vec2 b  = vertices[1];
         Vec2 n  = ((b - a).getPerp()).getNormalized();
         Vec2 t  = n.getPerp();
-        Vec2 nw = n * thickness;
-        Vec2 tw = t * thickness;
+        Vec2 nw = n * width;
+        Vec2 tw = t * width;
         Vec2 v0 = b - (nw + tw);
         Vec2 v1 = b + (nw - tw);
         Vec2 v2 = b - nw;
@@ -1176,6 +1176,19 @@ void DrawNode::_drawSegment(const Vec2& from,
             break;
         }
     }
+}
+// Internal function _drawLine => thickness is always 1 (fastes way to draw a line)
+void DrawNode::_drawLine(const Vec2& from, const Vec2& to, const Color4B& color)
+{
+    Vec2 vertices[2] = {from, to};
+    applyTransform(vertices, vertices, 2);
+
+
+    auto line = expandBufferAndGetPointer(_lines, 2);
+    _linesDirty = true;
+
+    line[0] = {vertices[0], color, Vec2::ZERO};
+    line[1] = {vertices[1], color, Vec2::ZERO};
 }
 
 void DrawNode::_drawDot(const Vec2& pos, float radius, const Color4B& color)
@@ -1571,6 +1584,18 @@ void DrawNode::applyTransform(const Vec2* from, Vec2* to, unsigned int count)
         }
     }
 }
+
+void DrawNode::Properties::setDefaultValues()
+{
+    auto fac = Director::getInstance()->getContentScaleFactor();
+    factor   = fac;
+    
+    scale     = Vec2(1.0f, 1.0f);
+    center    = Vec2(0.0f, 0.0f);
+    rotation  = 0.0f;
+    position  = Vec2(0.0f, 0.0f);
+    drawOrder = false;
+};
 
 #if defined(_WIN32)
 #    pragma pop_macro("TRANSPARENT")

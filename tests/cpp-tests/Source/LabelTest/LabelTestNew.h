@@ -891,6 +891,19 @@ public:
     ax::Label* _label2a;
 };
 
+class LabelUnderlineStrikethroughMultiline : public AtlasDemoNew
+{
+public:
+    CREATE_FUNC(LabelUnderlineStrikethroughMultiline);
+
+    LabelUnderlineStrikethroughMultiline();
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+
+    ax::Label* _label1a;
+    ax::Label* _label2a;
+};
+
 class LabelUnderlineMultiline : public AtlasDemoNew
 {
 public:
