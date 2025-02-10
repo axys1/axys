@@ -216,6 +216,28 @@ void AudioEngine::setVolume(AUDIO_ID audioID, float volume)
     }
 }
 
+void AudioEngine::setPitch(AUDIO_ID audioID, float pitch)
+{
+    auto it = _audioIDInfoMap.find(audioID);
+    if (it != _audioIDInfoMap.end())
+    {
+        if (pitch < 0.5f)
+        {
+            pitch = 0.5f;
+        }
+        else if (pitch > 2.0f)
+        {
+            pitch = 2.0f;
+        }
+
+        if (it->second.pitch != pitch)
+        {
+            _audioEngineImpl->setPitch(audioID, pitch);
+            it->second.pitch = pitch;
+        }
+    }
+}
+
 void AudioEngine::pause(AUDIO_ID audioID)
 {
     auto it = _audioIDInfoMap.find(audioID);

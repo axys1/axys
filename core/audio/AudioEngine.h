@@ -190,6 +190,22 @@ public:
     static float getVolume(AUDIO_ID audioID);
 
     /**
+     * Sets pitch for an audio instance.
+     *
+     * @param audioID An audioID returned by the play2d function.
+     * @param pitch Volume value (range from 0.5 to 2.0).
+     */
+    static void setPitch(AUDIO_ID audioID, float pitch);
+
+    /**
+     * Gets the volume value of an audio instance.
+     *
+     * @param audioID An audioID returned by the play2d function.
+     * @return pitch value (range from 0.5 to 2.0).
+     */
+    static float getPitch(AUDIO_ID audioID);
+
+    /**
      * Pause an audio instance.
      *
      * @param audioID An audioID returned by the play2d function.
@@ -354,6 +370,7 @@ protected:
         ProfileHelper* profileHelper;
 
         float volume;
+        float pitch;
         bool loop;
         float duration;
         AudioState state;

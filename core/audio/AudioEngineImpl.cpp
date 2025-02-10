@@ -551,6 +551,7 @@ AUDIO_ID AudioEngineImpl::play2d(std::string_view filePath, bool loop, float vol
     player->_alSource = alSource;
     player->_loop     = loop;
     player->_volume   = volume;
+    player->_pitch    = 1.0f;
     if (time > 0.0f)
     {
         player->_currTime  = time;
@@ -635,6 +636,30 @@ void AudioEngineImpl::setVolume(AUDIO_ID audioID, float volume)
     if (player->_ready)
     {
         alSourcef(player->_alSource, AL_GAIN, volume);
+
+        auto error = alGetError();
+        if (error != AL_NO_ERROR)
+        {
+            AXLOGE("{}: audio id = {}, error = {:#x}", __FUNCTION__, audioID, error);
+        }
+    }
+}
+
+void AudioEngineImpl::setPitch(AUDIO_ID audioID, float pitch)
+{
+    std::unique_lock<std::recursive_mutex> lck(_threadMutex);
+    auto iter = _audioPlayers.find(audioID);
+    if (iter == _audioPlayers.end())
+        return;
+
+    auto player = iter->second;
+    lck.unlock();
+
+    player->_pitch = pitch;
+
+    if (player->_ready)
+    {
+        alSourcef(player->_alSource, AL_PITCH, pitch);
 
         auto error = alGetError();
         if (error != AL_NO_ERROR)
