@@ -221,14 +221,7 @@ void AudioEngine::setPitch(AUDIO_ID audioID, float pitch)
     auto it = _audioIDInfoMap.find(audioID);
     if (it != _audioIDInfoMap.end())
     {
-        if (pitch < 0.5f)
-        {
-            pitch = 0.5f;
-        }
-        else if (pitch > 2.0f)
-        {
-            pitch = 2.0f;
-        }
+        pitch = std::clamp(pitch, 0.5f, 2.0f);
 
         if (it->second.pitch != pitch)
         {
