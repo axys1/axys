@@ -438,6 +438,80 @@ int lua_ax_audioengine_AudioEngine_getVolume(lua_State* tolua_S)
 #endif
     return 0;
 }
+int lua_ax_audioengine_AudioEngine_setPitch(lua_State* tolua_S)
+{
+    int argc = 0;
+    bool ok  = true;
+
+#if _AX_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+#if _AX_DEBUG >= 1
+    if (!tolua_isusertable(tolua_S,1,"ax.AudioEngine",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    argc = lua_gettop(tolua_S) - 1;
+
+    if (argc == 2)
+    {
+        int arg0;
+        double arg1;
+        ok &= luaval_to_int32(tolua_S, 2,(int *)&arg0, "ax.AudioEngine:setPitch");
+        ok &= luaval_to_number(tolua_S, 3,&arg1, "ax.AudioEngine:setPitch");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_audioengine_AudioEngine_setPitch'", nullptr);
+            return 0;
+        }
+        ax::AudioEngine::setPitch(arg0, arg1);
+        lua_settop(tolua_S, 1);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "ax.AudioEngine:setPitch",argc, 2);
+    return 0;
+#if _AX_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_ax_audioengine_AudioEngine_setPitch'.",&tolua_err);
+#endif
+    return 0;
+}
+int lua_ax_audioengine_AudioEngine_getPitch(lua_State* tolua_S)
+{
+    int argc = 0;
+    bool ok  = true;
+
+#if _AX_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+#if _AX_DEBUG >= 1
+    if (!tolua_isusertable(tolua_S,1,"ax.AudioEngine",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    argc = lua_gettop(tolua_S) - 1;
+
+    if (argc == 1)
+    {
+        int arg0;
+        ok &= luaval_to_int32(tolua_S, 2,(int *)&arg0, "ax.AudioEngine:getPitch");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_audioengine_AudioEngine_getPitch'", nullptr);
+            return 0;
+        }
+        auto&& ret = ax::AudioEngine::getPitch(arg0);
+        tolua_pushnumber(tolua_S,(lua_Number)ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "ax.AudioEngine:getPitch",argc, 1);
+    return 0;
+#if _AX_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_ax_audioengine_AudioEngine_getPitch'.",&tolua_err);
+#endif
+    return 0;
+}
 int lua_ax_audioengine_AudioEngine_pause(lua_State* tolua_S)
 {
     int argc = 0;
@@ -1161,6 +1235,8 @@ int lua_register_ax_audioengine_AudioEngine(lua_State* tolua_S)
         tolua_function(tolua_S,"isLoop", lua_ax_audioengine_AudioEngine_isLoop);
         tolua_function(tolua_S,"setVolume", lua_ax_audioengine_AudioEngine_setVolume);
         tolua_function(tolua_S,"getVolume", lua_ax_audioengine_AudioEngine_getVolume);
+        tolua_function(tolua_S,"setPitch", lua_ax_audioengine_AudioEngine_setPitch);
+        tolua_function(tolua_S,"getPitch", lua_ax_audioengine_AudioEngine_getPitch);
         tolua_function(tolua_S,"pause", lua_ax_audioengine_AudioEngine_pause);
         tolua_function(tolua_S,"pauseAll", lua_ax_audioengine_AudioEngine_pauseAll);
         tolua_function(tolua_S,"resume", lua_ax_audioengine_AudioEngine_resume);
