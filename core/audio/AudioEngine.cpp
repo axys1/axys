@@ -199,14 +199,7 @@ void AudioEngine::setVolume(AUDIO_ID audioID, float volume)
     auto it = _audioIDInfoMap.find(audioID);
     if (it != _audioIDInfoMap.end())
     {
-        if (volume < 0.0f)
-        {
-            volume = 0.0f;
-        }
-        else if (volume > 1.0f)
-        {
-            volume = 1.0f;
-        }
+        volume = std::max(volume, 0.0f);
 
         if (it->second.volume != volume)
         {
@@ -229,6 +222,18 @@ void AudioEngine::setPitch(AUDIO_ID audioID, float pitch)
             it->second.pitch = pitch;
         }
     }
+}
+
+float AudioEngine::getPitch(AUDIO_ID audioID)
+{
+    auto tmpIterator = _audioIDInfoMap.find(audioID);
+    if (tmpIterator != _audioIDInfoMap.end())
+    {
+        return tmpIterator->second.pitch;
+    }
+
+    AXLOGW("AudioEngine::getPitch-->The audio instance {} is non-existent", audioID);
+    return 0.0f;
 }
 
 void AudioEngine::pause(AUDIO_ID audioID)
