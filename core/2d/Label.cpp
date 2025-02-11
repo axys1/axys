@@ -1724,8 +1724,8 @@ void Label::updateContent()
 
     if (_lineDrawNode)
     {
-        Color4B lineColor = Color4B(_displayedColor);
-        if (_textColor != Color4B::WHITE && _textColor != lineColor)
+        Color32 lineColor = Color32(_displayedColor);
+        if (_textColor != Color32::WHITE && _textColor != lineColor)
             lineColor = _textColor;
 
         _lineDrawNode->clear();
@@ -1746,10 +1746,12 @@ void Label::updateContent()
                                             Color(lineColor), thickness);
                 }
 
-                // Github issue #15214. Uses _displayedColor instead of _textColor for the underline.
-                // This is to have the same behavior of SystemFonts.
-                _underlineNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
-                                         Color(_displayedColor), charheight / 6);
+                if (_underlineEnabled)
+                {
+                    float y = (_numberOfLines - i - 1) * charheight;
+                    _lineDrawNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
+                                            Color(lineColor), thickness);
+                }
             }
         }
         else if (_textSprite) // ...and is the logic for System fonts

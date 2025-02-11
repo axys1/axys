@@ -1929,9 +1929,9 @@ void DrawNodeLineDrawTest::update(float dt)
         float x = radius * cosf(rads) + center.x;
         float y = radius * sinf(rads) + center.y;
 
-        drawNode->drawLine(center - Vec2(20, 40), Vec2(x, y)- Vec2(20, 40), Color4F::RED, sliderValue[sliderType::Thickness]);
-        drawNode->drawLine(center + Vec2(120, 20), Vec2(x, y) + Vec2(120,20), Color4F::BLUE, sliderValue[sliderType::Thickness]);
-        drawNode->drawLine(center - Vec2(130, 110),Vec2(x,y) - Vec2(130,110), Color4F::GREEN, sliderValue[sliderType::Thickness]);
+        drawNode->drawLine(center - Vec2(20, 40), Vec2(x, y)- Vec2(20, 40), Color::RED, sliderValue[sliderType::Thickness]);
+        drawNode->drawLine(center + Vec2(120, 20), Vec2(x, y) + Vec2(120,20), Color::BLUE, sliderValue[sliderType::Thickness]);
+        drawNode->drawLine(center - Vec2(130, 110),Vec2(x,y) - Vec2(130,110), Color::GREEN, sliderValue[sliderType::Thickness]);
     }
 }
 
