@@ -11,7 +11,7 @@
 
 ## Box2D
 - [![Upstream](https://img.shields.io/github/v/release/erincatto/box2d?label=Upstream)](https://github.com/erincatto/box2d)
-- Version: 2.4.2
+- Version: 3.0.0-df7373c
 - License: MIT
 
 ## Bullet
@@ -23,11 +23,6 @@
 ## c-ares
 - [![Upstream](https://img.shields.io/github/v/release/c-ares/c-ares?label=Upstream)](https://github.com/c-ares/c-ares)
 - Version: 1.34.4
-- License: MIT
-
-## Chipmunk2D
-- [![Upstream](https://img.shields.io/github/v/tag/slembcke/Chipmunk2D?label=Upstream)](https://github.com/slembcke/Chipmunk2D)
-- Version: git 7.0.3-0cb05e7 {until Dec 16, 2021}
 - License: MIT
 
 ## Clipper2
@@ -60,6 +55,11 @@
 - Version: git 344eb40 (121)
 - License: MIT
 
+## fast_float
+- [![Upstream](https://img.shields.io/github/v/release/fastfloat/fast_float?label=Upstream)](https://github.com/fastfloat/fast_float)
+- Version: 8.0.0
+- License: MIT
+
 ## flatbuffers
 - [![Upstream](https://img.shields.io/github/v/release/google/flatbuffers?label=Upstream)](https://github.com/google/flatbuffers)
 - Version: 24.12.23
@@ -85,11 +85,6 @@
 - [![Upstream](https://img.shields.io/github/v/release/glfw/glfw?label=Upstream)](https://github.com/glfw/glfw)
 - Version: 3.4 with modified for create as win32 child window support
 - License: zlib
-
-## GHC (iOS devices only)
-- [![Upstream](https://img.shields.io/github/v/release/gulrak/filesystem?label=Upstream)](https://github.com/gulrak/filesystem)
-- Version: 1.5.14
-- License: MIT
 
 ## jni.hpp
 - [![Upstream](https://img.shields.io/github/v/release/mapbox/jni.hpp?label=Upstream)](https://github.com/mapbox/jni.hpp)
@@ -175,7 +170,11 @@
 
 ## OpenAL Soft
 - [![Upstream](https://img.shields.io/github/v/tag/kcat/openal-soft?label=Upstream)](https://github.com/kcat/openal-soft)
-- Version: 1.23.1-e714c8f (8659)
+- Version: 1.24.2
+- Modifications: 
+  - Remove `-Werror=undef`
+  - Linking `fmt::fmt` instead `alsoft::fmt`
+  - Exclude target `alsoft::excommon`
 - License: LGPL-2.1
 
 ## OpenSSL
@@ -219,7 +218,7 @@
 
 ## simdjson
 - [![Upstream](https://img.shields.io/github/v/tag/simdjson/simdjson?label=Upstream)](https://github.com/simdjson/simdjson)
-- Version: 3.10.1
+- Version: 3.12.0
 - License: Apache-2.0
 
 ## stb (stb_image)

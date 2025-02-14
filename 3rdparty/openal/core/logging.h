@@ -1,8 +1,9 @@
 #ifndef CORE_LOGGING_H
 #define CORE_LOGGING_H
 
-#include <stdio.h>
+#include <cstdio>
 
+#include "fmt/core.h"
 #include "opthelpers.h"
 
 
@@ -12,9 +13,9 @@ enum class LogLevel {
     Warning,
     Trace
 };
-extern LogLevel gLogLevel;
+DECL_HIDDEN extern LogLevel gLogLevel;
 
-extern FILE *gLogFile;
+DECL_HIDDEN extern FILE *gLogFile;
 
 
 using LogCallbackFunc = void(*)(void *userptr, char level, const char *message, int length) noexcept;
@@ -22,12 +23,13 @@ using LogCallbackFunc = void(*)(void *userptr, char level, const char *message, 
 void al_set_log_callback(LogCallbackFunc callback, void *userptr);
 
 
-#ifdef __USE_MINGW_ANSI_STDIO
-[[gnu::format(gnu_printf,2,3)]]
-#else
-[[gnu::format(printf,2,3)]]
-#endif
-void al_print(LogLevel level, const char *fmt, ...);
+void al_print_impl(LogLevel level, const fmt::string_view fmt, fmt::format_args args);
+
+template<typename ...Args>
+void al_print(LogLevel level, fmt::format_string<Args...> fmt, Args&& ...args) noexcept
+try {
+    al_print_impl(level, fmt, fmt::make_format_args(args...));
+} catch(...) { }
 
 #define TRACE(...) al_print(LogLevel::Trace, __VA_ARGS__)
 

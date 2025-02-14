@@ -49,20 +49,18 @@ class Quaternion;
 class AX_DLL Vec3
 {
 public:
-    /**
-     * The x-coordinate.
-     */
-    float x;
+    union
+    {
+        float comps[3];
 
-    /**
-     * The y-coordinate.
-     */
-    float y;
-
-    /**
-     * The z-coordinate.
-     */
-    float z;
+        // The coord alias
+        struct
+        {
+            float x;
+            float y;
+            float z;
+        };
+    };
 
     /**
      * Constructs a new vector initialized to all zeros.
@@ -92,16 +90,6 @@ public:
      * @param p2 The second point.
      */
     constexpr Vec3(const Vec3& p1, const Vec3& p2) { set(p1, p2); }
-
-    /**
-     * Creates a new vector from an integer interpreted as an RGB value.
-     * E.g. 0xff0000 represents red or the vector (1, 0, 0).
-     *
-     * @param color The integer to interpret as an RGB value.
-     *
-     * @return A vector corresponding to the interpreted RGB color.
-     */
-    static Vec3 fromColor(unsigned int color);
 
     /**
      * Indicates whether this vector contains all zeros.

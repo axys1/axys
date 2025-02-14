@@ -77,6 +77,7 @@ int lua_register_ax_backend_VertexFormat(lua_State* tolua_S)
         tolua_constant(tolua_S, "USHORT4", 8);
         tolua_constant(tolua_S, "USHORT2", 9);
         tolua_constant(tolua_S, "UBYTE4", 10);
+        tolua_constant(tolua_S, "MAT4", 11);
     tolua_endmodule(tolua_S);
 
     auto typeName = typeid(ax::backend::VertexFormat).name(); // rtti is literal storage
@@ -748,7 +749,7 @@ int lua_ax_backend_Program_getFragmentShader(lua_State* tolua_S)
 
     return 0;
 }
-int lua_ax_backend_Program_setupVertexLayout(lua_State* tolua_S)
+int lua_ax_backend_Program_defineVertexLayout(lua_State* tolua_S)
 {
     int argc = 0;
     ax::backend::Program* cobj = nullptr;
@@ -768,7 +769,7 @@ int lua_ax_backend_Program_setupVertexLayout(lua_State* tolua_S)
 #if _AX_DEBUG >= 1
     if (!cobj) 
     {
-        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_ax_backend_Program_setupVertexLayout'", nullptr);
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_ax_backend_Program_defineVertexLayout'", nullptr);
         return 0;
     }
 #endif
@@ -778,22 +779,22 @@ int lua_ax_backend_Program_setupVertexLayout(lua_State* tolua_S)
     {
         ax::backend::VertexLayoutType arg0;
 
-        ok &= luaval_to_int32(tolua_S, 2,(int *)&arg0, "axb.Program:setupVertexLayout");
+        ok &= luaval_to_int32(tolua_S, 2,(int *)&arg0, "axb.Program:defineVertexLayout");
         if(!ok)
         {
-            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_backend_Program_setupVertexLayout'", nullptr);
+            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_backend_Program_defineVertexLayout'", nullptr);
             return 0;
         }
-        cobj->setupVertexLayout(arg0);
+        cobj->defineVertexLayout(arg0);
         lua_settop(tolua_S, 1);
         return 1;
     }
-    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "axb.Program:setupVertexLayout",argc, 1);
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "axb.Program:defineVertexLayout",argc, 1);
     return 0;
 
 #if _AX_DEBUG >= 1
     tolua_lerror:
-    tolua_error(tolua_S,"#ferror in function 'lua_ax_backend_Program_setupVertexLayout'.",&tolua_err);
+    tolua_error(tolua_S,"#ferror in function 'lua_ax_backend_Program_defineVertexLayout'.",&tolua_err);
 #endif
 
     return 0;
@@ -979,6 +980,20 @@ int lua_ax_backend_Program_getVertexLayout(lua_State* tolua_S)
         object_to_luaval<ax::backend::VertexLayout>(tolua_S, "axb.VertexLayout",(ax::backend::VertexLayout*)ret);
         return 1;
     }
+    if (argc == 1) 
+    {
+        bool arg0;
+
+        ok &= luaval_to_boolean(tolua_S, 2,&arg0, "axb.Program:getVertexLayout");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_backend_Program_getVertexLayout'", nullptr);
+            return 0;
+        }
+        auto&& ret = cobj->getVertexLayout(arg0);
+        object_to_luaval<ax::backend::VertexLayout>(tolua_S, "axb.VertexLayout",(ax::backend::VertexLayout*)ret);
+        return 1;
+    }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "axb.Program:getVertexLayout",argc, 0);
     return 0;
 
@@ -1044,7 +1059,7 @@ int lua_register_ax_backend_Program(lua_State* tolua_S)
         tolua_function(tolua_S,"getActiveAttributes",lua_ax_backend_Program_getActiveAttributes);
         tolua_function(tolua_S,"getVertexShader",lua_ax_backend_Program_getVertexShader);
         tolua_function(tolua_S,"getFragmentShader",lua_ax_backend_Program_getFragmentShader);
-        tolua_function(tolua_S,"setupVertexLayout",lua_ax_backend_Program_setupVertexLayout);
+        tolua_function(tolua_S,"defineVertexLayout",lua_ax_backend_Program_defineVertexLayout);
         tolua_function(tolua_S,"getProgramType",lua_ax_backend_Program_getProgramType);
         tolua_function(tolua_S,"getProgramId",lua_ax_backend_Program_getProgramId);
         tolua_function(tolua_S,"getUniformBufferSize",lua_ax_backend_Program_getUniformBufferSize);
@@ -1579,6 +1594,20 @@ int lua_ax_backend_ProgramState_getMutableVertexLayout(lua_State* tolua_S)
             return 0;
         }
         auto&& ret = cobj->getMutableVertexLayout();
+        object_to_luaval<ax::backend::VertexLayout>(tolua_S, "axb.VertexLayout",(ax::backend::VertexLayout*)ret);
+        return 1;
+    }
+    if (argc == 1) 
+    {
+        bool arg0;
+
+        ok &= luaval_to_boolean(tolua_S, 2,&arg0, "axb.ProgramState:getMutableVertexLayout");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_ax_backend_ProgramState_getMutableVertexLayout'", nullptr);
+            return 0;
+        }
+        auto&& ret = cobj->getMutableVertexLayout(arg0);
         object_to_luaval<ax::backend::VertexLayout>(tolua_S, "axb.VertexLayout",(ax::backend::VertexLayout*)ret);
         return 1;
     }

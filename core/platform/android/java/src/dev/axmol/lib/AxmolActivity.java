@@ -25,13 +25,11 @@
  ****************************************************************************/
 package dev.axmol.lib;
 
-import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
@@ -46,14 +44,15 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import dev.axmol.lib.AxmolEngine.AxmolEngineListener;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
-import javax.microedition.khronos.egl.EGLContext;
 
-public abstract class AxmolActivity extends Activity implements AxmolEngineListener {
+public abstract class AxmolActivity extends AppCompatActivity implements AxmolEngineListener {
     // ===========================================================
     // Constants
     // ===========================================================

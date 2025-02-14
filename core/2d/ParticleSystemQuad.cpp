@@ -176,7 +176,7 @@ void ParticleSystemQuad::initTexCoordsWithRect(const Rect& pointRect)
     // Important. Texture in cocos2d are inverted, so the Y component should be inverted
     std::swap(top, bottom);
 
-    V3F_C4B_T2F_Quad* quads = nullptr;
+    V3F_T2F_C4B_Quad* quads = nullptr;
     unsigned int start = 0, end = 0;
     if (_batchNode)
     {
@@ -194,17 +194,17 @@ void ParticleSystemQuad::initTexCoordsWithRect(const Rect& pointRect)
     for (unsigned int i = start; i < end; i++)
     {
         // bottom-left vertex:
-        quads[i].bl.texCoords.u = left;
-        quads[i].bl.texCoords.v = bottom;
+        quads[i].bl.texCoord.u = left;
+        quads[i].bl.texCoord.v = bottom;
         // bottom-right vertex:
-        quads[i].br.texCoords.u = right;
-        quads[i].br.texCoords.v = bottom;
+        quads[i].br.texCoord.u = right;
+        quads[i].br.texCoord.v = bottom;
         // top-left vertex:
-        quads[i].tl.texCoords.u = left;
-        quads[i].tl.texCoords.v = top;
+        quads[i].tl.texCoord.u = left;
+        quads[i].tl.texCoord.v = top;
         // top-right vertex:
-        quads[i].tr.texCoords.u = right;
-        quads[i].tr.texCoords.v = top;
+        quads[i].tr.texCoord.u = right;
+        quads[i].tr.texCoord.v = top;
     }
 }
 
@@ -260,7 +260,7 @@ void ParticleSystemQuad::initIndices()
     }
 }
 
-inline void updatePosWithParticle(V3F_C4B_T2F_Quad* quad,
+static void updatePosWithParticle(V3F_T2F_C4B_Quad* quad,
                                   const Vec2& newPosition,
                                   float size,
                                   float scaleInSize,
@@ -290,20 +290,20 @@ inline void updatePosWithParticle(V3F_C4B_T2F_Quad* quad,
     float dy = x1 * sr + y2 * cr + y;
 
     // bottom-left
-    quad->bl.vertices.x = ax;
-    quad->bl.vertices.y = ay;
+    quad->bl.position.x = ax;
+    quad->bl.position.y = ay;
 
     // bottom-right vertex:
-    quad->br.vertices.x = bx;
-    quad->br.vertices.y = by;
+    quad->br.position.x = bx;
+    quad->br.position.y = by;
 
     // top-left vertex:
-    quad->tl.vertices.x = dx;
-    quad->tl.vertices.y = dy;
+    quad->tl.position.x = dx;
+    quad->tl.position.y = dy;
 
     // top-right vertex:
-    quad->tr.vertices.x = cx;
-    quad->tr.vertices.y = cy;
+    quad->tr.position.x = cx;
+    quad->tr.position.y = cy;
 }
 
 void ParticleSystemQuad::updateParticleQuads()
@@ -323,11 +323,11 @@ void ParticleSystemQuad::updateParticleQuads()
         currentPosition = _position;
     }
 
-    V3F_C4B_T2F_Quad* startQuad;
+    V3F_T2F_C4B_Quad* startQuad;
     Vec2 pos = Vec2::ZERO;
     if (_batchNode)
     {
-        V3F_C4B_T2F_Quad* batchQuads = _batchNode->getTextureAtlas()->getQuads();
+        V3F_T2F_C4B_Quad* batchQuads = _batchNode->getTextureAtlas()->getQuads();
         startQuad                    = &(batchQuads[_atlasIndex]);
         pos                          = _position;
     }
@@ -352,7 +352,7 @@ void ParticleSystemQuad::updateParticleQuads()
         float* sr                   = _particleData.staticRotation;
         float* sid                  = _particleData.scaleInDelta;
         float* sil                  = _particleData.scaleInLength;
-        V3F_C4B_T2F_Quad* quadStart = startQuad;
+        V3F_T2F_C4B_Quad* quadStart = startQuad;
         if (_isScaleInAllocated)
         {
             for (int i = 0; i < _particleCount;
@@ -393,7 +393,7 @@ void ParticleSystemQuad::updateParticleQuads()
         float* sr                   = _particleData.staticRotation;
         float* sid                  = _particleData.scaleInDelta;
         float* sil                  = _particleData.scaleInLength;
-        V3F_C4B_T2F_Quad* quadStart = startQuad;
+        V3F_T2F_C4B_Quad* quadStart = startQuad;
         if (_isScaleInAllocated)
         {
             for (int i = 0; i < _particleCount;
@@ -430,7 +430,7 @@ void ParticleSystemQuad::updateParticleQuads()
         float* sr                   = _particleData.staticRotation;
         float* sid                  = _particleData.scaleInDelta;
         float* sil                  = _particleData.scaleInLength;
-        V3F_C4B_T2F_Quad* quadStart = startQuad;
+        V3F_T2F_C4B_Quad* quadStart = startQuad;
         if (_isScaleInAllocated)
         {
             for (int i = 0; i < _particleCount;
@@ -450,7 +450,7 @@ void ParticleSystemQuad::updateParticleQuads()
         }
     }
 
-    V3F_C4B_T2F_Quad* quad = startQuad;
+    auto quad = startQuad;
     float* r               = _particleData.colorR;
     float* g               = _particleData.colorG;
     float* b               = _particleData.colorB;
@@ -478,15 +478,12 @@ void ParticleSystemQuad::updateParticleQuads()
                     hsv.h += *hue;
                     hsv.s     = abs(*sat);
                     hsv.v     = abs(*val);
-                    auto colF = hsv.toColor4F();
-                    quad->bl.colors.set(colF.r * colF.a * 255.0F, colF.g * colF.a * 255.0F, colF.b * colF.a * 255.0F,
-                                        colF.a * 255.0F);
-                    quad->br.colors.set(colF.r * colF.a * 255.0F, colF.g * colF.a * 255.0F, colF.b * colF.a * 255.0F,
-                                        colF.a * 255.0F);
-                    quad->tl.colors.set(colF.r * colF.a * 255.0F, colF.g * colF.a * 255.0F, colF.b * colF.a * 255.0F,
-                                        colF.a * 255.0F);
-                    quad->tr.colors.set(colF.r * colF.a * 255.0F, colF.g * colF.a * 255.0F, colF.b * colF.a * 255.0F,
-                                        colF.a * 255.0F);
+                    auto colF = hsv.toRgba();
+                    Color32 col  = colF.premultiplyAlpha();
+                    quad->bl.color = col;
+                    quad->br.color = col;
+                    quad->tl.color = col;
+                    quad->tr.color = col;
                 }
             }
             else
@@ -499,11 +496,11 @@ void ParticleSystemQuad::updateParticleQuads()
                     hsv.h += *hue;
                     hsv.s    = abs(*sat);
                     hsv.v    = abs(*val);
-                    auto col = hsv.toColor4B();
-                    quad->bl.colors.set(col.r, col.g, col.b, col.a);
-                    quad->br.colors.set(col.r, col.g, col.b, col.a);
-                    quad->tl.colors.set(col.r, col.g, col.b, col.a);
-                    quad->tr.colors.set(col.r, col.g, col.b, col.a);
+                    auto col = hsv.toColor32();
+                    quad->bl.color = col;
+                    quad->br.color = col;
+                    quad->tl.color = col;
+                    quad->tr.color = col;
                 }
             }
         }
@@ -514,28 +511,22 @@ void ParticleSystemQuad::updateParticleQuads()
             {
                 for (int i = 0; i < _particleCount; ++i, ++quad, ++r, ++g, ++b, ++a, ++fadeDt, ++fadeLn)
                 {
-                    uint8_t colorR = *r * *a * 255;
-                    uint8_t colorG = *g * *a * 255;
-                    uint8_t colorB = *b * *a * 255;
-                    uint8_t colorA = *a * (*fadeDt / *fadeLn) * 255;
-                    quad->bl.colors.set(colorR, colorG, colorB, colorA);
-                    quad->br.colors.set(colorR, colorG, colorB, colorA);
-                    quad->tl.colors.set(colorR, colorG, colorB, colorA);
-                    quad->tr.colors.set(colorR, colorG, colorB, colorA);
+                    Color32 col    = Color{*r * *a, *g * *a, *b * *a, *a * (*fadeDt / *fadeLn)};
+                    quad->bl.color = col;
+                    quad->br.color = col;
+                    quad->tl.color = col;
+                    quad->tr.color = col;
                 }
             }
             else
             {
                 for (int i = 0; i < _particleCount; ++i, ++quad, ++r, ++g, ++b, ++a, ++fadeDt, ++fadeLn)
                 {
-                    uint8_t colorR = *r * 255;
-                    uint8_t colorG = *g * 255;
-                    uint8_t colorB = *b * 255;
-                    uint8_t colorA = *a * (*fadeDt / *fadeLn) * 255;
-                    quad->bl.colors.set(colorR, colorG, colorB, colorA);
-                    quad->br.colors.set(colorR, colorG, colorB, colorA);
-                    quad->tl.colors.set(colorR, colorG, colorB, colorA);
-                    quad->tr.colors.set(colorR, colorG, colorB, colorA);
+                    Color32 col    = Color{*r, *g, *b, *a * (*fadeDt / *fadeLn)};
+                    quad->bl.color = col;
+                    quad->br.color = col;
+                    quad->tl.color = col;
+                    quad->tr.color = col;
                 }
             }
         }
@@ -558,15 +549,13 @@ void ParticleSystemQuad::updateParticleQuads()
                     hsv.h += *hue;
                     hsv.s     = abs(*sat);
                     hsv.v     = abs(*val);
-                    auto colF = hsv.toColor4F();
-                    quad->bl.colors.set(colF.r * colF.a * 255.0F, colF.g * colF.a * 255.0F, colF.b * colF.a * 255.0F,
-                                        colF.a * 255.0F);
-                    quad->br.colors.set(colF.r * colF.a * 255.0F, colF.g * colF.a * 255.0F, colF.b * colF.a * 255.0F,
-                                        colF.a * 255.0F);
-                    quad->tl.colors.set(colF.r * colF.a * 255.0F, colF.g * colF.a * 255.0F, colF.b * colF.a * 255.0F,
-                                        colF.a * 255.0F);
-                    quad->tr.colors.set(colF.r * colF.a * 255.0F, colF.g * colF.a * 255.0F, colF.b * colF.a * 255.0F,
-                                        colF.a * 255.0F);
+                    auto colF = hsv.toRgba();
+                    Color32 col = colF.premultiplyAlpha();
+                    quad->bl.color = col;
+                    quad->br.color = col;
+                    quad->tl.color = col;
+                    quad->tr.color = col;
+                                  
                 }
             }
             else
@@ -578,11 +567,11 @@ void ParticleSystemQuad::updateParticleQuads()
                     hsv.h += *hue;
                     hsv.s    = abs(*sat);
                     hsv.v    = abs(*val);
-                    auto col = hsv.toColor4B();
-                    quad->bl.colors.set(col.r, col.g, col.b, col.a);
-                    quad->br.colors.set(col.r, col.g, col.b, col.a);
-                    quad->tl.colors.set(col.r, col.g, col.b, col.a);
-                    quad->tr.colors.set(col.r, col.g, col.b, col.a);
+                    auto col = hsv.toColor32();
+                    quad->bl.color = col;
+                    quad->br.color = col;
+                    quad->tl.color = col;
+                    quad->tr.color = col;
                 }
             }
         }
@@ -593,28 +582,22 @@ void ParticleSystemQuad::updateParticleQuads()
             {
                 for (int i = 0; i < _particleCount; ++i, ++quad, ++r, ++g, ++b, ++a)
                 {
-                    uint8_t colorR = *r * *a * 255;
-                    uint8_t colorG = *g * *a * 255;
-                    uint8_t colorB = *b * *a * 255;
-                    uint8_t colorA = *a * 255;
-                    quad->bl.colors.set(colorR, colorG, colorB, colorA);
-                    quad->br.colors.set(colorR, colorG, colorB, colorA);
-                    quad->tl.colors.set(colorR, colorG, colorB, colorA);
-                    quad->tr.colors.set(colorR, colorG, colorB, colorA);
+                    Color32 col    = Color{*r * *a, *g * *a, *b * *a, *a};
+                    quad->bl.color = col;
+                    quad->br.color = col;
+                    quad->tl.color = col;
+                    quad->tr.color = col;
                 }
             }
             else
             {
                 for (int i = 0; i < _particleCount; ++i, ++quad, ++r, ++g, ++b, ++a)
                 {
-                    uint8_t colorR = *r * 255;
-                    uint8_t colorG = *g * 255;
-                    uint8_t colorB = *b * 255;
-                    uint8_t colorA = *a * 255;
-                    quad->bl.colors.set(colorR, colorG, colorB, colorA);
-                    quad->br.colors.set(colorR, colorG, colorB, colorA);
-                    quad->tl.colors.set(colorR, colorG, colorB, colorA);
-                    quad->tr.colors.set(colorR, colorG, colorB, colorA);
+                    Color32 col    = Color{*r, *g, *b, *a};
+                    quad->bl.color = col;
+                    quad->br.color = col;
+                    quad->tl.color = col;
+                    quad->tr.color = col;
                 }
             }
         }
@@ -628,7 +611,7 @@ void ParticleSystemQuad::updateParticleQuads()
     // It was proved to be effective especially for low-end devices.
     if ((_isLifeAnimated || _isEmitterAnimated || _isLoopAnimated) && _isAnimAllocated)
     {
-        V3F_C4B_T2F_Quad* quad    = startQuad;
+        V3F_T2F_C4B_Quad* quad    = startQuad;
         unsigned short* cellIndex = _particleData.animCellIndex;
 
         ParticleFrameDescriptor index;
@@ -653,17 +636,17 @@ void ParticleSystemQuad::updateParticleQuads()
             top    = index.rect.origin.y / texHeight;
             bottom = (index.rect.origin.y + index.rect.size.y) / texHeight;
 
-            quad->bl.texCoords.u = left;
-            quad->bl.texCoords.v = bottom;
+            quad->bl.texCoord.u = left;
+            quad->bl.texCoord.v = bottom;
 
-            quad->br.texCoords.u = right;
-            quad->br.texCoords.v = bottom;
+            quad->br.texCoord.u = right;
+            quad->br.texCoord.v = bottom;
 
-            quad->tl.texCoords.u = left;
-            quad->tl.texCoords.v = top;
+            quad->tl.texCoord.u = left;
+            quad->tl.texCoord.v = top;
 
-            quad->tr.texCoords.u = right;
-            quad->tr.texCoords.v = top;
+            quad->tr.texCoord.u = right;
+            quad->tr.texCoord.v = top;
         }
     }
 }
@@ -700,7 +683,7 @@ void ParticleSystemQuad::setTotalParticles(int tp)
             AXLOGW("Particle system: not enough memory");
             return;
         }
-        V3F_C4B_T2F_Quad* quadsNew = (V3F_C4B_T2F_Quad*)realloc(_quads, quadsSize);
+        auto quadsNew = (V3F_T2F_C4B_Quad*)realloc(_quads, quadsSize);
         unsigned short* indicesNew = (unsigned short*)realloc(_indices, indicesSize);
 
         if (quadsNew && indicesNew)
@@ -780,7 +763,7 @@ bool ParticleSystemQuad::allocMemory()
     AX_SAFE_FREE(_quads);
     AX_SAFE_FREE(_indices);
 
-    _quads   = (V3F_C4B_T2F_Quad*)malloc(_totalParticles * sizeof(V3F_C4B_T2F_Quad));
+    _quads   = (V3F_T2F_C4B_Quad*)malloc(_totalParticles * sizeof(V3F_T2F_C4B_Quad));
     _indices = (unsigned short*)malloc(_totalParticles * 6 * sizeof(unsigned short));
 
     if (!_quads || !_indices)
@@ -792,7 +775,7 @@ bool ParticleSystemQuad::allocMemory()
         return false;
     }
 
-    memset(_quads, 0, _totalParticles * sizeof(V3F_C4B_T2F_Quad));
+    memset(_quads, 0, _totalParticles * sizeof(V3F_T2F_C4B_Quad));
     memset(_indices, 0, _totalParticles * 6 * sizeof(unsigned short));
 
     return true;
@@ -818,8 +801,8 @@ void ParticleSystemQuad::setBatchNode(ParticleBatchNode* batchNode)
         else if (!oldBatch)
         {
             // copy current state to batch
-            V3F_C4B_T2F_Quad* batchQuads = _batchNode->getTextureAtlas()->getQuads();
-            V3F_C4B_T2F_Quad* quad       = &(batchQuads[_atlasIndex]);
+            auto batchQuads = _batchNode->getTextureAtlas()->getQuads();
+            auto quad       = &(batchQuads[_atlasIndex]);
             memcpy(quad, _quads, _totalParticles * sizeof(_quads[0]));
 
             AX_SAFE_FREE(_quads);

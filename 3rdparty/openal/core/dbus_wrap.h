@@ -7,7 +7,7 @@
 
 #include "dynload.h"
 
-#ifdef HAVE_DYNLOAD
+#if HAVE_DYNLOAD
 
 #include <mutex>
 
@@ -63,16 +63,23 @@ inline auto HasDBus()
 #else
 
 constexpr bool HasDBus() noexcept { return true; }
-#endif /* HAVE_DYNLOAD */
+#endif
 
 
 namespace dbus {
 
 struct Error {
     Error() { dbus_error_init(&mError); }
+    Error(const Error&) = delete;
+    Error(Error&&) = delete;
     ~Error() { dbus_error_free(&mError); }
+
+    void operator=(const Error&) = delete;
+    void operator=(Error&&) = delete;
+
     DBusError* operator->() { return &mError; }
     DBusError &get() { return mError; }
+
 private:
     DBusError mError{};
 };

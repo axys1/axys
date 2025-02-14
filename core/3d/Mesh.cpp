@@ -199,7 +199,7 @@ Mesh* Mesh::create(const std::vector<float>& positions,
 {
     int perVertexSizeInFloat = 0;
     std::vector<float> vertices;
-    std::vector<MeshVertexAttrib> attribs;
+    axstd::pod_vector<MeshVertexAttrib> attribs;
 
     MeshVertexAttrib att;
     att.type = backend::VertexFormat::FLOAT3;
@@ -258,7 +258,7 @@ Mesh* Mesh::create(const std::vector<float>& positions,
 Mesh* Mesh::create(const std::vector<float>& vertices,
                    int /*perVertexSizeInFloat*/,
                    const IndexArray& indices,
-                   const std::vector<MeshVertexAttrib>& attribs)
+                   const axstd::pod_vector<MeshVertexAttrib>& attribs)
 {
     MeshData meshdata;
     meshdata.attribs = attribs;
@@ -537,7 +537,7 @@ void Mesh::draw(Renderer* renderer,
         command.setWireframe(wireframe);
         if (_instancing && _instances.size() > 0)
         {
-            command.setDrawType(CustomCommand::DrawType::ELEMENT_INSTANCE);
+            command.setDrawType(CustomCommand::DrawType::ELEMENT_INSTANCED);
             command.setInstanceBuffer(_instanceTransformBuffer, _instances.size());
         }
         else if (_instancing)
