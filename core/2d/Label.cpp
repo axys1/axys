@@ -1503,6 +1503,7 @@ void Label::enableUnderline()
     {
         _lineDrawNode = DrawNode::create();
         _lineDrawNode->setGlobalZOrder(getGlobalZOrder());
+        _lineDrawNode->setOpacity(_displayedOpacity);
         _lineDrawNode->properties.setFactor(_lineDrawNode->properties.getFactor() * 2.0f);  // 2.0f: Makes the line smaller 
         addChild(_lineDrawNode, 100000);
     }
@@ -2423,6 +2424,12 @@ void Label::updateDisplayedOpacity(uint8_t parentOpacity)
     for (auto&& it : _letters)
     {
         it.second->updateDisplayedOpacity(_displayedOpacity);
+    }
+
+    if (_lineDrawNode)
+    {
+        _lineDrawNode->setOpacity(_displayedOpacity);
+        _contentDirty = true;
     }
 }
 
