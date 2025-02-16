@@ -1753,28 +1753,32 @@ void Label::updateContent()
 
         _lineDrawNode->clear();
 
-        if (_numberOfLines && _currentLabelType != LabelType::STRING_TEXTURE)
+        if (_numberOfLines > 0 && _currentLabelType != LabelType::STRING_TEXTURE)
         {
             // This is the logic for TTF fonts
-            const float charheight = (_textDesiredHeight / _numberOfLines);
-            float thickness        = charheight / 6;
+            float thickness         = (_lineHeight * _fontScale) / 6;
+            float nextTokenY        = _letterOffsetY;
+            auto contentScaleFactor = AX_CONTENT_SCALE_FACTOR();
+            float lineSpacing       = _lineSpacing * contentScaleFactor;
 
             // atlas font
             for (int i = 0; i < _numberOfLines; ++i)
             {
                 if (_strikethroughEnabled)
                 {
-                    float y = (_numberOfLines - i - 1) * charheight + charheight / 2;
+                    auto y = nextTokenY / contentScaleFactor - _lineHeight * _fontScale / 2;
                     _lineDrawNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
                                             Color4F(lineColor), thickness);
                 }
 
                 if (_underlineEnabled)
                 {
-                    float y = (_numberOfLines - i - 1) * charheight;
+                    auto y = (nextTokenY * _fontScale) / contentScaleFactor - _lineHeight * _fontScale;
                     _lineDrawNode->drawLine(Vec2(_linesOffsetX[i], y), Vec2(_linesWidth[i] + _linesOffsetX[i], y),
                                             Color4F(lineColor), thickness);
                 }
+
+                nextTokenY -= _lineHeight * _fontScale + lineSpacing;
             }
         }
         else if (_textSprite) // ...and is the logic for System fonts
@@ -1784,24 +1788,25 @@ void Label::updateContent()
 
             // FIXME: system fonts don't report the height of the font correctly. only the size of the texture, which is POT
             // FIXME: Might not work with different vertical alignments
-            float offsety         = spriteSize.height / _numberOfLines;
-            float thickness       = spriteSize.height / 6 / _numberOfLines;
-    
+            const auto thickness = spriteSize.height / 6 / static_cast<float>(_numberOfLines);
+            const auto lineSize  = spriteSize.height / static_cast<float>(_numberOfLines);
+
             if (_underlineEnabled)
-            {       
+            {
+                const auto baseY = spriteSize.height / (static_cast<float>(_numberOfLines) * lineSize);
                 for (int i = 0; i < _numberOfLines; ++i)
                 {
-                    float y = offsety * i;
+                    float y = baseY + lineSize * i;
                     _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(lineColor), thickness);
                 }
             }
 
             if (_strikethroughEnabled)
             {  
-                float _of = spriteSize.height / _numberOfLines / 2;
+                const auto baseY    = lineSize - lineSize / 2;
                 for (int i = 0; i < _numberOfLines; ++i)
                 {
-                    float y = _of + offsety * i;
+                    float y = baseY + lineSize * i;
                     _lineDrawNode->drawLine(Vec2(0.0f, y), Vec2(spriteSize.width, y), Color4F(lineColor), thickness);
                 }
             }
