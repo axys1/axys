@@ -1756,7 +1756,7 @@ void Label::updateContent()
         if (_numberOfLines > 0 && _currentLabelType != LabelType::STRING_TEXTURE)
         {
             // This is the logic for TTF fonts
-            float thickness         = (_lineHeight * _fontScale) / 6;
+            float thickness         = (_lineHeight * _fontScale) * 0.12f;
             float nextTokenY        = _letterOffsetY;
             auto contentScaleFactor = AX_CONTENT_SCALE_FACTOR();
             float lineSpacing       = _lineSpacing * contentScaleFactor;
@@ -1788,7 +1788,7 @@ void Label::updateContent()
 
             // FIXME: system fonts don't report the height of the font correctly. only the size of the texture, which is POT
             // FIXME: Might not work with different vertical alignments
-            const auto thickness = spriteSize.height / 6 / static_cast<float>(_numberOfLines);
+            const auto thickness = spriteSize.height / static_cast<float>(_numberOfLines) * 0.12f;
             const auto lineSize  = spriteSize.height / static_cast<float>(_numberOfLines);
 
             if (_underlineEnabled)
