@@ -1504,7 +1504,8 @@ void Label::enableUnderline()
         _lineDrawNode = DrawNode::create();
         _lineDrawNode->setGlobalZOrder(getGlobalZOrder());
         _lineDrawNode->setOpacity(_displayedOpacity);
-        _lineDrawNode->properties.setFactor(_lineDrawNode->properties.getFactor() * 2.0f);  // 2.0f: Makes the line smaller 
+        _lineDrawNode->properties.setFactor(_lineDrawNode->properties.getFactor() *
+                                            2.0f);  // 2.0f: Makes the line smaller 
         addChild(_lineDrawNode, 100000);
     }
 }
